@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ENUMS
+
+enum UserRole {
+  STUDENT
+  ADMIN
+}
+
+enum SessionStatus {
+  VALID
+  SUSPICIOUS
+  REJECTED
+}
+
+//MODELS
+
+model User {
+  id        Int                 @id @default(autoincrement())
+  publicId  String              @unique @default(cuid())
+  email     String              @unique
+  role      UserRole            @default(STUDENT)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime
+  profile   Profile?
+  devices   Device[]
+  sessions  AttendanceSession[]
+}
+
+////////////////
+model Profile {
+  id             Int      @id @default(autoincrement())
+  publicId       String   @unique @default(cuid())
+  userId         Int      @unique
+  firstName      String
+  lastName       String
+  phoneNo        String?
+  avatarUrl      String?
+  department     String?
+  enrolmentNo    String?
+  year           Int?
+  preprationGoal Json?
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+//////////////////////
+
+model Device {
+  id         Int                 @id @default(autoincrement())
+  publicId   String              @unique @default(cuid())
+  userId     Int
+  deviceName String?
+  hashedMac  String              @unique
+  createdAt  DateTime            @default(now())
+  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions   AttendanceSession[]
+  logs       PresenceLog[]
+}
+
+model AccessPoint {
+  id        Int                 @id @default(autoincrement())
+  publicId  String              @unique @default(cuid())
+  name      String
+  location  String?
+  sessions  AttendanceSession[]
+  logs      PresenceLog[]
+  createdAt DateTime            @default(now())
+}
+
+model AttendanceSession {
+  id              Int            @id @default(autoincrement())
+  publicId        String         @unique @default(cuid())
+  userId          Int
+  deviceId        Int
+  apId            Int?
+  startTime       DateTime
+  endTime         DateTime
+  duration        Int?
+  confidenceScore Float?
+  status          SessionStatus?
+  createdAt       DateTime       @default(now())
+  user            User           @relation(fields: [userId], references: [id])
+  device          Device         @relation(fields: [deviceId], references: [id])
+  accessPoint     AccessPoint?   @relation(fields: [apId], references: [id])
+  anomalies       AnomalyLog[]
+
+  @@index([userId])
+  @@index([deviceId])
+  @@index([startTime, endTime])
+}
+
+model PresenceLog {
+  id       Int    @id @default(autoincrement())
+  publicId String @unique @default(cuid())
+
+  deviceId Int
+  apId     Int?
+
+  rssi   Int?
+  seenAt DateTime
+
+  createdAt DateTime @default(now())
+
+  device      Device       @relation(fields: [deviceId], references: [id])
+  accessPoint AccessPoint? @relation(fields: [apId], references: [id])
+
+  @@index([deviceId, seenAt])
+}
+
+model AnomalyLog {
+  id        Int    @id @default(autoincrement())
+  publicId  String @unique @default(cuid())
+
+  sessionId Int
+
+  type     String
+  severity Int
+  meta     Json?
+
+  createdAt DateTime @default(now())
+
+  session AttendanceSession @relation(fields: [sessionId], references: [id])
+}
