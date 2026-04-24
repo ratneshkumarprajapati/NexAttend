@@ -31,9 +31,11 @@ model User {
   id        Int                 @id @default(autoincrement())
   publicId  String              @unique @default(cuid())
   email     String              @unique
+  password  String
   role      UserRole            @default(STUDENT)
   createdAt DateTime            @default(now())
-  updatedAt DateTime
+  deletedAt DateTime?
+  updatedAt DateTime            @updatedAt
   profile   Profile?
   devices   Device[]
   sessions  AttendanceSession[]
@@ -121,8 +123,8 @@ model PresenceLog {
 }
 
 model AnomalyLog {
-  id        Int    @id @default(autoincrement())
-  publicId  String @unique @default(cuid())
+  id       Int    @id @default(autoincrement())
+  publicId String @unique @default(cuid())
 
   sessionId Int
 
