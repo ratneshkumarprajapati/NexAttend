@@ -23,3 +23,7 @@ export const CORS_ORIGINS = [
   "http://127.0.0.1:3000",
   "http://127.0.0.1:5173",
 ] as const;
+
+export const API_PREFIX = "api";
+export const API_VERSION = "v1";
+export const API_BASE_PATH = `/${API_PREFIX}/${API_VERSION}`;

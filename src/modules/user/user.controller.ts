@@ -2,17 +2,16 @@ import type { Request, Response } from "express";
 import { createUserSchema, updateUserSchema } from "./user.validation.js";
 import { toUserResponseDto, toUserResponseDtoList } from "./user.dto.js";
 import { userService } from "./user.service.js";
-import logger from "../../utils/logger.js";
 import {
     sendErrorResponse,
     sendSuccessResponse,
 } from "../../utils/apiResponse.js";
+import { handleError } from "../../utils/errorHandler.js";
 
 export const userController = {
     async create(req: Request, res: Response) {
         try {
-            const { email, password, role } = req.body;
-            const parsed = createUserSchema.parse({ email, password, role });
+            const parsed = createUserSchema.parse(req.body);
             const user = await userService.createUser(parsed);
             return sendSuccessResponse(
                 res,
@@ -21,8 +20,7 @@ export const userController = {
                 toUserResponseDto(user)
             );
         } catch (error) {
-            logger.error(error);
-            return sendErrorResponse(res, 400, "Something went wrong");
+            return handleError(res, error);
         }
     },
 
@@ -36,8 +34,7 @@ export const userController = {
                 toUserResponseDtoList(users)
             );
         } catch (error) {
-            logger.error(error);
-            return sendErrorResponse(res, 400, "Something went wrong");
+            return handleError(res, error);
         }
     },
     async getOne(req: Request, res: Response) {
@@ -57,8 +54,7 @@ export const userController = {
                 toUserResponseDto(user)
             );
         } catch (error) {
-            logger.error(error);
-            return sendErrorResponse(res, 400, "Something went wrong");
+            return handleError(res, error);
         }
 
     },
@@ -80,9 +76,8 @@ export const userController = {
                 "User updated successfully",
                 toUserResponseDto(user)
             );
-        } catch (err: any) {
-            logger.error(err);
-            return sendErrorResponse(res, 400, err.message);
+        } catch (error) {
+            return handleError(res, error);
         }
     },
 
@@ -97,9 +92,8 @@ export const userController = {
             await userService.deleteUser(publicId);
 
             return sendSuccessResponse(res, 200, "User deleted successfully");
-        } catch (error: any) {
-            logger.error(error);
-            return sendErrorResponse(res, 400, error.message);
+        } catch (error) {
+            return handleError(res, error);
         }
     },
 

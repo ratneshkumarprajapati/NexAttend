@@ -1,29 +1,70 @@
 import bcrypt from "bcrypt";
+import { Prisma } from "../../generated/prisma/client.js";
 import { userRepository } from "./user.repository.js";
 import type { CreateUserInput, UpdateUserInput } from "./user.types.js";
 import { env } from "../../config/env.js";
+import { withActiveSpan } from "../../instrumentation/otel.js";
 import logger from "../../utils/logger.js";
+import { AppError } from "../../utils/appError.js";
 
 const SALT_ROUNDS = Number(env.SECURITY.HASH_SALT) || 10;
 
+const isPrismaKnownError = (
+    error: unknown
+): error is Prisma.PrismaClientKnownRequestError =>
+    error instanceof Prisma.PrismaClientKnownRequestError;
+
 export const userService = {
     async createUser(data: CreateUserInput) {
-        logger.info(`Creating user with email: ${data.email}`);
-        const existing = await userRepository.findByEmail(data.email);
+        return withActiveSpan(
+            "user.create",
+            {
+                "user.email": data.email,
+                "user.role": data.role,
+                "user.has_profile": Boolean(data.profile),
+            },
+            async () => {
+                logger.info(`Creating user with email: ${data.email}`);
 
-        if (existing) {
-            logger.warn(`User creation blocked because email already exists: ${data.email}`);
-            throw new Error("User already exists");
+                const hashedPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
+                try {
+                    const user = await userRepository.create({
+                        email: data.email,
+                        password: hashedPassword,
+                        role: data.role,
+                        profile: data.profile
+                            ? {
+                                create: {
+                                    firstName: data.profile.firstName.trim(),
+                                    lastName: data.profile.lastName.trim(),
+                                    phoneNo: data.profile.phoneNo?.trim() || null,
+                                },
+                            }
+                            : undefined,
+                    });
+
+                    logger.info(`User created successfully with publicId: ${user.publicId}`);
+
+                    return user;
+                } catch (error) {
+                    if (isPrismaKnownError(error) && error.code === "P2002") {
+                        logger.warn(`User creation blocked because email already exists: ${data.email}`);
+                        throw new AppError("User already exists", 409);
+                    }
+
+                    throw error;
+                }
+            }
+        );
+    },
+    async getUserByEmail(email: string) {
+        logger.info(`Fetching user with email: ${email}`);
+        const user = await userRepository.findByEmail(email);
+
+        if (!user) {
+            logger.warn(`User not found for email: ${email}`);
+            throw new AppError("User not found", 404);
         }
-
-        const hashedPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
-
-        const user = await userRepository.create({
-            ...data,
-            password: hashedPassword,
-        });
-
-        logger.info(`User created successfully with publicId: ${user.publicId}`);
 
         return user;
     },
@@ -34,7 +75,7 @@ export const userService = {
 
         if (!user) {
             logger.warn(`User not found for publicId: ${publicId}`);
-            throw new Error("User not found");
+            throw new AppError("User not found", 404);
         }
 
         return user;
@@ -67,7 +108,7 @@ export const userService = {
 
         if (!user) {
             logger.warn(`User update failed because user was not found: ${publicId}`);
-            throw new Error("User not found");
+            throw new AppError("User not found", 404);
         }
 
         logger.info(`User updated successfully with publicId: ${publicId}`);
@@ -80,7 +121,7 @@ export const userService = {
 
         if (!deletedUser) {
             logger.warn(`User delete failed because user was not found: ${publicId}`);
-            throw new Error("User not found");
+            throw new AppError("User not found", 404);
         }
 
         logger.info(`User soft deleted successfully with publicId: ${publicId}`);

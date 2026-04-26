@@ -3,7 +3,7 @@
     "_postman_id": "7d96ec51-2b2a-46b8-8af1-8f4dc792d0d1",
     "name": "NexAttend API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Postman collection for testing NexAttend user APIs."
+    "description": "Dummy Postman collection for testing NexAttend versioned APIs and the basic auth -> user -> profile flow."
   },
   "variable": [
     {
@@ -11,8 +11,28 @@
       "value": "http://localhost:4000"
     },
     {
-      "key": "userBasePath",
-      "value": "api/v1/users"
+      "key": "apiBasePath",
+      "value": "api/v1"
+    },
+    {
+      "key": "authPath",
+      "value": "auth"
+    },
+    {
+      "key": "userPath",
+      "value": "user"
+    },
+    {
+      "key": "profilePath",
+      "value": "profile"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": "1"
     },
     {
       "key": "userPublicId",
@@ -21,10 +41,25 @@
   ],
   "item": [
     {
-      "name": "Users",
+      "name": "Auth Flow",
+      "description": "Run Register first. It stores `userId`, `userPublicId`, and `authToken` for the later requests.",
       "item": [
         {
-          "name": "Create User",
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response?.data?.token) pm.collectionVariables.set('authToken', response.data.token);",
+                  "if (response?.data?.user?.id) pm.collectionVariables.set('userId', String(response.data.user.id));",
+                  "if (response?.data?.user?.publicId) pm.collectionVariables.set('userPublicId', response.data.user.publicId);"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -35,18 +70,115 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"student1@example.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"STUDENT\"\n}"
+              "raw": "{\n  \"email\": \"student1@example.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"STUDENT\",\n  \"firstName\": \"Ratnesh\",\n  \"lastName\": \"Kumar\",\n  \"phoneNo\": \"9876543210\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/{{userBasePath}}",
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{authPath}}/register",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "{{userBasePath}}"
+                "{{apiBasePath}}",
+                "{{authPath}}",
+                "register"
               ]
             },
-            "description": "Create a new user."
+            "description": "Create a user through the auth flow and capture token + IDs for later requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response?.data?.token) pm.collectionVariables.set('authToken', response.data.token);",
+                  "if (response?.data?.user?.id) pm.collectionVariables.set('userId', String(response.data.user.id));",
+                  "if (response?.data?.user?.publicId) pm.collectionVariables.set('userPublicId', response.data.user.publicId);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"student1@example.com\",\n  \"password\": \"Password@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{authPath}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiBasePath}}",
+                "{{authPath}}",
+                "login"
+              ]
+            },
+            "description": "Login with the same credentials and refresh the stored token."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User APIs",
+      "description": "Versioned user endpoints. These use the singular path `api/v1/user` and the server also keeps the older plural alias working.",
+      "item": [
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response?.data?.id) pm.collectionVariables.set('userId', String(response.data.id));",
+                  "if (response?.data?.publicId) pm.collectionVariables.set('userPublicId', response.data.publicId);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin1@example.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"ADMIN\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{userPath}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiBasePath}}",
+                "{{userPath}}"
+              ]
+            },
+            "description": "Create a user directly from the user module."
           },
           "response": []
         },
@@ -54,14 +186,21 @@
           "name": "Get All Users",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/{{userBasePath}}",
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{userPath}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "{{userBasePath}}"
+                "{{apiBasePath}}",
+                "{{userPath}}"
               ]
             },
             "description": "Fetch all active users."
@@ -72,18 +211,25 @@
           "name": "Get User By PublicId",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/{{userBasePath}}/{{userPublicId}}",
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{userPath}}/{{userPublicId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "{{userBasePath}}",
+                "{{apiBasePath}}",
+                "{{userPath}}",
                 "{{userPublicId}}"
               ]
             },
-            "description": "Fetch one user by publicId."
+            "description": "Fetch a single user by publicId."
           },
           "response": []
         },
@@ -95,6 +241,11 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
               }
             ],
             "body": {
@@ -102,12 +253,13 @@
               "raw": "{\n  \"email\": \"updated.student1@example.com\",\n  \"role\": \"ADMIN\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/{{userBasePath}}/{{userPublicId}}",
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{userPath}}/{{userPublicId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "{{userBasePath}}",
+                "{{apiBasePath}}",
+                "{{userPath}}",
                 "{{userPublicId}}"
               ]
             },
@@ -116,21 +268,128 @@
           "response": []
         },
         {
-          "name": "Soft Delete User",
+          "name": "Delete User",
           "request": {
             "method": "DELETE",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/{{userBasePath}}/{{userPublicId}}",
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{userPath}}/{{userPublicId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "{{userBasePath}}",
+                "{{apiBasePath}}",
+                "{{userPath}}",
                 "{{userPublicId}}"
               ]
             },
             "description": "Soft delete a user by publicId."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Profile APIs",
+      "description": "Profiles use the numeric `userId`, so run Register User or Create User first.",
+      "item": [
+        {
+          "name": "Create Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{userId}},\n  \"firstName\": \"Ratnesh\",\n  \"lastName\": \"Kumar\",\n  \"phoneNo\": \"9876543210\",\n  \"department\": \"CSE\",\n  \"enrolmentNo\": \"NA2026001\",\n  \"year\": 4,\n  \"preprationGoal\": {\n    \"target\": \"95_percent_attendance\",\n    \"focus\": \"placement_preparation\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{profilePath}}/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiBasePath}}",
+                "{{profilePath}}",
+                "create"
+              ]
+            },
+            "description": "Create a profile for a user using the numeric userId."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile By UserId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{profilePath}}/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiBasePath}}",
+                "{{profilePath}}",
+                "{{userId}}"
+              ]
+            },
+            "description": "Fetch a profile by numeric userId."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"department\": \"ECE\",\n  \"year\": 3,\n  \"preprationGoal\": {\n    \"target\": \"internship\",\n    \"focus\": \"system_design\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{profilePath}}/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiBasePath}}",
+                "{{profilePath}}",
+                "{{userId}}"
+              ]
+            },
+            "description": "Update one or more profile fields."
           },
           "response": []
         }

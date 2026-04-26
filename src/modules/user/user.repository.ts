@@ -2,7 +2,10 @@ import { prisma } from "../../services/prisma/prisma.client.js";
 
 export const userRepository = {
   create: (data: any) =>
-    prisma.user.create({ data }),
+    prisma.user.create({
+      data,
+      include: { profile: true },
+    }),
 
   findByEmail: (email: string) =>
     prisma.user.findFirst({
@@ -10,6 +13,7 @@ export const userRepository = {
         email,
         deletedAt: null,
       },
+      include: { profile: true },
     }),
 
   findByPublicId: (publicId: string) =>
