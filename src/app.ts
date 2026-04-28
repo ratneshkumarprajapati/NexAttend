@@ -7,6 +7,7 @@ import { API_BASE_PATH, CORS_ORIGINS } from "./config/constants.js";
 import userRoutes from "./modules/user/user.routes.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import profileRoutes from "./modules/profile/profile.routes.js";
+import deviceRoutes from "./modules/device/device.routes.js"
 
 const app = express();
 
@@ -35,6 +36,7 @@ const v1Router = express.Router();
 v1Router.use("/auth", authRoutes);
 v1Router.use("/users", userRoutes);
 v1Router.use("/profiles", profileRoutes);
+v1Router.use("/devices", deviceRoutes);
 
 app.use(API_BASE_PATH, v1Router);
 

@@ -20,3 +20,7 @@ export interface AuthTokenPayload {
     email: string;
     role: UserRole;
 }
+export interface AuthRequest extends Request {
+  user?: AuthTokenPayload;
+}
+
