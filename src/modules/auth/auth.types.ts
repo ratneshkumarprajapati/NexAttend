@@ -15,6 +15,7 @@ export interface ILoginInput {
 }
 
 export interface AuthTokenPayload {
+    userId:number,
     publicId: string;
     email: string;
     role: UserRole;

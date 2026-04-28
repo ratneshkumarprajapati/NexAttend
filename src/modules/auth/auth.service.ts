@@ -46,7 +46,8 @@ export const authService = {
       });
 
       const token = this.generateToken({
-        publicId: user.publicId,
+        userId: user.id,           
+        publicId: user.publicId,   
         email: user.email,
         role: user.role,
       });
@@ -86,6 +87,7 @@ export const authService = {
     }
 
     const token = this.generateToken({
+      userId:user.id,
       publicId: user.publicId,
       email: user.email,
       role: user.role,
