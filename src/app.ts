@@ -8,6 +8,8 @@ import userRoutes from "./modules/user/user.routes.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import profileRoutes from "./modules/profile/profile.routes.js";
 import deviceRoutes from "./modules/device/device.routes.js"
+import { routerService } from "./services/router/router.service.js";
+import { poller } from "./jobs/routerPoller.job.js";
 
 const app = express();
 
@@ -40,4 +42,6 @@ v1Router.use("/devices", deviceRoutes);
 
 app.use(API_BASE_PATH, v1Router);
 
+poller.start()
+// console.table(await routerService.fetchConnectedDevices())
 export default app;

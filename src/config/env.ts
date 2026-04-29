@@ -17,9 +17,9 @@ export const env = {
   },
 
   ROUTER: {
-    BASE_URL: process.env.ROUTER_BASE_URL!,
-    USERNAME: process.env.ROUTER_USERNAME!,
-    PASSWORD: process.env.ROUTER_PASSWORD!,
+    BASE_URL: process.env.ROUTER_BASE_URL||"https://192.168.1.1",
+    USERNAME: process.env.ROUTER_USERNAME||"admin",
+    PASSWORD: process.env.ROUTER_PASSWORD||"admin",
     POLL_INTERVAL: Number(process.env.ROUTER_POLL_INTERVAL) || 15000,
   },
 

@@ -1,283 +1,129 @@
-import { AppError } from "../../utils/appError.js";
-import type {
-  FetchClientConfig,
-  FetchErrorResponse,
-  FetchRequestConfig,
-  FetchResponse,
-  HttpMethod,
-  QueryParams,
-} from "./router.types.js";
+import { log } from "node:console";
+import { env } from "../../config/env.js";
+import { routerClient } from "../http/routerClient.instance.js";
+import type { ConnectedDevice, RouterJwtPayload, RouterLoginResponse } from "./router.types.js";
+import logger from "../../utils/logger.js";
 
-const DEFAULT_TIMEOUT = 30_000;
 
-export class FetchError<T = unknown> extends AppError {
-  response: FetchErrorResponse<T> | undefined;
 
-  constructor(message: string, statusCode = 500, response?: FetchErrorResponse<T>) {
-    super(message, statusCode);
-    this.name = "FetchError";
-    this.response = response;
-  }
-}
+class RouterService {
+  private token: string | null = null;
+  private tokenExpiry: number | null = null;
 
-const buildUrl = (url: string, params?: QueryParams, baseURL?: string) => {
-  const targetUrl = new URL(url, baseURL);
-
-  if (!params) {
-    return targetUrl.toString();
+  private getCommandUrl(command: string) {
+    return `/dm/sys/?cmd=${encodeURIComponent(command)}`;
   }
 
-  for (const [key, value] of Object.entries(params)) {
-    if (Array.isArray(value)) {
-      for (const item of value) {
-        if (item !== undefined && item !== null) {
-          targetUrl.searchParams.append(key, String(item));
-        }
+  private getTokenExpiry(token: string) {
+    try {
+      const payloadPart = token.split(".")[1];
+
+      if (!payloadPart) {
+        return Date.now() + 25 * 60 * 1000;
       }
-      continue;
+
+      const payload = JSON.parse(
+        Buffer.from(payloadPart, "base64url").toString("utf8")
+      ) as RouterJwtPayload;
+
+      if (payload.iat && payload.SessionTimeout) {
+        return (payload.iat + payload.SessionTimeout - 30) * 1000;
+      }
+    } catch {
+      // Fall back to a conservative timeout if the router changes token format.
     }
 
-    if (value !== undefined && value !== null) {
-      targetUrl.searchParams.set(key, String(value));
-    }
+    return Date.now() + 25 * 60 * 1000;
   }
 
-  return targetUrl.toString();
-};
-
-const buildHeaders = (configHeaders?: HeadersInit, requestHeaders?: HeadersInit) => {
-  const headers = new Headers(configHeaders);
-
-  if (requestHeaders) {
-    const incomingHeaders = new Headers(requestHeaders);
-    incomingHeaders.forEach((value, key) => {
-      headers.set(key, value);
-    });
-  }
-
-  return headers;
-};
-
-const buildBody = (body: FetchRequestConfig["body"], headers: Headers) => {
-  if (body === undefined || body === null) {
-    return undefined;
-  }
-
-  if (
-    typeof body === "string" ||
-    body instanceof Blob ||
-    body instanceof FormData ||
-    body instanceof URLSearchParams ||
-    body instanceof ArrayBuffer ||
-    ArrayBuffer.isView(body) ||
-    body instanceof ReadableStream
-  ) {
-    return body;
-  }
-
-  if (!headers.has("content-type")) {
-    headers.set("content-type", "application/json");
-  }
-
-  return JSON.stringify(body);
-};
-
-const parseResponseBody = async (response: Response) => {
-  if (response.status === 204 || response.status === 205) {
-    return undefined;
-  }
-
-  const contentType = response.headers.get("content-type") ?? "";
-
-  if (contentType.includes("application/json")) {
-    return response.json();
-  }
-
-  if (contentType.startsWith("text/")) {
-    return response.text();
-  }
-
-  const text = await response.text();
-  return text || undefined;
-};
-
-const createTimeoutSignal = (timeout: number, externalSignal?: AbortSignal) => {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => {
-    controller.abort();
-  }, timeout);
-
-  const abortFromExternalSignal = () => {
-    controller.abort((externalSignal as AbortSignal).reason);
-  };
-
-  if (externalSignal) {
-    if (externalSignal.aborted) {
-      controller.abort(externalSignal.reason);
-    } else {
-      externalSignal.addEventListener("abort", abortFromExternalSignal, {
-        once: true,
-      });
-    }
-  }
-
-  const cleanup = () => {
-    clearTimeout(timeoutId);
-
-    if (externalSignal) {
-      externalSignal.removeEventListener("abort", abortFromExternalSignal);
-    }
-  };
-
-  return { cleanup, signal: controller.signal };
-};
-
-class FetchClient {
-  constructor(private readonly config: FetchClientConfig = {}) {}
-
-  async request<T = unknown>(
-    url: string,
-    config: FetchRequestConfig = {},
-  ): Promise<FetchResponse<T>> {
-    const {
-      baseURL,
-      body: requestBody,
-      headers: requestHeaders,
-      method: requestMethod,
-      params,
-      timeout: requestTimeout,
-      ...fetchOptions
-    } = config;
-    const method = (requestMethod ?? "GET") as HttpMethod;
-    const headers = buildHeaders(this.config.headers, requestHeaders);
-    const targetUrl = buildUrl(
-      url,
-      params,
-      baseURL ?? this.config.baseURL,
+  private async login() {
+    const res = await routerClient.post<RouterLoginResponse>(
+      this.getCommandUrl("Login"),
+      {
+        Login: {
+          data: {
+            username: env.ROUTER.USERNAME,
+            password: env.ROUTER.PASSWORD,
+            captcha: "",
+          },
+        },
+      }
     );
-    const body = buildBody(requestBody, headers);
-    const timeout = requestTimeout ?? this.config.timeout ?? DEFAULT_TIMEOUT;
-    const { cleanup, signal } = createTimeoutSignal(timeout, fetchOptions.signal);
+
+    const login = res.Login?.data?.login;
+    const token = login?.authenticatedToken;
+    if (res.Login?.status_code !== 200 || login?.status !== "success" || !token) {
+      throw new Error("Router login failed");
+    }
+
+    this.token = token;
+    this.tokenExpiry = this.getTokenExpiry(token);
+  }
+
+  private async ensureAuth() {
+    if (!this.token || !this.tokenExpiry || Date.now() > this.tokenExpiry) {
+      await this.login();
+    }
+  }
+
+  private async request<T>(command: string) {
+    await this.ensureAuth();
 
     try {
-      const requestInit: RequestInit = {
-        ...fetchOptions,
-        headers,
-        method,
-        signal,
-      };
+      const response = await routerClient.get<T>(command, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      });
+      return response
+    } catch (error: any) {
+      if (error.message.includes("401")) {
+        await this.login();
 
-      if (body !== undefined) {
-        requestInit.body = body;
-      }
-
-      const response = await fetch(targetUrl, requestInit);
-
-      const data = (await parseResponseBody(response)) as T;
-      const result: FetchResponse<T> = {
-        data,
-        headers: response.headers,
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        url: response.url,
-      };
-
-      if (!response.ok) {
-        throw new FetchError(
-          response.statusText || "Request failed",
-          response.status,
-          {
-            data,
-            headers: response.headers,
-            status: response.status,
-            statusText: response.statusText,
-            url: response.url,
+        return routerClient.get<T>(this.getCommandUrl(command), {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
           },
-        );
+        });
       }
 
-      return result;
-    } catch (error) {
-      if (error instanceof FetchError) {
-        throw error;
-      }
-
-      if (error instanceof Error && error.name === "AbortError") {
-        throw new FetchError(`Request timeout after ${timeout}ms`, 408);
-      }
-
-      if (error instanceof Error) {
-        throw new FetchError(error.message, 500);
-      }
-
-      throw new FetchError("Unknown request error", 500);
-    } finally {
-      cleanup();
+      logger.error(error)
+      throw error;
     }
   }
 
-  get<T = unknown>(url: string, config?: Omit<FetchRequestConfig, "method" | "body">) {
-    return this.request<T>(url, { ...config, method: "GET" });
-  }
+  async fetchConnectedDevices() {
+    const data = await this.request<any>("/dm/tr98/?objs=WLANAssociatedDevice&page=StatusPage-CurrentWirelessUser");
 
-  delete<T = unknown>(
-    url: string,
-    config?: Omit<FetchRequestConfig, "method" | "body">,
-  ) {
-    return this.request<T>(url, { ...config, method: "DELETE" });
-  }
+    const rawDevices = data?.WLANAssociatedDevice?.data || [];
+    console.table(rawDevices)
+    return rawDevices.map((d: any):ConnectedDevice => ({
+      mac: d.associatedDeviceMACAddress?.toLowerCase(), // normalize
+      ip: d.associatedDeviceIPAddress,
 
-  post<T = unknown>(
-    url: string,
-    body?: FetchRequestConfig["body"],
-    config?: FetchRequestConfig,
-  ) {
-    return this.request<T>(url, {
-      ...config,
-      ...(body !== undefined ? { body } : {}),
-      method: "POST",
-    });
-  }
+      hostname: d.associatedDeviceHostName || null,
+      manufacturer: d.associatedDeviceManufacturer || null,
 
-  put<T = unknown>(
-    url: string,
-    body?: FetchRequestConfig["body"],
-    config?: FetchRequestConfig,
-  ) {
-    return this.request<T>(url, {
-      ...config,
-      ...(body !== undefined ? { body } : {}),
-      method: "PUT",
-    });
-  }
+      connection: {
+        band: d.associatedDeviceStandard, // 2.4G / 5G
+        rssi: d.associatedDeviceRSSI,     // signal strength
+        txRate: d.associatedDeviceTxRate,
+        rxRate: d.associatedDeviceRecvRate,
+      },
 
-  patch<T = unknown>(
-    url: string,
-    body?: FetchRequestConfig["body"],
-    config?: FetchRequestConfig,
-  ) {
-    return this.request<T>(url, {
-      ...config,
-      ...(body !== undefined ? { body } : {}),
-      method: "PATCH",
-    });
+      session: {
+        duration: d.associatedDeviceDuration, // seconds connected
+        expireTime: d.associatedDeviceExpireTime,
+      },
+
+      meta: {
+        ssidIndex: d.associatedDeviceSSIDIndex,
+        iid: d.iid,
+      },
+
+      source: "router",
+    }));
   }
 }
 
-export const createFetchClient = (config?: FetchClientConfig) => {
-  return new FetchClient(config);
-};
-
-export const routerService = createFetchClient();
-
-export const isFetchError = <T = unknown>(error: unknown): error is FetchError<T> => {
-  return error instanceof FetchError;
-};
-
-export const withBaseUrl = (baseURL: string, config?: Omit<FetchClientConfig, "baseURL">) => {
-  return createFetchClient({
-    ...config,
-    baseURL,
-  });
-};
+export const routerService = new RouterService();
