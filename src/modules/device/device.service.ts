@@ -1,4 +1,5 @@
 import { hashMac } from "../../utils/hash.util.js"
+import logger from "../../utils/logger.js";
 import { deviceRepository } from "./device.repository.js";
 
 
@@ -27,6 +28,7 @@ export const deviceService={
     },
     async identifyDevice(macAddress:string){
         const hashedMac=hashMac(macAddress);
+        console.log("hashedmac",hashedMac)
         return deviceRepository.findHashedMac(hashedMac)
     }
 

@@ -1,8 +1,7 @@
-import { strictObject, string } from "zod";
 import type { Device } from "./routerPoller.types.js";
 import logger from "../utils/logger.js";
 import { routerService } from "../services/router/router.service.js";
-
+import { eventBus } from "../events/eventBus.js";
 
 
 
@@ -52,6 +51,12 @@ export class RouterPoller {
             for (const [mac, device] of currentMap) {
                 if (!this.previousDevices.has(mac)) {
                     logger.info(`New Device-> ${device.mac} `)
+                    await eventBus.emit('device:connected', {
+                        mac,
+                        ip: device.ip,
+                        rssi: device.connection?.rssi,
+                        timestamp: new Date(),
+                    })
                 }
             }
             //detected disconnected device
@@ -59,6 +64,10 @@ export class RouterPoller {
             for (const [mac, device] of this.previousDevices) {
                 if (!currentMap.has(mac)) {
                     logger.info(`Left Device-> ${device.mac} `)
+                    await eventBus.emit("device:disconnected", {
+                        mac,
+                        timestamp: new Date(),
+                    });
                 }
             }
 

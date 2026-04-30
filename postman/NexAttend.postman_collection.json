@@ -3,7 +3,7 @@
     "_postman_id": "7d96ec51-2b2a-46b8-8af1-8f4dc792d0d1",
     "name": "NexAttend API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Dummy Postman collection for testing NexAttend versioned APIs and the basic auth -> user -> profile flow."
+    "description": "Postman collection for NexAttend versioned APIs. Run Auth Flow first to capture token and IDs for users, profiles, and devices."
   },
   "variable": [
     {
@@ -20,11 +20,15 @@
     },
     {
       "key": "userPath",
-      "value": "user"
+      "value": "users"
     },
     {
       "key": "profilePath",
-      "value": "profile"
+      "value": "profiles"
+    },
+    {
+      "key": "devicePath",
+      "value": "devices"
     },
     {
       "key": "authToken",
@@ -37,12 +41,34 @@
     {
       "key": "userPublicId",
       "value": "replace-with-user-public-id"
+    },
+    {
+      "key": "deviceId",
+      "value": "1"
+    },
+    {
+      "key": "devicePublicId",
+      "value": "replace-with-device-public-id"
+    },
+    {
+      "key": "macAddress",
+      "value": "AA:BB:CC:DD:EE:01"
     }
   ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
   "item": [
     {
       "name": "Auth Flow",
-      "description": "Run Register first. It stores `userId`, `userPublicId`, and `authToken` for the later requests.",
+      "description": "Run Register User or Login User first. Successful responses store `authToken`, `userId`, and `userPublicId` for later requests.",
       "item": [
         {
           "name": "Register User",
@@ -61,6 +87,9 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [
               {
@@ -83,7 +112,7 @@
                 "register"
               ]
             },
-            "description": "Create a user through the auth flow and capture token + IDs for later requests."
+            "description": "Create a user through the auth flow and capture token + IDs."
           },
           "response": []
         },
@@ -104,6 +133,9 @@
             }
           ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [
               {
@@ -126,7 +158,7 @@
                 "login"
               ]
             },
-            "description": "Login with the same credentials and refresh the stored token."
+            "description": "Login with existing credentials and refresh the stored token."
           },
           "response": []
         }
@@ -134,7 +166,7 @@
     },
     {
       "name": "User APIs",
-      "description": "Versioned user endpoints. These use the singular path `api/v1/user` and the server also keeps the older plural alias working.",
+      "description": "Versioned user endpoints mounted at `/api/v1/users`.",
       "item": [
         {
           "name": "Create User",
@@ -157,11 +189,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
               }
             ],
             "body": {
@@ -178,7 +205,7 @@
                 "{{userPath}}"
               ]
             },
-            "description": "Create a user directly from the user module."
+            "description": "Create a user directly through the user module."
           },
           "response": []
         },
@@ -186,13 +213,7 @@
           "name": "Get All Users",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/{{apiBasePath}}/{{userPath}}",
               "host": [
@@ -211,13 +232,7 @@
           "name": "Get User By PublicId",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/{{apiBasePath}}/{{userPath}}/{{userPublicId}}",
               "host": [
@@ -241,11 +256,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
               }
             ],
             "body": {
@@ -271,13 +281,7 @@
           "name": "Delete User",
           "request": {
             "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/{{apiBasePath}}/{{userPath}}/{{userPublicId}}",
               "host": [
@@ -297,7 +301,7 @@
     },
     {
       "name": "Profile APIs",
-      "description": "Profiles use the numeric `userId`, so run Register User or Create User first.",
+      "description": "Profiles are mounted at `/api/v1/profiles` and use numeric `userId` in the current routes.",
       "item": [
         {
           "name": "Create Profile",
@@ -307,11 +311,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
               }
             ],
             "body": {
@@ -329,7 +328,7 @@
                 "create"
               ]
             },
-            "description": "Create a profile for a user using the numeric userId."
+            "description": "Create a profile for a user using numeric userId."
           },
           "response": []
         },
@@ -337,13 +336,7 @@
           "name": "Get Profile By UserId",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/{{apiBasePath}}/{{profilePath}}/{{userId}}",
               "host": [
@@ -367,11 +360,6 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{authToken}}",
-                "type": "text"
               }
             ],
             "body": {
@@ -390,6 +378,74 @@
               ]
             },
             "description": "Update one or more profile fields."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Device APIs",
+      "description": "Authenticated device endpoints mounted at `/api/v1/devices`. These use the logged-in user's token to resolve `userId`.",
+      "item": [
+        {
+          "name": "Register Device",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response?.data?.id) pm.collectionVariables.set('deviceId', String(response.data.id));",
+                  "if (response?.data?.publicId) pm.collectionVariables.set('devicePublicId', response.data.publicId);",
+                  "if (response?.data?.hashedMac) pm.collectionVariables.set('lastDeviceHash', response.data.hashedMac);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceName\": \"Ratnesh Laptop\",\n  \"macAddress\": \"{{macAddress}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{devicePath}}/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiBasePath}}",
+                "{{devicePath}}",
+                "register"
+              ]
+            },
+            "description": "Register the authenticated user's device. The backend hashes `macAddress` before storing it."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Devices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{devicePath}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiBasePath}}",
+                "{{devicePath}}"
+              ]
+            },
+            "description": "Fetch devices for the authenticated user."
           },
           "response": []
         }

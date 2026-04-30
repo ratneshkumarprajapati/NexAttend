@@ -26,6 +26,7 @@ export const env = {
   SECURITY: {
     JWT_SECRET: process.env.JWT_SECRET!,
     HASH_SALT: process.env.HASH_SALT!,
+    HASH_SECRET:process.env.HASH_SECRET
   },
 
   AI: {

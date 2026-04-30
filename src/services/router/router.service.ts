@@ -96,7 +96,7 @@ class RouterService {
     const data = await this.request<any>("/dm/tr98/?objs=WLANAssociatedDevice&page=StatusPage-CurrentWirelessUser");
 
     const rawDevices = data?.WLANAssociatedDevice?.data || [];
-    console.table(rawDevices)
+    // console.table(rawDevices)
     return rawDevices.map((d: any):ConnectedDevice => ({
       mac: d.associatedDeviceMACAddress?.toLowerCase(), // normalize
       ip: d.associatedDeviceIPAddress,

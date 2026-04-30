@@ -242,7 +242,7 @@ export type AttendanceSessionGroupByOutputType = {
   deviceId: number
   apId: number | null
   startTime: Date
-  endTime: Date
+  endTime: Date | null
   duration: number | null
   confidenceScore: number | null
   status: $Enums.SessionStatus | null
@@ -279,7 +279,7 @@ export type AttendanceSessionWhereInput = {
   deviceId?: Prisma.IntFilter<"AttendanceSession"> | number
   apId?: Prisma.IntNullableFilter<"AttendanceSession"> | number | null
   startTime?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
-  endTime?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
+  endTime?: Prisma.DateTimeNullableFilter<"AttendanceSession"> | Date | string | null
   duration?: Prisma.IntNullableFilter<"AttendanceSession"> | number | null
   confidenceScore?: Prisma.FloatNullableFilter<"AttendanceSession"> | number | null
   status?: Prisma.EnumSessionStatusNullableFilter<"AttendanceSession"> | $Enums.SessionStatus | null
@@ -297,7 +297,7 @@ export type AttendanceSessionOrderByWithRelationInput = {
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrderInput | Prisma.SortOrder
   startTime?: Prisma.SortOrder
-  endTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
   confidenceScore?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -318,7 +318,7 @@ export type AttendanceSessionWhereUniqueInput = Prisma.AtLeast<{
   deviceId?: Prisma.IntFilter<"AttendanceSession"> | number
   apId?: Prisma.IntNullableFilter<"AttendanceSession"> | number | null
   startTime?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
-  endTime?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
+  endTime?: Prisma.DateTimeNullableFilter<"AttendanceSession"> | Date | string | null
   duration?: Prisma.IntNullableFilter<"AttendanceSession"> | number | null
   confidenceScore?: Prisma.FloatNullableFilter<"AttendanceSession"> | number | null
   status?: Prisma.EnumSessionStatusNullableFilter<"AttendanceSession"> | $Enums.SessionStatus | null
@@ -336,7 +336,7 @@ export type AttendanceSessionOrderByWithAggregationInput = {
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrderInput | Prisma.SortOrder
   startTime?: Prisma.SortOrder
-  endTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
   confidenceScore?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -358,7 +358,7 @@ export type AttendanceSessionScalarWhereWithAggregatesInput = {
   deviceId?: Prisma.IntWithAggregatesFilter<"AttendanceSession"> | number
   apId?: Prisma.IntNullableWithAggregatesFilter<"AttendanceSession"> | number | null
   startTime?: Prisma.DateTimeWithAggregatesFilter<"AttendanceSession"> | Date | string
-  endTime?: Prisma.DateTimeWithAggregatesFilter<"AttendanceSession"> | Date | string
+  endTime?: Prisma.DateTimeNullableWithAggregatesFilter<"AttendanceSession"> | Date | string | null
   duration?: Prisma.IntNullableWithAggregatesFilter<"AttendanceSession"> | number | null
   confidenceScore?: Prisma.FloatNullableWithAggregatesFilter<"AttendanceSession"> | number | null
   status?: Prisma.EnumSessionStatusNullableWithAggregatesFilter<"AttendanceSession"> | $Enums.SessionStatus | null
@@ -368,7 +368,7 @@ export type AttendanceSessionScalarWhereWithAggregatesInput = {
 export type AttendanceSessionCreateInput = {
   publicId?: string
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -386,7 +386,7 @@ export type AttendanceSessionUncheckedCreateInput = {
   deviceId: number
   apId?: number | null
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -397,7 +397,7 @@ export type AttendanceSessionUncheckedCreateInput = {
 export type AttendanceSessionUpdateInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -415,7 +415,7 @@ export type AttendanceSessionUncheckedUpdateInput = {
   deviceId?: Prisma.IntFieldUpdateOperationsInput | number
   apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -430,7 +430,7 @@ export type AttendanceSessionCreateManyInput = {
   deviceId: number
   apId?: number | null
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -440,7 +440,7 @@ export type AttendanceSessionCreateManyInput = {
 export type AttendanceSessionUpdateManyMutationInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -454,7 +454,7 @@ export type AttendanceSessionUncheckedUpdateManyInput = {
   deviceId?: Prisma.IntFieldUpdateOperationsInput | number
   apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -691,7 +691,7 @@ export type AttendanceSessionUpdateOneRequiredWithoutAnomaliesNestedInput = {
 export type AttendanceSessionCreateWithoutUserInput = {
   publicId?: string
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -707,7 +707,7 @@ export type AttendanceSessionUncheckedCreateWithoutUserInput = {
   deviceId: number
   apId?: number | null
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -751,7 +751,7 @@ export type AttendanceSessionScalarWhereInput = {
   deviceId?: Prisma.IntFilter<"AttendanceSession"> | number
   apId?: Prisma.IntNullableFilter<"AttendanceSession"> | number | null
   startTime?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
-  endTime?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
+  endTime?: Prisma.DateTimeNullableFilter<"AttendanceSession"> | Date | string | null
   duration?: Prisma.IntNullableFilter<"AttendanceSession"> | number | null
   confidenceScore?: Prisma.FloatNullableFilter<"AttendanceSession"> | number | null
   status?: Prisma.EnumSessionStatusNullableFilter<"AttendanceSession"> | $Enums.SessionStatus | null
@@ -761,7 +761,7 @@ export type AttendanceSessionScalarWhereInput = {
 export type AttendanceSessionCreateWithoutDeviceInput = {
   publicId?: string
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -777,7 +777,7 @@ export type AttendanceSessionUncheckedCreateWithoutDeviceInput = {
   userId: number
   apId?: number | null
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -814,7 +814,7 @@ export type AttendanceSessionUpdateManyWithWhereWithoutDeviceInput = {
 export type AttendanceSessionCreateWithoutAccessPointInput = {
   publicId?: string
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -830,7 +830,7 @@ export type AttendanceSessionUncheckedCreateWithoutAccessPointInput = {
   userId: number
   deviceId: number
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -867,7 +867,7 @@ export type AttendanceSessionUpdateManyWithWhereWithoutAccessPointInput = {
 export type AttendanceSessionCreateWithoutAnomaliesInput = {
   publicId?: string
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -884,7 +884,7 @@ export type AttendanceSessionUncheckedCreateWithoutAnomaliesInput = {
   deviceId: number
   apId?: number | null
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -910,7 +910,7 @@ export type AttendanceSessionUpdateToOneWithWhereWithoutAnomaliesInput = {
 export type AttendanceSessionUpdateWithoutAnomaliesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -927,7 +927,7 @@ export type AttendanceSessionUncheckedUpdateWithoutAnomaliesInput = {
   deviceId?: Prisma.IntFieldUpdateOperationsInput | number
   apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -940,7 +940,7 @@ export type AttendanceSessionCreateManyUserInput = {
   deviceId: number
   apId?: number | null
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -950,7 +950,7 @@ export type AttendanceSessionCreateManyUserInput = {
 export type AttendanceSessionUpdateWithoutUserInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -966,7 +966,7 @@ export type AttendanceSessionUncheckedUpdateWithoutUserInput = {
   deviceId?: Prisma.IntFieldUpdateOperationsInput | number
   apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -980,7 +980,7 @@ export type AttendanceSessionUncheckedUpdateManyWithoutUserInput = {
   deviceId?: Prisma.IntFieldUpdateOperationsInput | number
   apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -993,7 +993,7 @@ export type AttendanceSessionCreateManyDeviceInput = {
   userId: number
   apId?: number | null
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -1003,7 +1003,7 @@ export type AttendanceSessionCreateManyDeviceInput = {
 export type AttendanceSessionUpdateWithoutDeviceInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -1019,7 +1019,7 @@ export type AttendanceSessionUncheckedUpdateWithoutDeviceInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -1033,7 +1033,7 @@ export type AttendanceSessionUncheckedUpdateManyWithoutDeviceInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -1046,7 +1046,7 @@ export type AttendanceSessionCreateManyAccessPointInput = {
   userId: number
   deviceId: number
   startTime: Date | string
-  endTime: Date | string
+  endTime?: Date | string | null
   duration?: number | null
   confidenceScore?: number | null
   status?: $Enums.SessionStatus | null
@@ -1056,7 +1056,7 @@ export type AttendanceSessionCreateManyAccessPointInput = {
 export type AttendanceSessionUpdateWithoutAccessPointInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -1072,7 +1072,7 @@ export type AttendanceSessionUncheckedUpdateWithoutAccessPointInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   deviceId?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -1086,7 +1086,7 @@ export type AttendanceSessionUncheckedUpdateManyWithoutAccessPointInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   deviceId?: Prisma.IntFieldUpdateOperationsInput | number
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confidenceScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.NullableEnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus | null
@@ -1225,7 +1225,7 @@ export type $AttendanceSessionPayload<ExtArgs extends runtime.Types.Extensions.I
     deviceId: number
     apId: number | null
     startTime: Date
-    endTime: Date
+    endTime: Date | null
     duration: number | null
     confidenceScore: number | null
     status: $Enums.SessionStatus | null

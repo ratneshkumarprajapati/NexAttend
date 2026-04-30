@@ -7,6 +7,8 @@
   "scripts": {
     "build": "tsc -b",
     "dev": "npm run build && node dist/bootstrap.js",
+    "debug": "npm run build && node --inspect dist/bootstrap.js",
+    "debug:brk": "npm run build && node --inspect-brk dist/bootstrap.js",
     "watch": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

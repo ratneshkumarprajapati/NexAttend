@@ -1,7 +1,4 @@
 import prisma from "../../services/prisma/prisma.client.js";
-import type { RegisterDeviceInput } from "./device.types.js";
-
-
 
 
 export const deviceRepository={

@@ -89,7 +89,7 @@ model AttendanceSession {
   deviceId        Int
   apId            Int?
   startTime       DateTime
-  endTime         DateTime
+  endTime         DateTime?
   duration        Int?
   confidenceScore Float?
   status          SessionStatus?
