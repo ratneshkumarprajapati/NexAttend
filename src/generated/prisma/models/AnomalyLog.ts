@@ -29,21 +29,19 @@ export type AggregateAnomalyLog = {
 export type AnomalyLogAvgAggregateOutputType = {
   id: number | null
   sessionId: number | null
-  severity: number | null
 }
 
 export type AnomalyLogSumAggregateOutputType = {
   id: number | null
   sessionId: number | null
-  severity: number | null
 }
 
 export type AnomalyLogMinAggregateOutputType = {
   id: number | null
   publicId: string | null
   sessionId: number | null
-  type: string | null
-  severity: number | null
+  type: $Enums.AnomalyType | null
+  severity: $Enums.AnomalySeverity | null
   createdAt: Date | null
 }
 
@@ -51,8 +49,8 @@ export type AnomalyLogMaxAggregateOutputType = {
   id: number | null
   publicId: string | null
   sessionId: number | null
-  type: string | null
-  severity: number | null
+  type: $Enums.AnomalyType | null
+  severity: $Enums.AnomalySeverity | null
   createdAt: Date | null
 }
 
@@ -71,13 +69,11 @@ export type AnomalyLogCountAggregateOutputType = {
 export type AnomalyLogAvgAggregateInputType = {
   id?: true
   sessionId?: true
-  severity?: true
 }
 
 export type AnomalyLogSumAggregateInputType = {
   id?: true
   sessionId?: true
-  severity?: true
 }
 
 export type AnomalyLogMinAggregateInputType = {
@@ -199,8 +195,8 @@ export type AnomalyLogGroupByOutputType = {
   id: number
   publicId: string
   sessionId: number
-  type: string
-  severity: number
+  type: $Enums.AnomalyType
+  severity: $Enums.AnomalySeverity
   meta: runtime.JsonValue | null
   createdAt: Date
   _count: AnomalyLogCountAggregateOutputType | null
@@ -232,8 +228,8 @@ export type AnomalyLogWhereInput = {
   id?: Prisma.IntFilter<"AnomalyLog"> | number
   publicId?: Prisma.StringFilter<"AnomalyLog"> | string
   sessionId?: Prisma.IntFilter<"AnomalyLog"> | number
-  type?: Prisma.StringFilter<"AnomalyLog"> | string
-  severity?: Prisma.IntFilter<"AnomalyLog"> | number
+  type?: Prisma.EnumAnomalyTypeFilter<"AnomalyLog"> | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityFilter<"AnomalyLog"> | $Enums.AnomalySeverity
   meta?: Prisma.JsonNullableFilter<"AnomalyLog">
   createdAt?: Prisma.DateTimeFilter<"AnomalyLog"> | Date | string
   session?: Prisma.XOR<Prisma.AttendanceSessionScalarRelationFilter, Prisma.AttendanceSessionWhereInput>
@@ -257,8 +253,8 @@ export type AnomalyLogWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.AnomalyLogWhereInput[]
   NOT?: Prisma.AnomalyLogWhereInput | Prisma.AnomalyLogWhereInput[]
   sessionId?: Prisma.IntFilter<"AnomalyLog"> | number
-  type?: Prisma.StringFilter<"AnomalyLog"> | string
-  severity?: Prisma.IntFilter<"AnomalyLog"> | number
+  type?: Prisma.EnumAnomalyTypeFilter<"AnomalyLog"> | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityFilter<"AnomalyLog"> | $Enums.AnomalySeverity
   meta?: Prisma.JsonNullableFilter<"AnomalyLog">
   createdAt?: Prisma.DateTimeFilter<"AnomalyLog"> | Date | string
   session?: Prisma.XOR<Prisma.AttendanceSessionScalarRelationFilter, Prisma.AttendanceSessionWhereInput>
@@ -286,16 +282,16 @@ export type AnomalyLogScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"AnomalyLog"> | number
   publicId?: Prisma.StringWithAggregatesFilter<"AnomalyLog"> | string
   sessionId?: Prisma.IntWithAggregatesFilter<"AnomalyLog"> | number
-  type?: Prisma.StringWithAggregatesFilter<"AnomalyLog"> | string
-  severity?: Prisma.IntWithAggregatesFilter<"AnomalyLog"> | number
+  type?: Prisma.EnumAnomalyTypeWithAggregatesFilter<"AnomalyLog"> | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityWithAggregatesFilter<"AnomalyLog"> | $Enums.AnomalySeverity
   meta?: Prisma.JsonNullableWithAggregatesFilter<"AnomalyLog">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AnomalyLog"> | Date | string
 }
 
 export type AnomalyLogCreateInput = {
   publicId?: string
-  type: string
-  severity: number
+  type: $Enums.AnomalyType
+  severity: $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   session: Prisma.AttendanceSessionCreateNestedOneWithoutAnomaliesInput
@@ -305,16 +301,16 @@ export type AnomalyLogUncheckedCreateInput = {
   id?: number
   publicId?: string
   sessionId: number
-  type: string
-  severity: number
+  type: $Enums.AnomalyType
+  severity: $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
 export type AnomalyLogUpdateInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  severity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityFieldUpdateOperationsInput | $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   session?: Prisma.AttendanceSessionUpdateOneRequiredWithoutAnomaliesNestedInput
@@ -324,8 +320,8 @@ export type AnomalyLogUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   sessionId?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  severity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityFieldUpdateOperationsInput | $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -334,16 +330,16 @@ export type AnomalyLogCreateManyInput = {
   id?: number
   publicId?: string
   sessionId: number
-  type: string
-  severity: number
+  type: $Enums.AnomalyType
+  severity: $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
 export type AnomalyLogUpdateManyMutationInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  severity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityFieldUpdateOperationsInput | $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -352,8 +348,8 @@ export type AnomalyLogUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   sessionId?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  severity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityFieldUpdateOperationsInput | $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -381,7 +377,6 @@ export type AnomalyLogCountOrderByAggregateInput = {
 export type AnomalyLogAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
-  severity?: Prisma.SortOrder
 }
 
 export type AnomalyLogMaxOrderByAggregateInput = {
@@ -405,7 +400,6 @@ export type AnomalyLogMinOrderByAggregateInput = {
 export type AnomalyLogSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
-  severity?: Prisma.SortOrder
 }
 
 export type AnomalyLogCreateNestedManyWithoutSessionInput = {
@@ -450,10 +444,18 @@ export type AnomalyLogUncheckedUpdateManyWithoutSessionNestedInput = {
   deleteMany?: Prisma.AnomalyLogScalarWhereInput | Prisma.AnomalyLogScalarWhereInput[]
 }
 
+export type EnumAnomalyTypeFieldUpdateOperationsInput = {
+  set?: $Enums.AnomalyType
+}
+
+export type EnumAnomalySeverityFieldUpdateOperationsInput = {
+  set?: $Enums.AnomalySeverity
+}
+
 export type AnomalyLogCreateWithoutSessionInput = {
   publicId?: string
-  type: string
-  severity: number
+  type: $Enums.AnomalyType
+  severity: $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
@@ -461,8 +463,8 @@ export type AnomalyLogCreateWithoutSessionInput = {
 export type AnomalyLogUncheckedCreateWithoutSessionInput = {
   id?: number
   publicId?: string
-  type: string
-  severity: number
+  type: $Enums.AnomalyType
+  severity: $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
@@ -500,8 +502,8 @@ export type AnomalyLogScalarWhereInput = {
   id?: Prisma.IntFilter<"AnomalyLog"> | number
   publicId?: Prisma.StringFilter<"AnomalyLog"> | string
   sessionId?: Prisma.IntFilter<"AnomalyLog"> | number
-  type?: Prisma.StringFilter<"AnomalyLog"> | string
-  severity?: Prisma.IntFilter<"AnomalyLog"> | number
+  type?: Prisma.EnumAnomalyTypeFilter<"AnomalyLog"> | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityFilter<"AnomalyLog"> | $Enums.AnomalySeverity
   meta?: Prisma.JsonNullableFilter<"AnomalyLog">
   createdAt?: Prisma.DateTimeFilter<"AnomalyLog"> | Date | string
 }
@@ -509,16 +511,16 @@ export type AnomalyLogScalarWhereInput = {
 export type AnomalyLogCreateManySessionInput = {
   id?: number
   publicId?: string
-  type: string
-  severity: number
+  type: $Enums.AnomalyType
+  severity: $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
 export type AnomalyLogUpdateWithoutSessionInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  severity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityFieldUpdateOperationsInput | $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -526,8 +528,8 @@ export type AnomalyLogUpdateWithoutSessionInput = {
 export type AnomalyLogUncheckedUpdateWithoutSessionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  severity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityFieldUpdateOperationsInput | $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -535,8 +537,8 @@ export type AnomalyLogUncheckedUpdateWithoutSessionInput = {
 export type AnomalyLogUncheckedUpdateManyWithoutSessionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
-  severity?: Prisma.IntFieldUpdateOperationsInput | number
+  type?: Prisma.EnumAnomalyTypeFieldUpdateOperationsInput | $Enums.AnomalyType
+  severity?: Prisma.EnumAnomalySeverityFieldUpdateOperationsInput | $Enums.AnomalySeverity
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -606,8 +608,8 @@ export type $AnomalyLogPayload<ExtArgs extends runtime.Types.Extensions.Internal
     id: number
     publicId: string
     sessionId: number
-    type: string
-    severity: number
+    type: $Enums.AnomalyType
+    severity: $Enums.AnomalySeverity
     meta: runtime.JsonValue | null
     createdAt: Date
   }, ExtArgs["result"]["anomalyLog"]>
@@ -1037,8 +1039,8 @@ export interface AnomalyLogFieldRefs {
   readonly id: Prisma.FieldRef<"AnomalyLog", 'Int'>
   readonly publicId: Prisma.FieldRef<"AnomalyLog", 'String'>
   readonly sessionId: Prisma.FieldRef<"AnomalyLog", 'Int'>
-  readonly type: Prisma.FieldRef<"AnomalyLog", 'String'>
-  readonly severity: Prisma.FieldRef<"AnomalyLog", 'Int'>
+  readonly type: Prisma.FieldRef<"AnomalyLog", 'AnomalyType'>
+  readonly severity: Prisma.FieldRef<"AnomalyLog", 'AnomalySeverity'>
   readonly meta: Prisma.FieldRef<"AnomalyLog", 'Json'>
   readonly createdAt: Prisma.FieldRef<"AnomalyLog", 'DateTime'>
 }

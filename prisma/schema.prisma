@@ -25,20 +25,44 @@ enum SessionStatus {
   REJECTED
 }
 
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+}
+
+enum AnomalyType {
+  DEVICE_SWAP
+  DUPLICATE_SESSION
+  LOCATION_JUMP
+  SIGNAL_ANOMALY
+  IMPOSSIBLE_TRAVEL
+}
+
+enum AnomalySeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
 //MODELS
 
 model User {
-  id        Int                 @id @default(autoincrement())
-  publicId  String              @unique @default(cuid())
-  email     String              @unique
-  password  String
-  role      UserRole            @default(STUDENT)
-  createdAt DateTime            @default(now())
-  deletedAt DateTime?
-  updatedAt DateTime            @updatedAt
-  profile   Profile?
-  devices   Device[]
-  sessions  AttendanceSession[]
+  id             Int                 @id @default(autoincrement())
+  publicId       String              @unique @default(cuid())
+  email          String              @unique
+  password       String
+  role           UserRole            @default(STUDENT)
+  createdAt      DateTime            @default(now())
+  deletedAt      DateTime?
+  updatedAt      DateTime            @updatedAt
+  profile        Profile?
+  devices        Device[]
+  sessions       AttendanceSession[]
+  attendanceLogs AttendanceLog[]
+  attendanceDays AttendanceDaily[]
+
+  @@index([deletedAt])
 }
 
 ////////////////
@@ -51,7 +75,7 @@ model Profile {
   phoneNo        String?
   avatarUrl      String?
   department     String?
-  enrolmentNo    String?
+  enrolmentNo    String?  @unique
   year           Int?
   preprationGoal Json?
   createdAt      DateTime @default(now())
@@ -61,65 +85,124 @@ model Profile {
 //////////////////////
 
 model Device {
-  id         Int                 @id @default(autoincrement())
-  publicId   String              @unique @default(cuid())
-  userId     Int
-  deviceName String?
-  hashedMac  String              @unique
-  createdAt  DateTime            @default(now())
-  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sessions   AttendanceSession[]
-  logs       PresenceLog[]
+  id             Int                 @id @default(autoincrement())
+  publicId       String              @unique @default(cuid())
+  userId         Int
+  deviceName     String?
+  hashedMac      String              @unique
+  isActive       Boolean             @default(true)
+  deletedAt      DateTime?
+  createdAt      DateTime            @default(now())
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions       AttendanceSession[]
+  attendanceLogs AttendanceLog[]
+  presenceLogs   PresenceLog[]
+
+  @@index([userId])
+  @@index([isActive])
 }
 
 model AccessPoint {
-  id        Int                 @id @default(autoincrement())
-  publicId  String              @unique @default(cuid())
-  name      String
-  location  String?
-  sessions  AttendanceSession[]
-  logs      PresenceLog[]
-  createdAt DateTime            @default(now())
+  id           Int                 @id @default(autoincrement())
+  publicId     String              @unique @default(cuid())
+  name         String
+  location     String?
+  isActive     Boolean             @default(true)
+  sessions     AttendanceSession[]
+  presenceLogs PresenceLog[]
+  createdAt    DateTime            @default(now())
 }
 
 model AttendanceSession {
-  id              Int            @id @default(autoincrement())
-  publicId        String         @unique @default(cuid())
+  id              Int             @id @default(autoincrement())
+  publicId        String          @unique @default(cuid())
   userId          Int
   deviceId        Int
   apId            Int?
   startTime       DateTime
+  lastSeen        DateTime
   endTime         DateTime?
   duration        Int?
   confidenceScore Float?
-  status          SessionStatus?
-  createdAt       DateTime       @default(now())
-  user            User           @relation(fields: [userId], references: [id])
-  device          Device         @relation(fields: [deviceId], references: [id])
-  accessPoint     AccessPoint?   @relation(fields: [apId], references: [id])
+  status          SessionStatus   @default(VALID)
+  createdAt       DateTime        @default(now())
+  user            User            @relation(fields: [userId], references: [id])
+  device          Device          @relation(fields: [deviceId], references: [id])
+  accessPoint     AccessPoint?    @relation(fields: [apId], references: [id])
   anomalies       AnomalyLog[]
+  logs            AttendanceLog[]
+  presenceLogs    PresenceLog[]
 
   @@index([userId])
   @@index([deviceId])
+  @@index([apId])
+  @@index([status])
   @@index([startTime, endTime])
+  @@index([userId, startTime])
+}
+
+model AttendanceLog {
+  id       Int    @id @default(autoincrement())
+  publicId String @unique @default(cuid())
+
+  sessionId Int?
+  userId    Int
+  deviceId  Int
+
+  timestamp DateTime
+  status    AttendanceStatus
+
+  createdAt DateTime @default(now())
+
+  session AttendanceSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  user    User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device  Device             @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([deviceId])
+  @@index([timestamp])
+  @@index([userId, timestamp])
+  @@index([sessionId, timestamp])
+}
+
+model AttendanceDaily {
+  id            Int       @id @default(autoincrement())
+  publicId      String    @unique @default(cuid())
+  userId        Int
+  date          DateTime  @db.Date
+  totalDuration Int       @default(0)
+  firstSeen     DateTime?
+  lastSeen      DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([date])
+  @@index([userId, date])
 }
 
 model PresenceLog {
   id       Int    @id @default(autoincrement())
   publicId String @unique @default(cuid())
 
-  deviceId Int
-  apId     Int?
+  deviceId  Int
+  apId      Int?
+  sessionId Int?
 
   rssi   Int?
   seenAt DateTime
 
   createdAt DateTime @default(now())
 
-  device      Device       @relation(fields: [deviceId], references: [id])
-  accessPoint AccessPoint? @relation(fields: [apId], references: [id])
+  device      Device             @relation(fields: [deviceId], references: [id])
+  accessPoint AccessPoint?       @relation(fields: [apId], references: [id])
+  session     AttendanceSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
 
   @@index([deviceId, seenAt])
+  @@index([sessionId])
 }
 
 model AnomalyLog {
@@ -128,11 +211,15 @@ model AnomalyLog {
 
   sessionId Int
 
-  type     String
-  severity Int
+  type     AnomalyType
+  severity AnomalySeverity
   meta     Json?
 
   createdAt DateTime @default(now())
 
   session AttendanceSession @relation(fields: [sessionId], references: [id])
+
+  @@index([sessionId])
+  @@index([type])
+  @@index([severity])
 }

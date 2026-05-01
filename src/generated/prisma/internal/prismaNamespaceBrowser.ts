@@ -56,6 +56,8 @@ export const ModelName = {
   Device: 'Device',
   AccessPoint: 'AccessPoint',
   AttendanceSession: 'AttendanceSession',
+  AttendanceLog: 'AttendanceLog',
+  AttendanceDaily: 'AttendanceDaily',
   PresenceLog: 'PresenceLog',
   AnomalyLog: 'AnomalyLog'
 } as const
@@ -114,6 +116,8 @@ export const DeviceScalarFieldEnum = {
   userId: 'userId',
   deviceName: 'deviceName',
   hashedMac: 'hashedMac',
+  isActive: 'isActive',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -125,6 +129,7 @@ export const AccessPointScalarFieldEnum = {
   publicId: 'publicId',
   name: 'name',
   location: 'location',
+  isActive: 'isActive',
   createdAt: 'createdAt'
 } as const
 
@@ -138,6 +143,7 @@ export const AttendanceSessionScalarFieldEnum = {
   deviceId: 'deviceId',
   apId: 'apId',
   startTime: 'startTime',
+  lastSeen: 'lastSeen',
   endTime: 'endTime',
   duration: 'duration',
   confidenceScore: 'confidenceScore',
@@ -148,11 +154,41 @@ export const AttendanceSessionScalarFieldEnum = {
 export type AttendanceSessionScalarFieldEnum = (typeof AttendanceSessionScalarFieldEnum)[keyof typeof AttendanceSessionScalarFieldEnum]
 
 
+export const AttendanceLogScalarFieldEnum = {
+  id: 'id',
+  publicId: 'publicId',
+  sessionId: 'sessionId',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  timestamp: 'timestamp',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type AttendanceLogScalarFieldEnum = (typeof AttendanceLogScalarFieldEnum)[keyof typeof AttendanceLogScalarFieldEnum]
+
+
+export const AttendanceDailyScalarFieldEnum = {
+  id: 'id',
+  publicId: 'publicId',
+  userId: 'userId',
+  date: 'date',
+  totalDuration: 'totalDuration',
+  firstSeen: 'firstSeen',
+  lastSeen: 'lastSeen',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AttendanceDailyScalarFieldEnum = (typeof AttendanceDailyScalarFieldEnum)[keyof typeof AttendanceDailyScalarFieldEnum]
+
+
 export const PresenceLogScalarFieldEnum = {
   id: 'id',
   publicId: 'publicId',
   deviceId: 'deviceId',
   apId: 'apId',
+  sessionId: 'sessionId',
   rssi: 'rssi',
   seenAt: 'seenAt',
   createdAt: 'createdAt'

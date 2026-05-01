@@ -28,7 +28,6 @@ export const deviceService={
     },
     async identifyDevice(macAddress:string){
         const hashedMac=hashMac(macAddress);
-        console.log("hashedmac",hashedMac)
         return deviceRepository.findHashedMac(hashedMac)
     }
 

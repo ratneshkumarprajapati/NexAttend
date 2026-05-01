@@ -39,6 +39,7 @@ export type AccessPointMinAggregateOutputType = {
   publicId: string | null
   name: string | null
   location: string | null
+  isActive: boolean | null
   createdAt: Date | null
 }
 
@@ -47,6 +48,7 @@ export type AccessPointMaxAggregateOutputType = {
   publicId: string | null
   name: string | null
   location: string | null
+  isActive: boolean | null
   createdAt: Date | null
 }
 
@@ -55,6 +57,7 @@ export type AccessPointCountAggregateOutputType = {
   publicId: number
   name: number
   location: number
+  isActive: number
   createdAt: number
   _all: number
 }
@@ -73,6 +76,7 @@ export type AccessPointMinAggregateInputType = {
   publicId?: true
   name?: true
   location?: true
+  isActive?: true
   createdAt?: true
 }
 
@@ -81,6 +85,7 @@ export type AccessPointMaxAggregateInputType = {
   publicId?: true
   name?: true
   location?: true
+  isActive?: true
   createdAt?: true
 }
 
@@ -89,6 +94,7 @@ export type AccessPointCountAggregateInputType = {
   publicId?: true
   name?: true
   location?: true
+  isActive?: true
   createdAt?: true
   _all?: true
 }
@@ -184,6 +190,7 @@ export type AccessPointGroupByOutputType = {
   publicId: string
   name: string
   location: string | null
+  isActive: boolean
   createdAt: Date
   _count: AccessPointCountAggregateOutputType | null
   _avg: AccessPointAvgAggregateOutputType | null
@@ -215,9 +222,10 @@ export type AccessPointWhereInput = {
   publicId?: Prisma.StringFilter<"AccessPoint"> | string
   name?: Prisma.StringFilter<"AccessPoint"> | string
   location?: Prisma.StringNullableFilter<"AccessPoint"> | string | null
+  isActive?: Prisma.BoolFilter<"AccessPoint"> | boolean
   createdAt?: Prisma.DateTimeFilter<"AccessPoint"> | Date | string
   sessions?: Prisma.AttendanceSessionListRelationFilter
-  logs?: Prisma.PresenceLogListRelationFilter
+  presenceLogs?: Prisma.PresenceLogListRelationFilter
 }
 
 export type AccessPointOrderByWithRelationInput = {
@@ -225,9 +233,10 @@ export type AccessPointOrderByWithRelationInput = {
   publicId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sessions?: Prisma.AttendanceSessionOrderByRelationAggregateInput
-  logs?: Prisma.PresenceLogOrderByRelationAggregateInput
+  presenceLogs?: Prisma.PresenceLogOrderByRelationAggregateInput
 }
 
 export type AccessPointWhereUniqueInput = Prisma.AtLeast<{
@@ -238,9 +247,10 @@ export type AccessPointWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.AccessPointWhereInput | Prisma.AccessPointWhereInput[]
   name?: Prisma.StringFilter<"AccessPoint"> | string
   location?: Prisma.StringNullableFilter<"AccessPoint"> | string | null
+  isActive?: Prisma.BoolFilter<"AccessPoint"> | boolean
   createdAt?: Prisma.DateTimeFilter<"AccessPoint"> | Date | string
   sessions?: Prisma.AttendanceSessionListRelationFilter
-  logs?: Prisma.PresenceLogListRelationFilter
+  presenceLogs?: Prisma.PresenceLogListRelationFilter
 }, "id" | "publicId">
 
 export type AccessPointOrderByWithAggregationInput = {
@@ -248,6 +258,7 @@ export type AccessPointOrderByWithAggregationInput = {
   publicId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.AccessPointCountOrderByAggregateInput
   _avg?: Prisma.AccessPointAvgOrderByAggregateInput
@@ -264,6 +275,7 @@ export type AccessPointScalarWhereWithAggregatesInput = {
   publicId?: Prisma.StringWithAggregatesFilter<"AccessPoint"> | string
   name?: Prisma.StringWithAggregatesFilter<"AccessPoint"> | string
   location?: Prisma.StringNullableWithAggregatesFilter<"AccessPoint"> | string | null
+  isActive?: Prisma.BoolWithAggregatesFilter<"AccessPoint"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AccessPoint"> | Date | string
 }
 
@@ -271,9 +283,10 @@ export type AccessPointCreateInput = {
   publicId?: string
   name: string
   location?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutAccessPointInput
-  logs?: Prisma.PresenceLogCreateNestedManyWithoutAccessPointInput
+  presenceLogs?: Prisma.PresenceLogCreateNestedManyWithoutAccessPointInput
 }
 
 export type AccessPointUncheckedCreateInput = {
@@ -281,18 +294,20 @@ export type AccessPointUncheckedCreateInput = {
   publicId?: string
   name: string
   location?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutAccessPointInput
-  logs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutAccessPointInput
+  presenceLogs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutAccessPointInput
 }
 
 export type AccessPointUpdateInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AttendanceSessionUpdateManyWithoutAccessPointNestedInput
-  logs?: Prisma.PresenceLogUpdateManyWithoutAccessPointNestedInput
+  presenceLogs?: Prisma.PresenceLogUpdateManyWithoutAccessPointNestedInput
 }
 
 export type AccessPointUncheckedUpdateInput = {
@@ -300,9 +315,10 @@ export type AccessPointUncheckedUpdateInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutAccessPointNestedInput
-  logs?: Prisma.PresenceLogUncheckedUpdateManyWithoutAccessPointNestedInput
+  presenceLogs?: Prisma.PresenceLogUncheckedUpdateManyWithoutAccessPointNestedInput
 }
 
 export type AccessPointCreateManyInput = {
@@ -310,6 +326,7 @@ export type AccessPointCreateManyInput = {
   publicId?: string
   name: string
   location?: string | null
+  isActive?: boolean
   createdAt?: Date | string
 }
 
@@ -317,6 +334,7 @@ export type AccessPointUpdateManyMutationInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -325,6 +343,7 @@ export type AccessPointUncheckedUpdateManyInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -333,6 +352,7 @@ export type AccessPointCountOrderByAggregateInput = {
   publicId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -345,6 +365,7 @@ export type AccessPointMaxOrderByAggregateInput = {
   publicId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -353,6 +374,7 @@ export type AccessPointMinOrderByAggregateInput = {
   publicId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -381,28 +403,29 @@ export type AccessPointUpdateOneWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AccessPointUpdateToOneWithWhereWithoutSessionsInput, Prisma.AccessPointUpdateWithoutSessionsInput>, Prisma.AccessPointUncheckedUpdateWithoutSessionsInput>
 }
 
-export type AccessPointCreateNestedOneWithoutLogsInput = {
-  create?: Prisma.XOR<Prisma.AccessPointCreateWithoutLogsInput, Prisma.AccessPointUncheckedCreateWithoutLogsInput>
-  connectOrCreate?: Prisma.AccessPointCreateOrConnectWithoutLogsInput
+export type AccessPointCreateNestedOneWithoutPresenceLogsInput = {
+  create?: Prisma.XOR<Prisma.AccessPointCreateWithoutPresenceLogsInput, Prisma.AccessPointUncheckedCreateWithoutPresenceLogsInput>
+  connectOrCreate?: Prisma.AccessPointCreateOrConnectWithoutPresenceLogsInput
   connect?: Prisma.AccessPointWhereUniqueInput
 }
 
-export type AccessPointUpdateOneWithoutLogsNestedInput = {
-  create?: Prisma.XOR<Prisma.AccessPointCreateWithoutLogsInput, Prisma.AccessPointUncheckedCreateWithoutLogsInput>
-  connectOrCreate?: Prisma.AccessPointCreateOrConnectWithoutLogsInput
-  upsert?: Prisma.AccessPointUpsertWithoutLogsInput
+export type AccessPointUpdateOneWithoutPresenceLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.AccessPointCreateWithoutPresenceLogsInput, Prisma.AccessPointUncheckedCreateWithoutPresenceLogsInput>
+  connectOrCreate?: Prisma.AccessPointCreateOrConnectWithoutPresenceLogsInput
+  upsert?: Prisma.AccessPointUpsertWithoutPresenceLogsInput
   disconnect?: Prisma.AccessPointWhereInput | boolean
   delete?: Prisma.AccessPointWhereInput | boolean
   connect?: Prisma.AccessPointWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.AccessPointUpdateToOneWithWhereWithoutLogsInput, Prisma.AccessPointUpdateWithoutLogsInput>, Prisma.AccessPointUncheckedUpdateWithoutLogsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AccessPointUpdateToOneWithWhereWithoutPresenceLogsInput, Prisma.AccessPointUpdateWithoutPresenceLogsInput>, Prisma.AccessPointUncheckedUpdateWithoutPresenceLogsInput>
 }
 
 export type AccessPointCreateWithoutSessionsInput = {
   publicId?: string
   name: string
   location?: string | null
+  isActive?: boolean
   createdAt?: Date | string
-  logs?: Prisma.PresenceLogCreateNestedManyWithoutAccessPointInput
+  presenceLogs?: Prisma.PresenceLogCreateNestedManyWithoutAccessPointInput
 }
 
 export type AccessPointUncheckedCreateWithoutSessionsInput = {
@@ -410,8 +433,9 @@ export type AccessPointUncheckedCreateWithoutSessionsInput = {
   publicId?: string
   name: string
   location?: string | null
+  isActive?: boolean
   createdAt?: Date | string
-  logs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutAccessPointInput
+  presenceLogs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutAccessPointInput
 }
 
 export type AccessPointCreateOrConnectWithoutSessionsInput = {
@@ -434,8 +458,9 @@ export type AccessPointUpdateWithoutSessionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  logs?: Prisma.PresenceLogUpdateManyWithoutAccessPointNestedInput
+  presenceLogs?: Prisma.PresenceLogUpdateManyWithoutAccessPointNestedInput
 }
 
 export type AccessPointUncheckedUpdateWithoutSessionsInput = {
@@ -443,56 +468,61 @@ export type AccessPointUncheckedUpdateWithoutSessionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  logs?: Prisma.PresenceLogUncheckedUpdateManyWithoutAccessPointNestedInput
+  presenceLogs?: Prisma.PresenceLogUncheckedUpdateManyWithoutAccessPointNestedInput
 }
 
-export type AccessPointCreateWithoutLogsInput = {
+export type AccessPointCreateWithoutPresenceLogsInput = {
   publicId?: string
   name: string
   location?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutAccessPointInput
 }
 
-export type AccessPointUncheckedCreateWithoutLogsInput = {
+export type AccessPointUncheckedCreateWithoutPresenceLogsInput = {
   id?: number
   publicId?: string
   name: string
   location?: string | null
+  isActive?: boolean
   createdAt?: Date | string
   sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutAccessPointInput
 }
 
-export type AccessPointCreateOrConnectWithoutLogsInput = {
+export type AccessPointCreateOrConnectWithoutPresenceLogsInput = {
   where: Prisma.AccessPointWhereUniqueInput
-  create: Prisma.XOR<Prisma.AccessPointCreateWithoutLogsInput, Prisma.AccessPointUncheckedCreateWithoutLogsInput>
+  create: Prisma.XOR<Prisma.AccessPointCreateWithoutPresenceLogsInput, Prisma.AccessPointUncheckedCreateWithoutPresenceLogsInput>
 }
 
-export type AccessPointUpsertWithoutLogsInput = {
-  update: Prisma.XOR<Prisma.AccessPointUpdateWithoutLogsInput, Prisma.AccessPointUncheckedUpdateWithoutLogsInput>
-  create: Prisma.XOR<Prisma.AccessPointCreateWithoutLogsInput, Prisma.AccessPointUncheckedCreateWithoutLogsInput>
+export type AccessPointUpsertWithoutPresenceLogsInput = {
+  update: Prisma.XOR<Prisma.AccessPointUpdateWithoutPresenceLogsInput, Prisma.AccessPointUncheckedUpdateWithoutPresenceLogsInput>
+  create: Prisma.XOR<Prisma.AccessPointCreateWithoutPresenceLogsInput, Prisma.AccessPointUncheckedCreateWithoutPresenceLogsInput>
   where?: Prisma.AccessPointWhereInput
 }
 
-export type AccessPointUpdateToOneWithWhereWithoutLogsInput = {
+export type AccessPointUpdateToOneWithWhereWithoutPresenceLogsInput = {
   where?: Prisma.AccessPointWhereInput
-  data: Prisma.XOR<Prisma.AccessPointUpdateWithoutLogsInput, Prisma.AccessPointUncheckedUpdateWithoutLogsInput>
+  data: Prisma.XOR<Prisma.AccessPointUpdateWithoutPresenceLogsInput, Prisma.AccessPointUncheckedUpdateWithoutPresenceLogsInput>
 }
 
-export type AccessPointUpdateWithoutLogsInput = {
+export type AccessPointUpdateWithoutPresenceLogsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AttendanceSessionUpdateManyWithoutAccessPointNestedInput
 }
 
-export type AccessPointUncheckedUpdateWithoutLogsInput = {
+export type AccessPointUncheckedUpdateWithoutPresenceLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutAccessPointNestedInput
 }
@@ -504,12 +534,12 @@ export type AccessPointUncheckedUpdateWithoutLogsInput = {
 
 export type AccessPointCountOutputType = {
   sessions: number
-  logs: number
+  presenceLogs: number
 }
 
 export type AccessPointCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | AccessPointCountOutputTypeCountSessionsArgs
-  logs?: boolean | AccessPointCountOutputTypeCountLogsArgs
+  presenceLogs?: boolean | AccessPointCountOutputTypeCountPresenceLogsArgs
 }
 
 /**
@@ -532,7 +562,7 @@ export type AccessPointCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.
 /**
  * AccessPointCountOutputType without action
  */
-export type AccessPointCountOutputTypeCountLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type AccessPointCountOutputTypeCountPresenceLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PresenceLogWhereInput
 }
 
@@ -542,9 +572,10 @@ export type AccessPointSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   publicId?: boolean
   name?: boolean
   location?: boolean
+  isActive?: boolean
   createdAt?: boolean
   sessions?: boolean | Prisma.AccessPoint$sessionsArgs<ExtArgs>
-  logs?: boolean | Prisma.AccessPoint$logsArgs<ExtArgs>
+  presenceLogs?: boolean | Prisma.AccessPoint$presenceLogsArgs<ExtArgs>
   _count?: boolean | Prisma.AccessPointCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["accessPoint"]>
 
@@ -553,6 +584,7 @@ export type AccessPointSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   publicId?: boolean
   name?: boolean
   location?: boolean
+  isActive?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["accessPoint"]>
 
@@ -561,6 +593,7 @@ export type AccessPointSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   publicId?: boolean
   name?: boolean
   location?: boolean
+  isActive?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["accessPoint"]>
 
@@ -569,13 +602,14 @@ export type AccessPointSelectScalar = {
   publicId?: boolean
   name?: boolean
   location?: boolean
+  isActive?: boolean
   createdAt?: boolean
 }
 
-export type AccessPointOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "location" | "createdAt", ExtArgs["result"]["accessPoint"]>
+export type AccessPointOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "location" | "isActive" | "createdAt", ExtArgs["result"]["accessPoint"]>
 export type AccessPointInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.AccessPoint$sessionsArgs<ExtArgs>
-  logs?: boolean | Prisma.AccessPoint$logsArgs<ExtArgs>
+  presenceLogs?: boolean | Prisma.AccessPoint$presenceLogsArgs<ExtArgs>
   _count?: boolean | Prisma.AccessPointCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AccessPointIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -585,13 +619,14 @@ export type $AccessPointPayload<ExtArgs extends runtime.Types.Extensions.Interna
   name: "AccessPoint"
   objects: {
     sessions: Prisma.$AttendanceSessionPayload<ExtArgs>[]
-    logs: Prisma.$PresenceLogPayload<ExtArgs>[]
+    presenceLogs: Prisma.$PresenceLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     publicId: string
     name: string
     location: string | null
+    isActive: boolean
     createdAt: Date
   }, ExtArgs["result"]["accessPoint"]>
   composites: {}
@@ -988,7 +1023,7 @@ readonly fields: AccessPointFieldRefs;
 export interface Prisma__AccessPointClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sessions<T extends Prisma.AccessPoint$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccessPoint$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  logs<T extends Prisma.AccessPoint$logsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccessPoint$logsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PresenceLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  presenceLogs<T extends Prisma.AccessPoint$presenceLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccessPoint$presenceLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PresenceLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1022,6 +1057,7 @@ export interface AccessPointFieldRefs {
   readonly publicId: Prisma.FieldRef<"AccessPoint", 'String'>
   readonly name: Prisma.FieldRef<"AccessPoint", 'String'>
   readonly location: Prisma.FieldRef<"AccessPoint", 'String'>
+  readonly isActive: Prisma.FieldRef<"AccessPoint", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"AccessPoint", 'DateTime'>
 }
     
@@ -1440,9 +1476,9 @@ export type AccessPoint$sessionsArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
- * AccessPoint.logs
+ * AccessPoint.presenceLogs
  */
-export type AccessPoint$logsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type AccessPoint$presenceLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the PresenceLog
    */

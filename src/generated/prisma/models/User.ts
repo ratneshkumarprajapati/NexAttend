@@ -243,6 +243,8 @@ export type UserWhereInput = {
   profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.ProfileWhereInput> | null
   devices?: Prisma.DeviceListRelationFilter
   sessions?: Prisma.AttendanceSessionListRelationFilter
+  attendanceLogs?: Prisma.AttendanceLogListRelationFilter
+  attendanceDays?: Prisma.AttendanceDailyListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -257,6 +259,8 @@ export type UserOrderByWithRelationInput = {
   profile?: Prisma.ProfileOrderByWithRelationInput
   devices?: Prisma.DeviceOrderByRelationAggregateInput
   sessions?: Prisma.AttendanceSessionOrderByRelationAggregateInput
+  attendanceLogs?: Prisma.AttendanceLogOrderByRelationAggregateInput
+  attendanceDays?: Prisma.AttendanceDailyOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -274,6 +278,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   profile?: Prisma.XOR<Prisma.ProfileNullableScalarRelationFilter, Prisma.ProfileWhereInput> | null
   devices?: Prisma.DeviceListRelationFilter
   sessions?: Prisma.AttendanceSessionListRelationFilter
+  attendanceLogs?: Prisma.AttendanceLogListRelationFilter
+  attendanceDays?: Prisma.AttendanceDailyListRelationFilter
 }, "id" | "publicId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -317,6 +323,8 @@ export type UserCreateInput = {
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutUserInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutUserInput
+  attendanceDays?: Prisma.AttendanceDailyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -331,6 +339,8 @@ export type UserUncheckedCreateInput = {
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutUserInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutUserInput
+  attendanceDays?: Prisma.AttendanceDailyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -344,6 +354,8 @@ export type UserUpdateInput = {
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AttendanceSessionUpdateManyWithoutUserNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutUserNestedInput
+  attendanceDays?: Prisma.AttendanceDailyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -358,6 +370,8 @@ export type UserUncheckedUpdateInput = {
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutUserNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutUserNestedInput
+  attendanceDays?: Prisma.AttendanceDailyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -504,6 +518,34 @@ export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionsInput, Prisma.UserUpdateWithoutSessionsInput>, Prisma.UserUncheckedUpdateWithoutSessionsInput>
 }
 
+export type UserCreateNestedOneWithoutAttendanceLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAttendanceLogsInput, Prisma.UserUncheckedCreateWithoutAttendanceLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAttendanceLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAttendanceLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAttendanceLogsInput, Prisma.UserUncheckedCreateWithoutAttendanceLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAttendanceLogsInput
+  upsert?: Prisma.UserUpsertWithoutAttendanceLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAttendanceLogsInput, Prisma.UserUpdateWithoutAttendanceLogsInput>, Prisma.UserUncheckedUpdateWithoutAttendanceLogsInput>
+}
+
+export type UserCreateNestedOneWithoutAttendanceDaysInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAttendanceDaysInput, Prisma.UserUncheckedCreateWithoutAttendanceDaysInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAttendanceDaysInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAttendanceDaysNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAttendanceDaysInput, Prisma.UserUncheckedCreateWithoutAttendanceDaysInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAttendanceDaysInput
+  upsert?: Prisma.UserUpsertWithoutAttendanceDaysInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAttendanceDaysInput, Prisma.UserUpdateWithoutAttendanceDaysInput>, Prisma.UserUncheckedUpdateWithoutAttendanceDaysInput>
+}
+
 export type UserCreateWithoutProfileInput = {
   publicId?: string
   email: string
@@ -514,6 +556,8 @@ export type UserCreateWithoutProfileInput = {
   updatedAt?: Date | string
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
   sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutUserInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutUserInput
+  attendanceDays?: Prisma.AttendanceDailyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -527,6 +571,8 @@ export type UserUncheckedCreateWithoutProfileInput = {
   updatedAt?: Date | string
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutUserInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutUserInput
+  attendanceDays?: Prisma.AttendanceDailyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -555,6 +601,8 @@ export type UserUpdateWithoutProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AttendanceSessionUpdateManyWithoutUserNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutUserNestedInput
+  attendanceDays?: Prisma.AttendanceDailyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -568,6 +616,8 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutUserNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutUserNestedInput
+  attendanceDays?: Prisma.AttendanceDailyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDevicesInput = {
@@ -580,6 +630,8 @@ export type UserCreateWithoutDevicesInput = {
   updatedAt?: Date | string
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutUserInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutUserInput
+  attendanceDays?: Prisma.AttendanceDailyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDevicesInput = {
@@ -593,6 +645,8 @@ export type UserUncheckedCreateWithoutDevicesInput = {
   updatedAt?: Date | string
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutUserInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutUserInput
+  attendanceDays?: Prisma.AttendanceDailyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDevicesInput = {
@@ -621,6 +675,8 @@ export type UserUpdateWithoutDevicesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   sessions?: Prisma.AttendanceSessionUpdateManyWithoutUserNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutUserNestedInput
+  attendanceDays?: Prisma.AttendanceDailyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDevicesInput = {
@@ -634,6 +690,8 @@ export type UserUncheckedUpdateWithoutDevicesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutUserNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutUserNestedInput
+  attendanceDays?: Prisma.AttendanceDailyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -646,6 +704,8 @@ export type UserCreateWithoutSessionsInput = {
   updatedAt?: Date | string
   profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutUserInput
+  attendanceDays?: Prisma.AttendanceDailyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -659,6 +719,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   updatedAt?: Date | string
   profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
   devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutUserInput
+  attendanceDays?: Prisma.AttendanceDailyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -687,6 +749,8 @@ export type UserUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutUserNestedInput
+  attendanceDays?: Prisma.AttendanceDailyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -700,6 +764,156 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
   devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutUserNestedInput
+  attendanceDays?: Prisma.AttendanceDailyUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAttendanceLogsInput = {
+  publicId?: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  updatedAt?: Date | string
+  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutUserInput
+  attendanceDays?: Prisma.AttendanceDailyCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAttendanceLogsInput = {
+  id?: number
+  publicId?: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  updatedAt?: Date | string
+  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutUserInput
+  attendanceDays?: Prisma.AttendanceDailyUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAttendanceLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAttendanceLogsInput, Prisma.UserUncheckedCreateWithoutAttendanceLogsInput>
+}
+
+export type UserUpsertWithoutAttendanceLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAttendanceLogsInput, Prisma.UserUncheckedUpdateWithoutAttendanceLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAttendanceLogsInput, Prisma.UserUncheckedCreateWithoutAttendanceLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAttendanceLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAttendanceLogsInput, Prisma.UserUncheckedUpdateWithoutAttendanceLogsInput>
+}
+
+export type UserUpdateWithoutAttendanceLogsInput = {
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AttendanceSessionUpdateManyWithoutUserNestedInput
+  attendanceDays?: Prisma.AttendanceDailyUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAttendanceLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutUserNestedInput
+  attendanceDays?: Prisma.AttendanceDailyUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAttendanceDaysInput = {
+  publicId?: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  updatedAt?: Date | string
+  profile?: Prisma.ProfileCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutUserInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAttendanceDaysInput = {
+  id?: number
+  publicId?: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  deletedAt?: Date | string | null
+  updatedAt?: Date | string
+  profile?: Prisma.ProfileUncheckedCreateNestedOneWithoutUserInput
+  devices?: Prisma.DeviceUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutUserInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAttendanceDaysInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAttendanceDaysInput, Prisma.UserUncheckedCreateWithoutAttendanceDaysInput>
+}
+
+export type UserUpsertWithoutAttendanceDaysInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAttendanceDaysInput, Prisma.UserUncheckedUpdateWithoutAttendanceDaysInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAttendanceDaysInput, Prisma.UserUncheckedCreateWithoutAttendanceDaysInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAttendanceDaysInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAttendanceDaysInput, Prisma.UserUncheckedUpdateWithoutAttendanceDaysInput>
+}
+
+export type UserUpdateWithoutAttendanceDaysInput = {
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profile?: Prisma.ProfileUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AttendanceSessionUpdateManyWithoutUserNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAttendanceDaysInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profile?: Prisma.ProfileUncheckedUpdateOneWithoutUserNestedInput
+  devices?: Prisma.DeviceUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutUserNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -710,11 +924,15 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
 export type UserCountOutputType = {
   devices: number
   sessions: number
+  attendanceLogs: number
+  attendanceDays: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   devices?: boolean | UserCountOutputTypeCountDevicesArgs
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+  attendanceLogs?: boolean | UserCountOutputTypeCountAttendanceLogsArgs
+  attendanceDays?: boolean | UserCountOutputTypeCountAttendanceDaysArgs
 }
 
 /**
@@ -741,6 +959,20 @@ export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.AttendanceSessionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAttendanceLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttendanceLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAttendanceDaysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttendanceDailyWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -754,6 +986,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   devices?: boolean | Prisma.User$devicesArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  attendanceLogs?: boolean | Prisma.User$attendanceLogsArgs<ExtArgs>
+  attendanceDays?: boolean | Prisma.User$attendanceDaysArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -795,6 +1029,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   devices?: boolean | Prisma.User$devicesArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  attendanceLogs?: boolean | Prisma.User$attendanceLogsArgs<ExtArgs>
+  attendanceDays?: boolean | Prisma.User$attendanceDaysArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -806,6 +1042,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     profile: Prisma.$ProfilePayload<ExtArgs> | null
     devices: Prisma.$DevicePayload<ExtArgs>[]
     sessions: Prisma.$AttendanceSessionPayload<ExtArgs>[]
+    attendanceLogs: Prisma.$AttendanceLogPayload<ExtArgs>[]
+    attendanceDays: Prisma.$AttendanceDailyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1213,6 +1451,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   profile<T extends Prisma.User$profileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   devices<T extends Prisma.User$devicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attendanceLogs<T extends Prisma.User$attendanceLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attendanceLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attendanceDays<T extends Prisma.User$attendanceDaysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attendanceDaysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceDailyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1707,6 +1947,54 @@ export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.AttendanceSessionScalarFieldEnum | Prisma.AttendanceSessionScalarFieldEnum[]
+}
+
+/**
+ * User.attendanceLogs
+ */
+export type User$attendanceLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttendanceLog
+   */
+  select?: Prisma.AttendanceLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttendanceLog
+   */
+  omit?: Prisma.AttendanceLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttendanceLogInclude<ExtArgs> | null
+  where?: Prisma.AttendanceLogWhereInput
+  orderBy?: Prisma.AttendanceLogOrderByWithRelationInput | Prisma.AttendanceLogOrderByWithRelationInput[]
+  cursor?: Prisma.AttendanceLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttendanceLogScalarFieldEnum | Prisma.AttendanceLogScalarFieldEnum[]
+}
+
+/**
+ * User.attendanceDays
+ */
+export type User$attendanceDaysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttendanceDaily
+   */
+  select?: Prisma.AttendanceDailySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttendanceDaily
+   */
+  omit?: Prisma.AttendanceDailyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttendanceDailyInclude<ExtArgs> | null
+  where?: Prisma.AttendanceDailyWhereInput
+  orderBy?: Prisma.AttendanceDailyOrderByWithRelationInput | Prisma.AttendanceDailyOrderByWithRelationInput[]
+  cursor?: Prisma.AttendanceDailyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttendanceDailyScalarFieldEnum | Prisma.AttendanceDailyScalarFieldEnum[]
 }
 
 /**

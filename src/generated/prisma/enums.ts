@@ -24,3 +24,32 @@ export const SessionStatus = {
 } as const
 
 export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus]
+
+
+export const AttendanceStatus = {
+  PRESENT: 'PRESENT',
+  ABSENT: 'ABSENT'
+} as const
+
+export type AttendanceStatus = (typeof AttendanceStatus)[keyof typeof AttendanceStatus]
+
+
+export const AnomalyType = {
+  DEVICE_SWAP: 'DEVICE_SWAP',
+  DUPLICATE_SESSION: 'DUPLICATE_SESSION',
+  LOCATION_JUMP: 'LOCATION_JUMP',
+  SIGNAL_ANOMALY: 'SIGNAL_ANOMALY',
+  IMPOSSIBLE_TRAVEL: 'IMPOSSIBLE_TRAVEL'
+} as const
+
+export type AnomalyType = (typeof AnomalyType)[keyof typeof AnomalyType]
+
+
+export const AnomalySeverity = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+} as const
+
+export type AnomalySeverity = (typeof AnomalySeverity)[keyof typeof AnomalySeverity]

@@ -42,6 +42,8 @@ export type DeviceMinAggregateOutputType = {
   userId: number | null
   deviceName: string | null
   hashedMac: string | null
+  isActive: boolean | null
+  deletedAt: Date | null
   createdAt: Date | null
 }
 
@@ -51,6 +53,8 @@ export type DeviceMaxAggregateOutputType = {
   userId: number | null
   deviceName: string | null
   hashedMac: string | null
+  isActive: boolean | null
+  deletedAt: Date | null
   createdAt: Date | null
 }
 
@@ -60,6 +64,8 @@ export type DeviceCountAggregateOutputType = {
   userId: number
   deviceName: number
   hashedMac: number
+  isActive: number
+  deletedAt: number
   createdAt: number
   _all: number
 }
@@ -81,6 +87,8 @@ export type DeviceMinAggregateInputType = {
   userId?: true
   deviceName?: true
   hashedMac?: true
+  isActive?: true
+  deletedAt?: true
   createdAt?: true
 }
 
@@ -90,6 +98,8 @@ export type DeviceMaxAggregateInputType = {
   userId?: true
   deviceName?: true
   hashedMac?: true
+  isActive?: true
+  deletedAt?: true
   createdAt?: true
 }
 
@@ -99,6 +109,8 @@ export type DeviceCountAggregateInputType = {
   userId?: true
   deviceName?: true
   hashedMac?: true
+  isActive?: true
+  deletedAt?: true
   createdAt?: true
   _all?: true
 }
@@ -195,6 +207,8 @@ export type DeviceGroupByOutputType = {
   userId: number
   deviceName: string | null
   hashedMac: string
+  isActive: boolean
+  deletedAt: Date | null
   createdAt: Date
   _count: DeviceCountAggregateOutputType | null
   _avg: DeviceAvgAggregateOutputType | null
@@ -227,10 +241,13 @@ export type DeviceWhereInput = {
   userId?: Prisma.IntFilter<"Device"> | number
   deviceName?: Prisma.StringNullableFilter<"Device"> | string | null
   hashedMac?: Prisma.StringFilter<"Device"> | string
+  isActive?: Prisma.BoolFilter<"Device"> | boolean
+  deletedAt?: Prisma.DateTimeNullableFilter<"Device"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   sessions?: Prisma.AttendanceSessionListRelationFilter
-  logs?: Prisma.PresenceLogListRelationFilter
+  attendanceLogs?: Prisma.AttendanceLogListRelationFilter
+  presenceLogs?: Prisma.PresenceLogListRelationFilter
 }
 
 export type DeviceOrderByWithRelationInput = {
@@ -239,10 +256,13 @@ export type DeviceOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrderInput | Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   sessions?: Prisma.AttendanceSessionOrderByRelationAggregateInput
-  logs?: Prisma.PresenceLogOrderByRelationAggregateInput
+  attendanceLogs?: Prisma.AttendanceLogOrderByRelationAggregateInput
+  presenceLogs?: Prisma.PresenceLogOrderByRelationAggregateInput
 }
 
 export type DeviceWhereUniqueInput = Prisma.AtLeast<{
@@ -254,10 +274,13 @@ export type DeviceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DeviceWhereInput | Prisma.DeviceWhereInput[]
   userId?: Prisma.IntFilter<"Device"> | number
   deviceName?: Prisma.StringNullableFilter<"Device"> | string | null
+  isActive?: Prisma.BoolFilter<"Device"> | boolean
+  deletedAt?: Prisma.DateTimeNullableFilter<"Device"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   sessions?: Prisma.AttendanceSessionListRelationFilter
-  logs?: Prisma.PresenceLogListRelationFilter
+  attendanceLogs?: Prisma.AttendanceLogListRelationFilter
+  presenceLogs?: Prisma.PresenceLogListRelationFilter
 }, "id" | "publicId" | "hashedMac">
 
 export type DeviceOrderByWithAggregationInput = {
@@ -266,6 +289,8 @@ export type DeviceOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrderInput | Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.DeviceCountOrderByAggregateInput
   _avg?: Prisma.DeviceAvgOrderByAggregateInput
@@ -283,6 +308,8 @@ export type DeviceScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"Device"> | number
   deviceName?: Prisma.StringNullableWithAggregatesFilter<"Device"> | string | null
   hashedMac?: Prisma.StringWithAggregatesFilter<"Device"> | string
+  isActive?: Prisma.BoolWithAggregatesFilter<"Device"> | boolean
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Device"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Device"> | Date | string
 }
 
@@ -290,10 +317,13 @@ export type DeviceCreateInput = {
   publicId?: string
   deviceName?: string | null
   hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDevicesInput
   sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutDeviceInput
-  logs?: Prisma.PresenceLogCreateNestedManyWithoutDeviceInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutDeviceInput
+  presenceLogs?: Prisma.PresenceLogCreateNestedManyWithoutDeviceInput
 }
 
 export type DeviceUncheckedCreateInput = {
@@ -302,19 +332,25 @@ export type DeviceUncheckedCreateInput = {
   userId: number
   deviceName?: string | null
   hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutDeviceInput
-  logs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutDeviceInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutDeviceInput
+  presenceLogs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutDeviceInput
 }
 
 export type DeviceUpdateInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDevicesNestedInput
   sessions?: Prisma.AttendanceSessionUpdateManyWithoutDeviceNestedInput
-  logs?: Prisma.PresenceLogUpdateManyWithoutDeviceNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutDeviceNestedInput
+  presenceLogs?: Prisma.PresenceLogUpdateManyWithoutDeviceNestedInput
 }
 
 export type DeviceUncheckedUpdateInput = {
@@ -323,9 +359,12 @@ export type DeviceUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutDeviceNestedInput
-  logs?: Prisma.PresenceLogUncheckedUpdateManyWithoutDeviceNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutDeviceNestedInput
+  presenceLogs?: Prisma.PresenceLogUncheckedUpdateManyWithoutDeviceNestedInput
 }
 
 export type DeviceCreateManyInput = {
@@ -334,6 +373,8 @@ export type DeviceCreateManyInput = {
   userId: number
   deviceName?: string | null
   hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -341,6 +382,8 @@ export type DeviceUpdateManyMutationInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -350,6 +393,8 @@ export type DeviceUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -369,6 +414,8 @@ export type DeviceCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -383,6 +430,8 @@ export type DeviceMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -392,6 +441,8 @@ export type DeviceMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -447,6 +498,10 @@ export type DeviceUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.DeviceScalarWhereInput | Prisma.DeviceScalarWhereInput[]
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type DeviceCreateNestedOneWithoutSessionsInput = {
   create?: Prisma.XOR<Prisma.DeviceCreateWithoutSessionsInput, Prisma.DeviceUncheckedCreateWithoutSessionsInput>
   connectOrCreate?: Prisma.DeviceCreateOrConnectWithoutSessionsInput
@@ -461,27 +516,44 @@ export type DeviceUpdateOneRequiredWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DeviceUpdateToOneWithWhereWithoutSessionsInput, Prisma.DeviceUpdateWithoutSessionsInput>, Prisma.DeviceUncheckedUpdateWithoutSessionsInput>
 }
 
-export type DeviceCreateNestedOneWithoutLogsInput = {
-  create?: Prisma.XOR<Prisma.DeviceCreateWithoutLogsInput, Prisma.DeviceUncheckedCreateWithoutLogsInput>
-  connectOrCreate?: Prisma.DeviceCreateOrConnectWithoutLogsInput
+export type DeviceCreateNestedOneWithoutAttendanceLogsInput = {
+  create?: Prisma.XOR<Prisma.DeviceCreateWithoutAttendanceLogsInput, Prisma.DeviceUncheckedCreateWithoutAttendanceLogsInput>
+  connectOrCreate?: Prisma.DeviceCreateOrConnectWithoutAttendanceLogsInput
   connect?: Prisma.DeviceWhereUniqueInput
 }
 
-export type DeviceUpdateOneRequiredWithoutLogsNestedInput = {
-  create?: Prisma.XOR<Prisma.DeviceCreateWithoutLogsInput, Prisma.DeviceUncheckedCreateWithoutLogsInput>
-  connectOrCreate?: Prisma.DeviceCreateOrConnectWithoutLogsInput
-  upsert?: Prisma.DeviceUpsertWithoutLogsInput
+export type DeviceUpdateOneRequiredWithoutAttendanceLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.DeviceCreateWithoutAttendanceLogsInput, Prisma.DeviceUncheckedCreateWithoutAttendanceLogsInput>
+  connectOrCreate?: Prisma.DeviceCreateOrConnectWithoutAttendanceLogsInput
+  upsert?: Prisma.DeviceUpsertWithoutAttendanceLogsInput
   connect?: Prisma.DeviceWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.DeviceUpdateToOneWithWhereWithoutLogsInput, Prisma.DeviceUpdateWithoutLogsInput>, Prisma.DeviceUncheckedUpdateWithoutLogsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DeviceUpdateToOneWithWhereWithoutAttendanceLogsInput, Prisma.DeviceUpdateWithoutAttendanceLogsInput>, Prisma.DeviceUncheckedUpdateWithoutAttendanceLogsInput>
+}
+
+export type DeviceCreateNestedOneWithoutPresenceLogsInput = {
+  create?: Prisma.XOR<Prisma.DeviceCreateWithoutPresenceLogsInput, Prisma.DeviceUncheckedCreateWithoutPresenceLogsInput>
+  connectOrCreate?: Prisma.DeviceCreateOrConnectWithoutPresenceLogsInput
+  connect?: Prisma.DeviceWhereUniqueInput
+}
+
+export type DeviceUpdateOneRequiredWithoutPresenceLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.DeviceCreateWithoutPresenceLogsInput, Prisma.DeviceUncheckedCreateWithoutPresenceLogsInput>
+  connectOrCreate?: Prisma.DeviceCreateOrConnectWithoutPresenceLogsInput
+  upsert?: Prisma.DeviceUpsertWithoutPresenceLogsInput
+  connect?: Prisma.DeviceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DeviceUpdateToOneWithWhereWithoutPresenceLogsInput, Prisma.DeviceUpdateWithoutPresenceLogsInput>, Prisma.DeviceUncheckedUpdateWithoutPresenceLogsInput>
 }
 
 export type DeviceCreateWithoutUserInput = {
   publicId?: string
   deviceName?: string | null
   hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutDeviceInput
-  logs?: Prisma.PresenceLogCreateNestedManyWithoutDeviceInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutDeviceInput
+  presenceLogs?: Prisma.PresenceLogCreateNestedManyWithoutDeviceInput
 }
 
 export type DeviceUncheckedCreateWithoutUserInput = {
@@ -489,9 +561,12 @@ export type DeviceUncheckedCreateWithoutUserInput = {
   publicId?: string
   deviceName?: string | null
   hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutDeviceInput
-  logs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutDeviceInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutDeviceInput
+  presenceLogs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutDeviceInput
 }
 
 export type DeviceCreateOrConnectWithoutUserInput = {
@@ -529,6 +604,8 @@ export type DeviceScalarWhereInput = {
   userId?: Prisma.IntFilter<"Device"> | number
   deviceName?: Prisma.StringNullableFilter<"Device"> | string | null
   hashedMac?: Prisma.StringFilter<"Device"> | string
+  isActive?: Prisma.BoolFilter<"Device"> | boolean
+  deletedAt?: Prisma.DateTimeNullableFilter<"Device"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
 }
 
@@ -536,9 +613,12 @@ export type DeviceCreateWithoutSessionsInput = {
   publicId?: string
   deviceName?: string | null
   hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDevicesInput
-  logs?: Prisma.PresenceLogCreateNestedManyWithoutDeviceInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutDeviceInput
+  presenceLogs?: Prisma.PresenceLogCreateNestedManyWithoutDeviceInput
 }
 
 export type DeviceUncheckedCreateWithoutSessionsInput = {
@@ -547,8 +627,11 @@ export type DeviceUncheckedCreateWithoutSessionsInput = {
   userId: number
   deviceName?: string | null
   hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
   createdAt?: Date | string
-  logs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutDeviceInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutDeviceInput
+  presenceLogs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutDeviceInput
 }
 
 export type DeviceCreateOrConnectWithoutSessionsInput = {
@@ -571,9 +654,12 @@ export type DeviceUpdateWithoutSessionsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDevicesNestedInput
-  logs?: Prisma.PresenceLogUpdateManyWithoutDeviceNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutDeviceNestedInput
+  presenceLogs?: Prisma.PresenceLogUpdateManyWithoutDeviceNestedInput
 }
 
 export type DeviceUncheckedUpdateWithoutSessionsInput = {
@@ -582,62 +668,143 @@ export type DeviceUncheckedUpdateWithoutSessionsInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  logs?: Prisma.PresenceLogUncheckedUpdateManyWithoutDeviceNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutDeviceNestedInput
+  presenceLogs?: Prisma.PresenceLogUncheckedUpdateManyWithoutDeviceNestedInput
 }
 
-export type DeviceCreateWithoutLogsInput = {
+export type DeviceCreateWithoutAttendanceLogsInput = {
   publicId?: string
   deviceName?: string | null
   hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDevicesInput
   sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutDeviceInput
+  presenceLogs?: Prisma.PresenceLogCreateNestedManyWithoutDeviceInput
 }
 
-export type DeviceUncheckedCreateWithoutLogsInput = {
+export type DeviceUncheckedCreateWithoutAttendanceLogsInput = {
   id?: number
   publicId?: string
   userId: number
   deviceName?: string | null
   hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutDeviceInput
+  presenceLogs?: Prisma.PresenceLogUncheckedCreateNestedManyWithoutDeviceInput
 }
 
-export type DeviceCreateOrConnectWithoutLogsInput = {
+export type DeviceCreateOrConnectWithoutAttendanceLogsInput = {
   where: Prisma.DeviceWhereUniqueInput
-  create: Prisma.XOR<Prisma.DeviceCreateWithoutLogsInput, Prisma.DeviceUncheckedCreateWithoutLogsInput>
+  create: Prisma.XOR<Prisma.DeviceCreateWithoutAttendanceLogsInput, Prisma.DeviceUncheckedCreateWithoutAttendanceLogsInput>
 }
 
-export type DeviceUpsertWithoutLogsInput = {
-  update: Prisma.XOR<Prisma.DeviceUpdateWithoutLogsInput, Prisma.DeviceUncheckedUpdateWithoutLogsInput>
-  create: Prisma.XOR<Prisma.DeviceCreateWithoutLogsInput, Prisma.DeviceUncheckedCreateWithoutLogsInput>
+export type DeviceUpsertWithoutAttendanceLogsInput = {
+  update: Prisma.XOR<Prisma.DeviceUpdateWithoutAttendanceLogsInput, Prisma.DeviceUncheckedUpdateWithoutAttendanceLogsInput>
+  create: Prisma.XOR<Prisma.DeviceCreateWithoutAttendanceLogsInput, Prisma.DeviceUncheckedCreateWithoutAttendanceLogsInput>
   where?: Prisma.DeviceWhereInput
 }
 
-export type DeviceUpdateToOneWithWhereWithoutLogsInput = {
+export type DeviceUpdateToOneWithWhereWithoutAttendanceLogsInput = {
   where?: Prisma.DeviceWhereInput
-  data: Prisma.XOR<Prisma.DeviceUpdateWithoutLogsInput, Prisma.DeviceUncheckedUpdateWithoutLogsInput>
+  data: Prisma.XOR<Prisma.DeviceUpdateWithoutAttendanceLogsInput, Prisma.DeviceUncheckedUpdateWithoutAttendanceLogsInput>
 }
 
-export type DeviceUpdateWithoutLogsInput = {
+export type DeviceUpdateWithoutAttendanceLogsInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDevicesNestedInput
   sessions?: Prisma.AttendanceSessionUpdateManyWithoutDeviceNestedInput
+  presenceLogs?: Prisma.PresenceLogUpdateManyWithoutDeviceNestedInput
 }
 
-export type DeviceUncheckedUpdateWithoutLogsInput = {
+export type DeviceUncheckedUpdateWithoutAttendanceLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutDeviceNestedInput
+  presenceLogs?: Prisma.PresenceLogUncheckedUpdateManyWithoutDeviceNestedInput
+}
+
+export type DeviceCreateWithoutPresenceLogsInput = {
+  publicId?: string
+  deviceName?: string | null
+  hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
+  createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutDevicesInput
+  sessions?: Prisma.AttendanceSessionCreateNestedManyWithoutDeviceInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutDeviceInput
+}
+
+export type DeviceUncheckedCreateWithoutPresenceLogsInput = {
+  id?: number
+  publicId?: string
+  userId: number
+  deviceName?: string | null
+  hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
+  createdAt?: Date | string
+  sessions?: Prisma.AttendanceSessionUncheckedCreateNestedManyWithoutDeviceInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutDeviceInput
+}
+
+export type DeviceCreateOrConnectWithoutPresenceLogsInput = {
+  where: Prisma.DeviceWhereUniqueInput
+  create: Prisma.XOR<Prisma.DeviceCreateWithoutPresenceLogsInput, Prisma.DeviceUncheckedCreateWithoutPresenceLogsInput>
+}
+
+export type DeviceUpsertWithoutPresenceLogsInput = {
+  update: Prisma.XOR<Prisma.DeviceUpdateWithoutPresenceLogsInput, Prisma.DeviceUncheckedUpdateWithoutPresenceLogsInput>
+  create: Prisma.XOR<Prisma.DeviceCreateWithoutPresenceLogsInput, Prisma.DeviceUncheckedCreateWithoutPresenceLogsInput>
+  where?: Prisma.DeviceWhereInput
+}
+
+export type DeviceUpdateToOneWithWhereWithoutPresenceLogsInput = {
+  where?: Prisma.DeviceWhereInput
+  data: Prisma.XOR<Prisma.DeviceUpdateWithoutPresenceLogsInput, Prisma.DeviceUncheckedUpdateWithoutPresenceLogsInput>
+}
+
+export type DeviceUpdateWithoutPresenceLogsInput = {
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutDevicesNestedInput
+  sessions?: Prisma.AttendanceSessionUpdateManyWithoutDeviceNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutDeviceNestedInput
+}
+
+export type DeviceUncheckedUpdateWithoutPresenceLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutDeviceNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutDeviceNestedInput
 }
 
 export type DeviceCreateManyUserInput = {
@@ -645,6 +812,8 @@ export type DeviceCreateManyUserInput = {
   publicId?: string
   deviceName?: string | null
   hashedMac: string
+  isActive?: boolean
+  deletedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -652,9 +821,12 @@ export type DeviceUpdateWithoutUserInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AttendanceSessionUpdateManyWithoutDeviceNestedInput
-  logs?: Prisma.PresenceLogUpdateManyWithoutDeviceNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutDeviceNestedInput
+  presenceLogs?: Prisma.PresenceLogUpdateManyWithoutDeviceNestedInput
 }
 
 export type DeviceUncheckedUpdateWithoutUserInput = {
@@ -662,9 +834,12 @@ export type DeviceUncheckedUpdateWithoutUserInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AttendanceSessionUncheckedUpdateManyWithoutDeviceNestedInput
-  logs?: Prisma.PresenceLogUncheckedUpdateManyWithoutDeviceNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutDeviceNestedInput
+  presenceLogs?: Prisma.PresenceLogUncheckedUpdateManyWithoutDeviceNestedInput
 }
 
 export type DeviceUncheckedUpdateManyWithoutUserInput = {
@@ -672,6 +847,8 @@ export type DeviceUncheckedUpdateManyWithoutUserInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -682,12 +859,14 @@ export type DeviceUncheckedUpdateManyWithoutUserInput = {
 
 export type DeviceCountOutputType = {
   sessions: number
-  logs: number
+  attendanceLogs: number
+  presenceLogs: number
 }
 
 export type DeviceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | DeviceCountOutputTypeCountSessionsArgs
-  logs?: boolean | DeviceCountOutputTypeCountLogsArgs
+  attendanceLogs?: boolean | DeviceCountOutputTypeCountAttendanceLogsArgs
+  presenceLogs?: boolean | DeviceCountOutputTypeCountPresenceLogsArgs
 }
 
 /**
@@ -710,7 +889,14 @@ export type DeviceCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types
 /**
  * DeviceCountOutputType without action
  */
-export type DeviceCountOutputTypeCountLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type DeviceCountOutputTypeCountAttendanceLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttendanceLogWhereInput
+}
+
+/**
+ * DeviceCountOutputType without action
+ */
+export type DeviceCountOutputTypeCountPresenceLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PresenceLogWhereInput
 }
 
@@ -721,10 +907,13 @@ export type DeviceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
+  isActive?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sessions?: boolean | Prisma.Device$sessionsArgs<ExtArgs>
-  logs?: boolean | Prisma.Device$logsArgs<ExtArgs>
+  attendanceLogs?: boolean | Prisma.Device$attendanceLogsArgs<ExtArgs>
+  presenceLogs?: boolean | Prisma.Device$presenceLogsArgs<ExtArgs>
   _count?: boolean | Prisma.DeviceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["device"]>
 
@@ -734,6 +923,8 @@ export type DeviceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
+  isActive?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["device"]>
@@ -744,6 +935,8 @@ export type DeviceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
+  isActive?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["device"]>
@@ -754,14 +947,17 @@ export type DeviceSelectScalar = {
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
+  isActive?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
 }
 
-export type DeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "userId" | "deviceName" | "hashedMac" | "createdAt", ExtArgs["result"]["device"]>
+export type DeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "userId" | "deviceName" | "hashedMac" | "isActive" | "deletedAt" | "createdAt", ExtArgs["result"]["device"]>
 export type DeviceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sessions?: boolean | Prisma.Device$sessionsArgs<ExtArgs>
-  logs?: boolean | Prisma.Device$logsArgs<ExtArgs>
+  attendanceLogs?: boolean | Prisma.Device$attendanceLogsArgs<ExtArgs>
+  presenceLogs?: boolean | Prisma.Device$presenceLogsArgs<ExtArgs>
   _count?: boolean | Prisma.DeviceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DeviceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -776,7 +972,8 @@ export type $DevicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     sessions: Prisma.$AttendanceSessionPayload<ExtArgs>[]
-    logs: Prisma.$PresenceLogPayload<ExtArgs>[]
+    attendanceLogs: Prisma.$AttendanceLogPayload<ExtArgs>[]
+    presenceLogs: Prisma.$PresenceLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -784,6 +981,8 @@ export type $DevicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     userId: number
     deviceName: string | null
     hashedMac: string
+    isActive: boolean
+    deletedAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["device"]>
   composites: {}
@@ -1181,7 +1380,8 @@ export interface Prisma__DeviceClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sessions<T extends Prisma.Device$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Device$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  logs<T extends Prisma.Device$logsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Device$logsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PresenceLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attendanceLogs<T extends Prisma.Device$attendanceLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Device$attendanceLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  presenceLogs<T extends Prisma.Device$presenceLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Device$presenceLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PresenceLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1216,6 +1416,8 @@ export interface DeviceFieldRefs {
   readonly userId: Prisma.FieldRef<"Device", 'Int'>
   readonly deviceName: Prisma.FieldRef<"Device", 'String'>
   readonly hashedMac: Prisma.FieldRef<"Device", 'String'>
+  readonly isActive: Prisma.FieldRef<"Device", 'Boolean'>
+  readonly deletedAt: Prisma.FieldRef<"Device", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Device", 'DateTime'>
 }
     
@@ -1642,9 +1844,33 @@ export type Device$sessionsArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * Device.logs
+ * Device.attendanceLogs
  */
-export type Device$logsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Device$attendanceLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttendanceLog
+   */
+  select?: Prisma.AttendanceLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttendanceLog
+   */
+  omit?: Prisma.AttendanceLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttendanceLogInclude<ExtArgs> | null
+  where?: Prisma.AttendanceLogWhereInput
+  orderBy?: Prisma.AttendanceLogOrderByWithRelationInput | Prisma.AttendanceLogOrderByWithRelationInput[]
+  cursor?: Prisma.AttendanceLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttendanceLogScalarFieldEnum | Prisma.AttendanceLogScalarFieldEnum[]
+}
+
+/**
+ * Device.presenceLogs
+ */
+export type Device$presenceLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the PresenceLog
    */

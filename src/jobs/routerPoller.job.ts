@@ -2,6 +2,7 @@ import type { Device } from "./routerPoller.types.js";
 import logger from "../utils/logger.js";
 import { routerService } from "../services/router/router.service.js";
 import { eventBus } from "../events/eventBus.js";
+import { env } from "../config/env.js";
 
 
 
@@ -74,7 +75,12 @@ export class RouterPoller {
             // Detect EXISTING devices (optional)
             for (const [mac, device] of currentMap) {
                 if (this.previousDevices.has(mac)) {
-                    // you can track updates here (RSSI change etc)
+                    await eventBus.emit("device:seen", {
+                        mac,
+                        ip: device.ip,
+                        rssi: device.connection?.rssi,
+                        timestamp: new Date(),
+                    });
                 }
             }
 
@@ -88,4 +94,4 @@ export class RouterPoller {
 }
 
 //single instance of poller
-export const poller = new RouterPoller(5000); 
+export const poller = new RouterPoller(env.ROUTER.POLL_INTERVAL); 

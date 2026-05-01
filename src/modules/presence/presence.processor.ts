@@ -8,7 +8,6 @@ export class PresenceProcessor {
     constructor(private service: PresenceService) { }
 
     async handleDeviceConnected(payload: any) {
-        console.log("payload",payload.mac)
         const device = await this.service.processDeviceSence(
             payload.mac,
             payload.rssi,

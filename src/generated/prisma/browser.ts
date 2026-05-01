@@ -43,6 +43,16 @@ export type AccessPoint = Prisma.AccessPointModel
  */
 export type AttendanceSession = Prisma.AttendanceSessionModel
 /**
+ * Model AttendanceLog
+ * 
+ */
+export type AttendanceLog = Prisma.AttendanceLogModel
+/**
+ * Model AttendanceDaily
+ * 
+ */
+export type AttendanceDaily = Prisma.AttendanceDailyModel
+/**
  * Model PresenceLog
  * 
  */

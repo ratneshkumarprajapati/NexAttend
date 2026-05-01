@@ -299,6 +299,7 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   publicId?: string
   userId?: number
+  enrolmentNo?: string
   AND?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
   OR?: Prisma.ProfileWhereInput[]
   NOT?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
@@ -307,12 +308,11 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   phoneNo?: Prisma.StringNullableFilter<"Profile"> | string | null
   avatarUrl?: Prisma.StringNullableFilter<"Profile"> | string | null
   department?: Prisma.StringNullableFilter<"Profile"> | string | null
-  enrolmentNo?: Prisma.StringNullableFilter<"Profile"> | string | null
   year?: Prisma.IntNullableFilter<"Profile"> | number | null
   preprationGoal?: Prisma.JsonNullableFilter<"Profile">
   createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "publicId" | "userId">
+}, "id" | "publicId" | "userId" | "enrolmentNo">
 
 export type ProfileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
