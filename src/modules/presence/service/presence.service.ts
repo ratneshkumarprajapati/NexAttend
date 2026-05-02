@@ -21,9 +21,9 @@ export class PresenceService {
         return device;
     }
 
-    async processDeviceSence(mac: string,ssidIndex:number, rssi?: number, timestamp?: Date) {
+    async processDeviceSence(mac: string,ssidIndex:number, rssi?: number, timestamp?: Date, routerKey?: string) {
         const device = await this.identifyDevice(mac);
-        const apId = await resolveAccessPoint(ssidIndex);
+        const apId = await resolveAccessPoint(ssidIndex, routerKey);
 
         if (!device) {
             return

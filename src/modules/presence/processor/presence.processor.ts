@@ -12,7 +12,8 @@ export class PresenceProcessor {
             payload.mac,
             payload.ssidIndex,
             payload.rssi,
-            payload.timestamp
+            payload.timestamp,
+            payload.routerKey
 
 
         )

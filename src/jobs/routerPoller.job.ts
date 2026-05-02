@@ -1,84 +1,105 @@
-import type { Device } from "./routerPoller.types.js";
-import logger from "../utils/logger.js";
-import { routerService } from "../services/router/router.service.js";
-import { eventBus } from "../events/eventBus.js";
 import { env } from "../config/env.js";
+import { eventBus } from "../events/eventBus.js";
 import { accessPointService } from "../modules/accesspoint/service/accesspoint.service.js";
-
+import { routerAggregator } from "../services/router/router.aggregator.js";
+import logger from "../utils/logger.js";
+import type { Device } from "./routerPoller.types.js";
 
 
 export class RouterPoller {
     private interval: number;
     private timer: NodeJS.Timeout | null = null;
 
-    //store previous state
     private previousDevices = new Map<string, Device>();
 
-    constructor(interval = 1000) {
+    constructor(interval = 2000) {
         this.interval = interval;
     }
 
     start() {
         if (this.timer) return;
-        logger.info("Router Poller Started...");
+
+        logger.info("[Poller] Started");
 
         const run = async () => {
             await this.poll();
-            this.timer = setTimeout(run, this.interval); 
+            this.timer = setTimeout(run, this.interval);
         };
 
         run();
-
     }
 
     stop() {
         if (this.timer) {
             clearTimeout(this.timer);
             this.timer = null;
+            logger.info("[Poller] Stopped");
         }
     }
 
-
-
     private async poll() {
         try {
-            const device = await routerService.fetchConnectedDevices();
-            const currentMap = new Map<string, Device>();
-            //buld current map
-            for (const d of device) {
-                const mac = d.mac.toLowerCase();
-                currentMap.set(mac, d)
-            }
+            //  Fetch from aggregator
+            const devices = await routerAggregator.fetchAllDevices();
 
-            const ssidIndexes = new Set<number>();
-            for (const device of currentMap.values()) {
-                if (device.meta.ssidIndex !== undefined && device.meta.ssidIndex !== null) {
-                    ssidIndexes.add(Number(device.meta.ssidIndex));
+            logger.info(`[Poller] Devices received: ${devices.length}`);
+
+            //  Build current state map
+            const currentMap = new Map<string, Device>();
+
+            for (const d of devices) {
+                const mac = d.mac.toLowerCase();
+                const existing = currentMap.get(mac);
+
+                if (!existing || d.connection.rssi > existing.connection.rssi) {
+                    currentMap.set(mac, d);
                 }
             }
 
-            for (const ssidIndex of ssidIndexes) {
-                await accessPointService.ensureAccessPointForSsidIndex(ssidIndex);
+            //  Ensure Access Points
+            const accessPoints = new Map<string, Device["meta"]>();
+
+            for (const device of currentMap.values()) {
+                if (device.meta.ssidIndex != null) {
+                    accessPoints.set(
+                        `${device.meta.routerKey}:${device.meta.ssidIndex}`,
+                        device.meta
+                    );
+                }
             }
 
-            //detect new device
+            for (const ap of accessPoints.values()) {
+                await accessPointService.ensureAccessPointForSsidIndex(
+                    ap.ssidIndex,
+                    {
+                        routerKey: ap.routerKey,
+                        routerName: ap.routerName,
+                        routerProvider: ap.routerProvider,
+                    }
+                );
+            }
+
+            // Detect NEW devices
             for (const [mac, device] of currentMap) {
                 if (!this.previousDevices.has(mac)) {
-                    logger.info(`New Device-> ${device.mac} `)
-                    await eventBus.emit('device:connected', {
+                    logger.info(`[Poller] New Device: ${mac}`);
+
+                    await eventBus.emit("device:connected", {
                         mac,
                         ip: device.ip,
-                        rssi: device.connection?.rssi,
+                        rssi: device.connection.rssi,
                         ssidIndex: device.meta.ssidIndex,
+                        routerKey: device.meta.routerKey,
                         timestamp: new Date(),
-                    })
+                    });
                 }
             }
-            //detected disconnected device
 
+            //  Detect DISCONNECTED
             for (const [mac, device] of this.previousDevices) {
                 if (!currentMap.has(mac)) {
-                    logger.info(`Left Device-> ${device.mac} `)
+                    logger.info(`[Poller] Device Left: ${mac}`);
+
                     await eventBus.emit("device:disconnected", {
                         mac,
                         timestamp: new Date(),
@@ -86,27 +107,28 @@ export class RouterPoller {
                 }
             }
 
-            // Detect EXISTING devices (optional)
+            //  Detect EXISTING (heartbeat)
             for (const [mac, device] of currentMap) {
                 if (this.previousDevices.has(mac)) {
                     await eventBus.emit("device:seen", {
                         mac,
                         ip: device.ip,
-                        rssi: device.connection?.rssi,
+                        rssi: device.connection.rssi,
                         ssidIndex: device.meta.ssidIndex,
+                        routerKey: device.meta.routerKey,
                         timestamp: new Date(),
                     });
                 }
             }
 
-            // Update state
+            //  Update state
             this.previousDevices = currentMap;
 
         } catch (error) {
-            logger.error("Polling failed:", error);
+            logger.error("[Poller] Polling failed", error);
         }
     }
 }
 
-//single instance of poller
-export const poller = new RouterPoller(env.ROUTER.POLL_INTERVAL); 
+//singleton instance
+export const poller = new RouterPoller(env.ROUTER.POLL_INTERVAL);

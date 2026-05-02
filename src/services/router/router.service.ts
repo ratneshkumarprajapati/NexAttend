@@ -1,17 +1,41 @@
-import { log } from "node:console";
 import { env } from "../../config/env.js";
-import { routerClient } from "../http/routerClient.instance.js";
+import { HttpClient } from "../http/http.client.js";
 import type { ConnectedDevice, RouterJwtPayload, RouterLoginResponse } from "./router.types.js";
 import logger from "../../utils/logger.js";
 
+type RouterConfig = (typeof env.ROUTER.CONFIGS)[number];
+
+const getByPath = (value: unknown, path: string): unknown => {
+  return path.split(".").reduce<unknown>((current, key) => {
+    if (current === null || current === undefined || typeof current !== "object") {
+      return undefined;
+    }
+
+    return (current as Record<string, unknown>)[key];
+  }, value);
+};
+
+const toNumber = (value: unknown) => {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : 0;
+};
+
+const toStringOrNull = (value: unknown) => {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+
+  return String(value);
+};
 
 
 class RouterService {
   private token: string | null = null;
   private tokenExpiry: number | null = null;
+  private routerClient: HttpClient;
 
-  private getCommandUrl(command: string) {
-    return `/dm/sys/?cmd=${encodeURIComponent(command)}`;
+  constructor(private config: RouterConfig) {
+    this.routerClient = new HttpClient(config.baseUrl);
   }
 
   private getTokenExpiry(token: string) {
@@ -37,23 +61,29 @@ class RouterService {
   }
 
   private async login() {
-    const res = await routerClient.post<RouterLoginResponse>(
-      this.getCommandUrl("Login"),
+    const res = await this.routerClient.post<RouterLoginResponse>(
+      this.config.loginApiUrl,
       {
         Login: {
           data: {
-            username: env.ROUTER.USERNAME,
-            password: env.ROUTER.PASSWORD,
+            username: this.config.username,
+            password: this.config.password,
             captcha: "",
           },
         },
       }
     );
 
-    const login = res.Login?.data?.login;
-    const token = login?.authenticatedToken;
-    if (res.Login?.status_code !== 200 || login?.status !== "success" || !token) {
-      throw new Error("Router login failed");
+    const statusCode = Number(getByPath(res, this.config.loginStatusCodePath));
+    const status = String(getByPath(res, this.config.loginStatusPath) ?? "");
+    const token = getByPath(res, this.config.loginTokenPath);
+
+    if (
+      statusCode !== 200 ||
+      status !== this.config.loginSuccessStatus ||
+      typeof token !== "string"
+    ) {
+      throw new Error(`Router login failed for ${this.config.name}`);
     }
 
     this.token = token;
@@ -66,11 +96,11 @@ class RouterService {
     }
   }
 
-  private async request<T>(command: string) {
+  private async request<T>(apiUrl: string) {
     await this.ensureAuth();
 
     try {
-      const response = await routerClient.get<T>(command, {
+      const response = await this.routerClient.get<T>(apiUrl, {
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
@@ -80,7 +110,7 @@ class RouterService {
       if (error.message.includes("401")) {
         await this.login();
 
-        return routerClient.get<T>(this.getCommandUrl(command), {
+        return this.routerClient.get<T>(apiUrl, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -93,37 +123,46 @@ class RouterService {
   }
 
   async fetchConnectedDevices() {
-    const data = await this.request<any>("/dm/tr98/?objs=WLANAssociatedDevice&page=StatusPage-CurrentWirelessUser");
+    const data = await this.request<any>(this.config.connectedDevicesApiUrl);
 
-    const rawDevices = data?.WLANAssociatedDevice?.data || [];
+    const rawDevices = getByPath(data, this.config.connectedDevicesDataPath);
+    const devices = Array.isArray(rawDevices) ? rawDevices : [];
+    const fields = this.config.deviceFieldMap;
     // console.table(rawDevices)
-    return rawDevices.map((d: any):ConnectedDevice => ({
-      mac: d.associatedDeviceMACAddress?.toLowerCase(), // normalize
-      ip: d.associatedDeviceIPAddress,
+    return devices.map((d: unknown):ConnectedDevice => ({
+      mac: String(getByPath(d, fields.mac) ?? "").toLowerCase(), // normalize
+      ip: String(getByPath(d, fields.ip) ?? ""),
 
-      hostname: d.associatedDeviceHostName || null,
-      manufacturer: d.associatedDeviceManufacturer || null,
+      hostname: toStringOrNull(getByPath(d, fields.hostname)),
+      manufacturer: toStringOrNull(getByPath(d, fields.manufacturer)),
 
       connection: {
-        band: d.associatedDeviceStandard, // 2.4G / 5G
-        rssi: d.associatedDeviceRSSI,     // signal strength
-        txRate: d.associatedDeviceTxRate,
-        rxRate: d.associatedDeviceRecvRate,
+        band: String(getByPath(d, fields.band) ?? ""), // 2.4G / 5G
+        rssi: toNumber(getByPath(d, fields.rssi)),     // signal strength
+        txRate: toNumber(getByPath(d, fields.txRate)),
+        rxRate: toNumber(getByPath(d, fields.rxRate)),
       },
 
       session: {
-        duration: d.associatedDeviceDuration, // seconds connected
-        expireTime: d.associatedDeviceExpireTime,
+        duration: toNumber(getByPath(d, fields.duration)), // seconds connected
+        expireTime: toNumber(getByPath(d, fields.expireTime)),
       },
 
       meta: {
-        ssidIndex: d.associatedDeviceSSIDIndex,
-        iid: d.iid,
+        routerKey: this.config.key,
+        routerName: this.config.name,
+        routerProvider: this.config.provider,
+        ssidIndex: toNumber(getByPath(d, fields.ssidIndex)),
+        iid: toNumber(getByPath(d, fields.iid)),
       },
 
       source: "router",
-    }));
+    })).filter((device) => device.mac);
   }
 }
 
-export const routerService = new RouterService();
+export const routerServices = env.ROUTER.CONFIGS
+  .sort((a, b) => a.priority - b.priority)
+  .map((config) => new RouterService(config));
+
+export const routerService = routerServices[0] ?? new RouterService(env.ROUTER.CONFIGS[0]!);

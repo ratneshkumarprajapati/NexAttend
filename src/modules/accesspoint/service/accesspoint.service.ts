@@ -2,6 +2,7 @@ import { accessPointRepository } from "../repository/accesspoint.repository.js";
 import { AppError } from "../../../utils/appError.js";
 import type {
   CreateAccessPointInput,
+  RouterAccessPointIdentity,
   UpdateAccessPointInput,
 } from "../types/accesspoint.types.js";
 
@@ -10,15 +11,23 @@ export const accessPointService = {
     return accessPointRepository.create(data);
   },
 
-  ensureAccessPointForSsidIndex: async (ssidIndex?: number | null) => {
+  ensureAccessPointForSsidIndex: async (
+    ssidIndex?: number | null,
+    router?: RouterAccessPointIdentity,
+  ) => {
     if (ssidIndex === undefined || ssidIndex === null) {
       return null;
     }
 
-    return accessPointRepository.upsertBySsidIndex(ssidIndex, {
+    const routerKey = router?.routerKey || "default";
+
+    return accessPointRepository.upsertByRouterAndSsidIndex(routerKey, ssidIndex, {
       ssidIndex,
-      name: `SSID ${ssidIndex}`,
-      location: "Router",
+      routerKey,
+      routerName: router?.routerName,
+      routerProvider: router?.routerProvider,
+      name: `${router?.routerName || "Router"} SSID ${ssidIndex}`,
+      location: router?.routerName || "Router",
       isActive: true,
     });
   },

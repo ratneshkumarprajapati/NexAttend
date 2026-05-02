@@ -1,12 +1,15 @@
 
 import { prisma } from "../../services/prisma/prisma.client.js";
 
-export const resolveAccessPoint = async (ssidIndex?: number) => {
+export const resolveAccessPoint = async (ssidIndex?: number, routerKey = "default") => {
   if (!ssidIndex) return null;
 
   const ap = await prisma.accessPoint.findUnique({
     where: {
-      ssidIndex 
+      routerKey_ssidIndex: {
+        routerKey,
+        ssidIndex,
+      },
     },
   });
 

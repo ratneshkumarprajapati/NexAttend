@@ -3,6 +3,111 @@ import { NODE_ENVS } from "./constants.js";
 
 dotenv.config();
 
+type RouterConfig = {
+  key: string;
+  name: string;
+  provider: string;
+  baseUrl: string;
+  loginApiUrl: string;
+  connectedDevicesApiUrl: string;
+  loginStatusCodePath: string;
+  loginStatusPath: string;
+  loginSuccessStatus: string;
+  loginTokenPath: string;
+  connectedDevicesDataPath: string;
+  deviceFieldMap: {
+    mac: string;
+    ip: string;
+    hostname: string;
+    manufacturer: string;
+    band: string;
+    rssi: string;
+    txRate: string;
+    rxRate: string;
+    duration: string;
+    expireTime: string;
+    ssidIndex: string;
+    iid: string;
+  };
+  username: string;
+  password: string;
+  priority: number;
+  enabled: boolean;
+};
+
+const parseRouterConfigs = (): RouterConfig[] => {
+  const defaultRouter: RouterConfig = {
+    key: process.env.ROUTER_KEY || "default",
+    name: process.env.ROUTER_NAME || "Default Router",
+    provider: process.env.ROUTER_PROVIDER || "generic",
+    baseUrl: process.env.ROUTER_BASE_URL || "https://192.168.1.1",
+    loginApiUrl: process.env.ROUTER_LOGIN_API_URL || "/dm/sys/?cmd=Login",
+    connectedDevicesApiUrl:
+      process.env.ROUTER_CONNECTED_DEVICES_API_URL ||
+      "/dm/tr98/?objs=WLANAssociatedDevice&page=StatusPage-CurrentWirelessUser",
+    loginStatusCodePath:
+      process.env.ROUTER_LOGIN_STATUS_CODE_PATH || "Login.status_code",
+    loginStatusPath:
+      process.env.ROUTER_LOGIN_STATUS_PATH || "Login.data.login.status",
+    loginSuccessStatus: process.env.ROUTER_LOGIN_SUCCESS_STATUS || "success",
+    loginTokenPath:
+      process.env.ROUTER_LOGIN_TOKEN_PATH ||
+      "Login.data.login.authenticatedToken",
+    connectedDevicesDataPath:
+      process.env.ROUTER_CONNECTED_DEVICES_DATA_PATH ||
+      "WLANAssociatedDevice.data",
+    deviceFieldMap: {
+      mac: "associatedDeviceMACAddress",
+      ip: "associatedDeviceIPAddress",
+      hostname: "associatedDeviceHostName",
+      manufacturer: "associatedDeviceManufacturer",
+      band: "associatedDeviceStandard",
+      rssi: "associatedDeviceRSSI",
+      txRate: "associatedDeviceTxRate",
+      rxRate: "associatedDeviceRecvRate",
+      duration: "associatedDeviceDuration",
+      expireTime: "associatedDeviceExpireTime",
+      ssidIndex: "associatedDeviceSSIDIndex",
+      iid: "iid",
+    },
+    username: process.env.ROUTER_USERNAME || "admin",
+    password: process.env.ROUTER_PASSWORD || "admin",
+    priority: Number(process.env.ROUTER_PRIORITY) || 100,
+    enabled: process.env.ROUTER_ENABLED !== "false",
+  };
+
+  if (!process.env.ROUTER_CONFIGS_JSON) {
+    return [defaultRouter];
+  }
+
+  try {
+    const routers = JSON.parse(process.env.ROUTER_CONFIGS_JSON) as Partial<RouterConfig>[];
+
+    const parsedRouters = routers
+      .map((router, index) => ({
+        ...defaultRouter,
+        ...router,
+        key: router.key || `router-${index + 1}`,
+        name: router.name || router.key || `Router ${index + 1}`,
+        provider: router.provider || defaultRouter.provider,
+        deviceFieldMap: {
+          ...defaultRouter.deviceFieldMap,
+          ...router.deviceFieldMap,
+        },
+        priority: Number(router.priority ?? defaultRouter.priority),
+        enabled: router.enabled !== false,
+      }))
+      .filter((router) => router.enabled);
+
+    return parsedRouters.length > 0 ? parsedRouters : [defaultRouter];
+  } catch {
+    return [defaultRouter];
+  }
+};
+
+const routers = parseRouterConfigs();
+const primaryRouter = routers[0]!;
+
 export const env = {
   NODE_ENV: process.env.NODE_ENV || "development",
   PORT: Number(process.env.PORT) || 4000,
@@ -17,16 +122,20 @@ export const env = {
   },
 
   ROUTER: {
-    BASE_URL: process.env.ROUTER_BASE_URL||"https://192.168.1.1",
-    USERNAME: process.env.ROUTER_USERNAME||"admin",
-    PASSWORD: process.env.ROUTER_PASSWORD||"admin",
+    CONFIGS: routers,
+    BASE_URL: primaryRouter.baseUrl,
+    LOGIN_API_URL: primaryRouter.loginApiUrl,
+    CONNECTED_DEVICES_API_URL: primaryRouter.connectedDevicesApiUrl,
+    CONNECTED_DEVICES_DATA_PATH: primaryRouter.connectedDevicesDataPath,
+    USERNAME: primaryRouter.username,
+    PASSWORD: primaryRouter.password,
     POLL_INTERVAL: Number(process.env.ROUTER_POLL_INTERVAL) || 15000,
   },
 
   SECURITY: {
     JWT_SECRET: process.env.JWT_SECRET!,
     HASH_SALT: process.env.HASH_SALT!,
-    HASH_SECRET:process.env.HASH_SECRET
+    HASH_SECRET: process.env.HASH_SECRET
   },
 
   AI: {

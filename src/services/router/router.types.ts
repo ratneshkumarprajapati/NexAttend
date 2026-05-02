@@ -36,6 +36,9 @@ export interface ConnectedDevice {
   };
 
   meta: {
+    routerKey: string;
+    routerName: string;
+    routerProvider: string;
     ssidIndex: number;
     iid: number;
   };

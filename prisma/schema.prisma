@@ -103,15 +103,21 @@ model Device {
 }
 
 model AccessPoint {
-  id           Int                 @id @default(autoincrement())
-  publicId     String              @unique @default(cuid())
-  ssidIndex    Int?                @unique
-  name         String
-  location     String?
-  isActive     Boolean             @default(true)
-  sessions     AttendanceSession[]
-  presenceLogs PresenceLog[]
-  createdAt    DateTime            @default(now())
+  id             Int                 @id @default(autoincrement())
+  publicId       String              @unique @default(cuid())
+  routerKey      String              @default("default")
+  routerName     String?
+  routerProvider String?
+  ssidIndex      Int?
+  name           String
+  location       String?
+  isActive       Boolean             @default(true)
+  sessions       AttendanceSession[]
+  presenceLogs   PresenceLog[]
+  createdAt      DateTime            @default(now())
+
+  @@unique([routerKey, ssidIndex])
+  @@index([routerKey])
 }
 
 model AttendanceSession {
