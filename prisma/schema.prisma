@@ -105,6 +105,7 @@ model Device {
 model AccessPoint {
   id           Int                 @id @default(autoincrement())
   publicId     String              @unique @default(cuid())
+  ssidIndex    Int?                @unique
   name         String
   location     String?
   isActive     Boolean             @default(true)

@@ -1,4 +1,5 @@
 import logger from "../../../utils/logger.js";
+import { resolveAccessPoint } from "../../accesspoint/ap.resolver.js";
 import { deviceService } from "../../device/service/device.service.js";
 import type { PresenceRepository } from "../repository/presence.repository.js";
 
@@ -6,6 +7,7 @@ import type { PresenceRepository } from "../repository/presence.repository.js";
 
 export class PresenceService {
     constructor(private repo: PresenceRepository) { };
+    
 
     async identifyDevice(mac: string) {
         const normalizeMac = mac.toLowerCase();
@@ -19,8 +21,9 @@ export class PresenceService {
         return device;
     }
 
-    async processDeviceSence(mac: string, rssi?: number, timestamp?: Date) {
+    async processDeviceSence(mac: string,ssidIndex:number, rssi?: number, timestamp?: Date) {
         const device = await this.identifyDevice(mac);
+        const apId = await resolveAccessPoint(ssidIndex);
 
         if (!device) {
             return
@@ -28,6 +31,7 @@ export class PresenceService {
         const params = {
             deviceId: device.id,
             rssi:rssi,
+            apId,
             seenAt:timestamp,
         }
 

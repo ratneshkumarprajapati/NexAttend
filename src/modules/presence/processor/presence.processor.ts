@@ -10,6 +10,7 @@ export class PresenceProcessor {
     async handleDeviceConnected(payload: any) {
         const device = await this.service.processDeviceSence(
             payload.mac,
+            payload.ssidIndex,
             payload.rssi,
             payload.timestamp
 

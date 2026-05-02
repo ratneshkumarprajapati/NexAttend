@@ -1166,6 +1166,7 @@ export type DeviceScalarFieldEnum = (typeof DeviceScalarFieldEnum)[keyof typeof 
 export const AccessPointScalarFieldEnum = {
   id: 'id',
   publicId: 'publicId',
+  ssidIndex: 'ssidIndex',
   name: 'name',
   location: 'location',
   isActive: 'isActive',

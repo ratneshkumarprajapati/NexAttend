@@ -3,6 +3,7 @@ import logger from "../utils/logger.js";
 import { routerService } from "../services/router/router.service.js";
 import { eventBus } from "../events/eventBus.js";
 import { env } from "../config/env.js";
+import { accessPointService } from "../modules/accesspoint/service/accesspoint.service.js";
 
 
 
@@ -23,7 +24,7 @@ export class RouterPoller {
 
         const run = async () => {
             await this.poll();
-            this.timer = setTimeout(run, this.interval); // 🔥 loop
+            this.timer = setTimeout(run, this.interval); 
         };
 
         run();
@@ -48,6 +49,18 @@ export class RouterPoller {
                 const mac = d.mac.toLowerCase();
                 currentMap.set(mac, d)
             }
+
+            const ssidIndexes = new Set<number>();
+            for (const device of currentMap.values()) {
+                if (device.meta.ssidIndex !== undefined && device.meta.ssidIndex !== null) {
+                    ssidIndexes.add(Number(device.meta.ssidIndex));
+                }
+            }
+
+            for (const ssidIndex of ssidIndexes) {
+                await accessPointService.ensureAccessPointForSsidIndex(ssidIndex);
+            }
+
             //detect new device
             for (const [mac, device] of currentMap) {
                 if (!this.previousDevices.has(mac)) {
@@ -56,6 +69,7 @@ export class RouterPoller {
                         mac,
                         ip: device.ip,
                         rssi: device.connection?.rssi,
+                        ssidIndex: device.meta.ssidIndex,
                         timestamp: new Date(),
                     })
                 }
@@ -79,6 +93,7 @@ export class RouterPoller {
                         mac,
                         ip: device.ip,
                         rssi: device.connection?.rssi,
+                        ssidIndex: device.meta.ssidIndex,
                         timestamp: new Date(),
                     });
                 }

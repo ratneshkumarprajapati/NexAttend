@@ -1,3 +1,4 @@
+import { eventBus } from "../../../events/eventBus.js";
 import logger from "../../../utils/logger.js";
 import type { AttendanceRepository } from "../repository/attendance.repository.js";
 
@@ -65,6 +66,7 @@ export class AttendanceService {
 
         if (activeSession) {
             await this.closeSessionAt(activeSession, timestamp);
+            eventBus.emit("attendance:completed", activeSession);
             logger.info(`Closed attendance session ${activeSession.id} on disconnect`);
         }
 
