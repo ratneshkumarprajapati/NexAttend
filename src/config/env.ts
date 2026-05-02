@@ -35,6 +35,14 @@ export const env = {
     RSSI_THRESHOLD: Number(process.env.RSSI_THRESHOLD) || -80,
   },
 
+  LOG_DUMP: {
+    ENABLED: process.env.LOG_DUMP_ENABLED !== "false",
+    DIRECTORY: process.env.LOG_DUMP_DIRECTORY || "exports/log-dumps",
+    HOUR: Number(process.env.LOG_DUMP_HOUR) || 0,
+    MINUTE: Number(process.env.LOG_DUMP_MINUTE) || 10,
+    BATCH_SIZE: Number(process.env.LOG_DUMP_BATCH_SIZE) || 5000,
+  },
+
   OTEL: {
     ENABLED:
       process.env.OTEL_ENABLED === "true" ||

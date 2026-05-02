@@ -4,14 +4,14 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { trace } from "@opentelemetry/api";
 import { API_BASE_PATH, CORS_ORIGINS } from "./config/constants.js";
-import userRoutes from "./modules/user/user.routes.js";
-import authRoutes from "./modules/auth/auth.routes.js";
-import profileRoutes from "./modules/profile/profile.routes.js";
-import deviceRoutes from "./modules/device/device.routes.js"
-import { routerService } from "./services/router/router.service.js";
+import userRoutes from "./modules/user/routes/user.routes.js";
+import authRoutes from "./modules/auth/routes/auth.routes.js";
+import profileRoutes from "./modules/profile/routes/profile.routes.js";
+import deviceRoutes from "./modules/device/routes/device.routes.js"
 import { poller } from "./jobs/routerPoller.job.js";
-import { initPresenceModule } from "./modules/presence/presence.init.js";
-import { initAttendanceModule } from "./modules/attendance/attendance.init.js";
+import { logDumpJob } from "./jobs/logDump.job.js";
+import { initPresenceModule } from "./modules/presence/init/presence.init.js";
+import { initAttendanceModule } from "./modules/attendance/init/attendance.init.js";
 
 const app = express();
 
@@ -45,7 +45,8 @@ v1Router.use("/devices", deviceRoutes);
 app.use(API_BASE_PATH, v1Router);
 
 poller.start();
-initPresenceModule()
-initAttendanceModule()
-// console.table(await routerService.fetchConnectedDevices())
+logDumpJob.start();
+initPresenceModule();
+initAttendanceModule();
+// console.table(await routerService.fetchConnectedDevices());
 export default app;
