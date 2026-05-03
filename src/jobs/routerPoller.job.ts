@@ -2,6 +2,7 @@ import { env } from "../config/env.js";
 import { eventBus } from "../events/eventBus.js";
 import { accessPointService } from "../modules/accesspoint/service/accesspoint.service.js";
 import { routerAggregator } from "../services/router/router.aggregator.js";
+import { routerAdapterClient } from "../services/router/routerAdapter.client.js";
 import logger from "../utils/logger.js";
 import type { Device } from "./routerPoller.types.js";
 
@@ -40,7 +41,7 @@ export class RouterPoller {
     private async poll() {
         try {
             //  Fetch from aggregator
-            const devices = await routerAggregator.fetchAllDevices();
+            const devices = await this.fetchDevices();
 
             logger.info(`[Poller] Devices received: ${devices.length}`);
 
@@ -127,6 +128,15 @@ export class RouterPoller {
         } catch (error) {
             logger.error("[Poller] Polling failed", error);
         }
+    }
+
+    private async fetchDevices() {
+        if (env.ROUTER.EXECUTION_MODE === "router-adapter") {
+            logger.info("[Poller] Fetching devices from Router Adapter API");
+            return routerAdapterClient.fetchConnectedDevices();
+        }
+
+        return routerAggregator.fetchAllDevices();
     }
 }
 

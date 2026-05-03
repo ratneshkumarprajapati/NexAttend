@@ -47,10 +47,12 @@ v1Router.use("/access-points", accessPointRoutes);
 
 app.use(API_BASE_PATH, v1Router);
 
-poller.start();
-logDumpJob.start();
-initPresenceModule();
-initAttendanceModule();
-initAIModule()
+export const startAppWorkers = () => {
+  initPresenceModule();
+  initAttendanceModule();
+  initAIModule();
+  poller.start();
+  logDumpJob.start();
+};
 // console.table(await routerService.fetchConnectedDevices());
 export default app;

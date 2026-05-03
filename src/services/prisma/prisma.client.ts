@@ -1,7 +1,10 @@
+import {setDefaultAutoSelectFamily} from "node:net"
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../generated/prisma/client.js";
 import { NODE_ENVS, PRISMA_LOG_LEVELS } from "../../config/constants.js";
 import { env } from "../../config/env.js";
+
+setDefaultAutoSelectFamily(false)
 
 const globalForPrisma = globalThis as typeof globalThis & {
   prisma?: PrismaClient;

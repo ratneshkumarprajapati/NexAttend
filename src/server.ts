@@ -1,4 +1,4 @@
-import app from "./app.js";
+import app, { startAppWorkers } from "./app.js";
 import { connectDB, registerDBShutdownHandlers } from "./config/db.js";
 import { env } from "./config/env.js";
 import { registerTelemetryShutdownHandlers } from "./instrumentation/otel.js";
@@ -8,7 +8,7 @@ try {
   await connectDB();
   registerDBShutdownHandlers();
   registerTelemetryShutdownHandlers();
-
+  startAppWorkers()
   app.listen(env.PORT, () => {
     logger.info(
       `${env.APP_NAME} server is running on port ${env.PORT} in ${env.NODE_ENV} mode`,
