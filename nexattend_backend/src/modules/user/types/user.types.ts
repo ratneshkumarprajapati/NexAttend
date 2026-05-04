@@ -18,3 +18,27 @@ export interface UpdateUserInput {
   password?: string | undefined;
   role?: UserRole | undefined;
 }
+
+export interface BulkStudentDeviceInput {
+  deviceName?: string | undefined;
+  macAddress: string;
+}
+
+export interface BulkStudentInput {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  phoneNo?: string | undefined;
+  department?: string | undefined;
+  enrolmentNo?: string | undefined;
+  year?: number | undefined;
+  preprationGoal?: unknown;
+  deviceName?: string | undefined;
+  macAddress?: string | undefined;
+  devices?: BulkStudentDeviceInput[] | undefined;
+}
+
+export interface BulkCreateStudentsInput {
+  students: BulkStudentInput[];
+}

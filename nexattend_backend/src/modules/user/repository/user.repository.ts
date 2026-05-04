@@ -1,4 +1,23 @@
 import { prisma } from "../../../services/prisma/prisma.client.js";
+import type { Prisma } from "../../../generated/prisma/client.js";
+
+type BulkStudentCreateData = {
+  email: string;
+  password: string;
+  profile: {
+    firstName: string;
+    lastName: string;
+    phoneNo?: string | null;
+    department?: string | null;
+    enrolmentNo?: string | null;
+    year?: number | null;
+    preprationGoal?: Prisma.InputJsonValue;
+  };
+  devices: Array<{
+    deviceName?: string | null;
+    hashedMac: string;
+  }>;
+};
 
 export const userRepository = {
   create: (data: any) =>
@@ -66,4 +85,33 @@ export const userRepository = {
 
     return { publicId, deletedAt };
   },
+
+  createBulkStudents: async (students: BulkStudentCreateData[]) =>
+    prisma.$transaction(async (tx) => {
+      const createdUsers = [];
+
+      for (const student of students) {
+        const createdUser = await tx.user.create({
+          data: {
+            email: student.email,
+            password: student.password,
+            role: "STUDENT",
+            profile: {
+              create: student.profile,
+            },
+            devices: {
+              create: student.devices,
+            },
+          },
+          include: {
+            profile: true,
+            devices: true,
+          },
+        });
+
+        createdUsers.push(createdUser);
+      }
+
+      return createdUsers;
+    }),
 };

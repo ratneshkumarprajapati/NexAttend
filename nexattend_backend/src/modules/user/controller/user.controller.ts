@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { createUserSchema, updateUserSchema } from "../validation/user.validation.js";
+import { bulkCreateStudentsSchema, createUserSchema, updateUserSchema } from "../validation/user.validation.js";
 import { toUserResponseDto, toUserResponseDtoList } from "../dto/user.dto.js";
 import { userService } from "../service/user.service.js";
 import {
@@ -18,6 +18,25 @@ export const userController = {
                 201,
                 "User created successfully",
                 toUserResponseDto(user)
+            );
+        } catch (error) {
+            return handleError(res, error);
+        }
+    },
+
+    async bulkCreateStudents(req: Request, res: Response) {
+        try {
+            const parsed = bulkCreateStudentsSchema.parse(req.body);
+            const users = await userService.createBulkStudents(parsed);
+
+            return sendSuccessResponse(
+                res,
+                201,
+                "Students created successfully",
+                {
+                    count: users.length,
+                    users: toUserResponseDtoList(users),
+                }
             );
         } catch (error) {
             return handleError(res, error);
