@@ -1,0 +1,223 @@
+{
+  "info": {
+    "_postman_id": "3e24437f-0d12-4c72-8c2a-610872548c38",
+    "name": "Router Microservice",
+    "description": "Postman collection for the Router Microservice REST APIs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "routerKey",
+      "value": "scraper-router-1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Devices",
+      "item": [
+        {
+          "name": "Get Cached Devices",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["devices"]
+            },
+            "description": "Returns the latest cached normalized device list. This endpoint does not call routers directly."
+          },
+          "response": [
+            {
+              "name": "Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/devices",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["devices"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"devices\": [\n    {\n      \"mac\": \"aa:bb:cc:dd:ee:ff\",\n      \"ip\": \"192.168.1.25\",\n      \"hostname\": \"phone\",\n      \"connection\": {\n        \"rssi\": -45,\n        \"band\": \"5GHz\",\n        \"interface\": \"WiFi\"\n      },\n      \"meta\": {\n        \"routerKey\": \"scraper-router-1\",\n        \"routerName\": \"Legacy UI Router\",\n        \"routerType\": \"SCRAPER\"\n      },\n      \"timestamp\": \"2026-05-03T08:45:45.325Z\"\n    }\n  ],\n  \"timestamp\": \"2026-05-03T08:45:45.325Z\",\n  \"failures\": []\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Get Router Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Runs live health checks for each configured router and returns latency plus availability."
+          },
+          "response": [
+            {
+              "name": "Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["health"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ok\",\n  \"routers\": [\n    {\n      \"routerKey\": \"scraper-router-1\",\n      \"routerName\": \"Legacy UI Router\",\n      \"routerType\": \"SCRAPER\",\n      \"available\": true,\n      \"latencyMs\": 132,\n      \"checkedAt\": \"2026-05-03T08:45:45.325Z\"\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Routers",
+      "item": [
+        {
+          "name": "Get Router Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/routers/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["routers", "status"]
+            },
+            "description": "Returns per-router diagnostics such as last login, last fetch, last error, and session state."
+          },
+          "response": [
+            {
+              "name": "Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/routers/status",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["routers", "status"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"routers\": [\n    {\n      \"key\": \"scraper-router-1\",\n      \"name\": \"Legacy UI Router\",\n      \"type\": \"SCRAPER\",\n      \"lastLoginAt\": \"2026-05-03T08:45:45.325Z\",\n      \"lastFetchAt\": \"2026-05-03T08:45:47.100Z\",\n      \"sessionActive\": true\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Debug",
+      "item": [
+        {
+          "name": "Get Raw Router Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/debug/raw?routerKey={{routerKey}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["debug", "raw"],
+              "query": [
+                {
+                  "key": "routerKey",
+                  "value": "{{routerKey}}",
+                  "description": "Router key from configuration."
+                }
+              ]
+            },
+            "description": "Returns raw adapter output before normalization. Useful for debugging API payload or scraper selector issues."
+          },
+          "response": [
+            {
+              "name": "Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/debug/raw?routerKey={{routerKey}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["debug", "raw"],
+                  "query": [
+                    {
+                      "key": "routerKey",
+                      "value": "{{routerKey}}"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"routerKey\": \"scraper-router-1\",\n  \"raw\": [\n    {\n      \"hostname\": \"phone\",\n      \"interface\": \"WiFi\",\n      \"ip\": \"192.168.1.25\",\n      \"mac\": \"AA:BB:CC:DD:EE:FF\",\n      \"allocation\": \"DHCP\",\n      \"lease\": \"23:58:10\"\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

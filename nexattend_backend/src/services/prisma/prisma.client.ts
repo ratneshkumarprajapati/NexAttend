@@ -1,9 +1,11 @@
 import {setDefaultAutoSelectFamily} from "node:net"
+import {setDefaultResultOrder}  from "node:dns"
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../generated/prisma/client.js";
 import { NODE_ENVS, PRISMA_LOG_LEVELS } from "../../config/constants.js";
 import { env } from "../../config/env.js";
 
+setDefaultResultOrder("ipv4first")
 setDefaultAutoSelectFamily(false)
 
 const globalForPrisma = globalThis as typeof globalThis & {
