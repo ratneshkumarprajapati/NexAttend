@@ -1,11 +1,13 @@
 
-import logger from "../../utils/logger.js";
+import { createModuleLogger } from "../../utils/logger.js";
 import { routerServices } from "./router.service.js";
 import type { ConnectedDevice } from "./router.types.js";
 
+const logger = createModuleLogger("Aggregator");
+
 export class RouterAggregator {
   async fetchAllDevices(): Promise<ConnectedDevice[]> {
-    logger.info("[Aggregator] Fetching devices from all routers...");
+    logger.info("Fetching devices from all routers...");
 
     const results = await Promise.allSettled(
       routerServices.map(async (router, index) => {
@@ -13,7 +15,7 @@ export class RouterAggregator {
 
         const devices = await router.fetchConnectedDevices();
 
-        logger.info(`[Aggregator] Router ${index} success`, {
+        logger.info(`Router ${index} success`, {
           count: devices.length,
           latency: Date.now() - start,
         });
@@ -28,17 +30,17 @@ export class RouterAggregator {
       if (result.status === "fulfilled") {
         allDevices.push(...result.value);
       } else {
-        logger.error(`[Aggregator] Router ${index} failed`, {
+        logger.error(`Router ${index} failed`, {
           error: result.reason?.message,
         });
       }
     });
 
-    logger.info(`[Aggregator] Total devices (before dedupe): ${allDevices.length}`);
+    logger.info(`Total devices (before dedupe): ${allDevices.length}`);
 
     const uniqueDevices = this.deduplicate(allDevices);
 
-    logger.info(`[Aggregator] Unique devices (after dedupe): ${uniqueDevices.length}`);
+    logger.info(`Unique devices (after dedupe): ${uniqueDevices.length}`);
 
     return uniqueDevices;
   }

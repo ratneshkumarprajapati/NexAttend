@@ -4,10 +4,11 @@ import { userRepository } from "../repository/user.repository.js";
 import type { BulkCreateStudentsInput, BulkStudentInput, CreateUserInput, UpdateUserInput } from "../types/user.types.js";
 import { env } from "../../../config/env.js";
 import { withActiveSpan } from "../../../instrumentation/otel.js";
-import logger from "../../../utils/logger.js";
+import { createModuleLogger } from "../../../utils/logger.js";
 import { AppError } from "../../../utils/appError.js";
 import { hashMac } from "../../../utils/hash.util.js";
 
+const logger = createModuleLogger("UserService");
 const SALT_ROUNDS = Number(env.SECURITY.HASH_SALT) || 10;
 
 const isPrismaKnownError = (

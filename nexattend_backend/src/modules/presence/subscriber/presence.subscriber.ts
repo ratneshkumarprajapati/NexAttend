@@ -1,5 +1,4 @@
 import { eventBus } from "../../../events/eventBus.js";
-import logger from "../../../utils/logger.js";
 import { PresenceProcessor } from "../processor/presence.processor.js";
 import { PresenceRepository } from "../repository/presence.repository.js"
 import { PresenceService } from "../service/presence.service.js";
@@ -13,7 +12,6 @@ export const registerPresenceSubscribers = () => {
     const service = new PresenceService(repo);
     const processor = new PresenceProcessor(service);
     eventBus.on("device:connected", (payload) => {
-        // logger.info("inside device connected event ")
         void processor.handleDeviceConnected(payload);
     });
 

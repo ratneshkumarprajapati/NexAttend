@@ -12,6 +12,7 @@ import accessPointRoutes from "./modules/accesspoint/routes/accesspoint.routes.j
 import attendanceRoutes from "./modules/attendance/routes/attendance.routes.js";
 import { poller } from "./jobs/routerPoller.job.js";
 import { logDumpJob } from "./jobs/logDump.job.js";
+import { systemLogArchiveJob } from "./jobs/systemLogArchive.job.js";
 import { initPresenceModule } from "./modules/presence/init/presence.init.js";
 import { initAttendanceModule } from "./modules/attendance/init/attendance.init.js";
 import { initAIModule } from "./modules/ai/Init/ai.init.js";
@@ -55,6 +56,7 @@ export const startAppWorkers = () => {
   initAIModule();
   poller.start();
   logDumpJob.start();
+  systemLogArchiveJob.start();
 };
 // console.table(await routerService.fetchConnectedDevices());
 export default app;

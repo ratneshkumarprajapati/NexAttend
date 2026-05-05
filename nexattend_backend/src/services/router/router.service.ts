@@ -1,8 +1,9 @@
 import { env } from "../../config/env.js";
 import { HttpClient } from "../http/http.client.js";
 import type { ConnectedDevice, RouterJwtPayload, RouterLoginResponse } from "./router.types.js";
-import logger from "../../utils/logger.js";
+import { createModuleLogger } from "../../utils/logger.js";
 
+const logger = createModuleLogger("RouterService");
 type RouterConfig = (typeof env.ROUTER.CONFIGS)[number];
 
 const getByPath = (value: unknown, path: string): unknown => {
@@ -117,7 +118,7 @@ class RouterService {
         });
       }
 
-      logger.error(error)
+      logger.error(error);
       throw error;
     }
   }

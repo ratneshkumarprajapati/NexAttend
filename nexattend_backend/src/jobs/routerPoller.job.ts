@@ -3,9 +3,10 @@ import { eventBus } from "../events/eventBus.js";
 import { accessPointService } from "../modules/accesspoint/service/accesspoint.service.js";
 import { routerAggregator } from "../services/router/router.aggregator.js";
 import { routerAdapterClient } from "../services/router/routerAdapter.client.js";
-import logger from "../utils/logger.js";
+import { createModuleLogger } from "../utils/logger.js";
 import type { Device } from "./routerPoller.types.js";
 
+const logger = createModuleLogger("Poller");
 
 export class RouterPoller {
     private interval: number;
@@ -20,7 +21,7 @@ export class RouterPoller {
     start() {
         if (this.timer) return;
 
-        logger.info("[Poller] Started");
+        logger.info("Started");
 
         const run = async () => {
             await this.poll();
@@ -34,7 +35,7 @@ export class RouterPoller {
         if (this.timer) {
             clearTimeout(this.timer);
             this.timer = null;
-            logger.info("[Poller] Stopped");
+            logger.info("Stopped");
         }
     }
 
@@ -43,7 +44,7 @@ export class RouterPoller {
             //  Fetch from aggregator
             const devices = await this.fetchDevices();
 
-            logger.info(`[Poller] Devices received: ${devices.length}`);
+            logger.info(`Devices received: ${devices.length}`);
 
             //  Build current state map
             const currentMap = new Map<string, Device>();
@@ -83,7 +84,7 @@ export class RouterPoller {
             // Detect NEW devices
             for (const [mac, device] of currentMap) {
                 if (!this.previousDevices.has(mac)) {
-                    logger.info(`[Poller] New Device: ${mac}`);
+                    logger.info(`New Device: ${mac}`);
 
                     await eventBus.emit("device:connected", {
                         mac,
@@ -99,7 +100,7 @@ export class RouterPoller {
             //  Detect DISCONNECTED
             for (const [mac, device] of this.previousDevices) {
                 if (!currentMap.has(mac)) {
-                    logger.info(`[Poller] Device Left: ${mac}`);
+                    logger.info(`Device Left: ${mac}`);
 
                     await eventBus.emit("device:disconnected", {
                         mac,
@@ -126,13 +127,13 @@ export class RouterPoller {
             this.previousDevices = currentMap;
 
         } catch (error) {
-            logger.error("[Poller] Polling failed", error);
+            logger.error("Polling failed", error);
         }
     }
 
     private async fetchDevices() {
         if (env.ROUTER.EXECUTION_MODE === "router-adapter") {
-            logger.info("[Poller] Fetching devices from Router Adapter API");
+            logger.info("Fetching devices from Router Adapter API");
             return routerAdapterClient.fetchConnectedDevices();
         }
 

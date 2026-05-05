@@ -1,8 +1,10 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig } from "axios";
 import https from "https";
-import logger from "../../utils/logger.js";
+import { createModuleLogger } from "../../utils/logger.js";
 import type { HttpOptions } from "./http.types.js";
+
+const logger = createModuleLogger("HttpClient");
 
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
@@ -21,20 +23,18 @@ export class HttpClient {
       },
     });
 
-    // ✅ Request interceptor
     this.client.interceptors.request.use((config) => {
-      logger.info(`➡️ ${config.method?.toUpperCase()} ${config.url}`);
+      logger.info(`${config.method?.toUpperCase()} ${config.url}`);
       return config;
     });
 
-    // ✅ Response interceptor
     this.client.interceptors.response.use(
       (response) => {
-        logger.info(`✅ ${response.status} ${response.config.url}`);
+        logger.info(`${response.status} ${response.config.url}`);
         return response;
       },
       (error) => {
-        logger.error("❌ HTTP Error:", error.message);
+        logger.error(`HTTP Error: ${error.message}`);
         return Promise.reject(error);
       }
     );
@@ -58,7 +58,6 @@ export class HttpClient {
 
       return response.data;
     } catch (error: any) {
-      // 🔥 Better error handling
       if (error.response) {
         throw new Error(
           error.response.data?.message ||
@@ -73,8 +72,6 @@ export class HttpClient {
       throw error;
     }
   }
-
-  // 🚀 Public methods
 
   get<T>(url: string, options?: HttpOptions) {
     return this.request<T>(url, {

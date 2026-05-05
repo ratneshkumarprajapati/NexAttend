@@ -15,7 +15,7 @@ const globalForPrisma = globalThis as typeof globalThis & {
 const createPrismaClient = () =>
   new PrismaClient({
     adapter: new PrismaPg(env.DATABASE_URL),
-    log: [...PRISMA_LOG_LEVELS],
+    // log: [...PRISMA_LOG_LEVELS],
   });
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();

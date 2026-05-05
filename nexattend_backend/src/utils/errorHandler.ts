@@ -1,8 +1,10 @@
 import type { Response } from "express";
 import { z } from "zod";
 import { AppError } from "./appError.js";
-import logger from "./logger.js";
+import { createModuleLogger } from "./logger.js";
 import { sendErrorResponse } from "./apiResponse.js";
+
+const logger = createModuleLogger("ErrorHandler");
 
 interface HandleErrorOptions {
   defaultMessage?: string;

@@ -152,10 +152,18 @@ export const env = {
 
   LOG_DUMP: {
     ENABLED: process.env.LOG_DUMP_ENABLED !== "false",
+    RUN_ON_STARTUP: process.env.LOG_DUMP_RUN_ON_STARTUP !== "false",
+    CLEAN_AFTER_DUMP: process.env.LOG_DUMP_CLEAN_AFTER_DUMP !== "false",
     DIRECTORY: process.env.LOG_DUMP_DIRECTORY || "exports/log-dumps",
-    HOUR: Number(process.env.LOG_DUMP_HOUR) || 0,
-    MINUTE: Number(process.env.LOG_DUMP_MINUTE) || 10,
+    HOUR: Number(process.env.LOG_DUMP_HOUR ?? 23),
+    MINUTE: Number(process.env.LOG_DUMP_MINUTE ?? 0),
     BATCH_SIZE: Number(process.env.LOG_DUMP_BATCH_SIZE) || 5000,
+  },
+
+  SYSTEM_LOG: {
+    ENABLED: process.env.SYSTEM_LOG_ENABLED !== "false",
+    DIRECTORY: process.env.SYSTEM_LOG_DIRECTORY || "clogs",
+    RETENTION_DAYS: Number(process.env.SYSTEM_LOG_RETENTION_DAYS) || 3,
   },
 
   OTEL: {

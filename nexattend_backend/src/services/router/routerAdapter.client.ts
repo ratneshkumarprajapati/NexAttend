@@ -1,7 +1,9 @@
 import axios from "axios";
 import { env } from "../../config/env.js";
-import logger from "../../utils/logger.js";
+import { createModuleLogger } from "../../utils/logger.js";
 import type { ConnectedDevice } from "./router.types.js";
+
+const logger = createModuleLogger("RouterAdapter");
 
 interface RouterAdapterDevice {
   mac: string;
@@ -56,7 +58,7 @@ class RouterAdapterClient {
     const response = await this.client.get<RouterAdapterDevicesResponse>("/devices");
 
     if (response.data.failures?.length) {
-      logger.warn("[RouterAdapter] Partial router failures", {
+      logger.warn("Partial router failures", {
         failures: response.data.failures,
       });
     }

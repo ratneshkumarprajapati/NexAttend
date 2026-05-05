@@ -1,7 +1,8 @@
 import { eventBus } from "../../../events/eventBus.js";
-import logger from "../../../utils/logger.js";
+import { createModuleLogger } from "../../../utils/logger.js";
 import type { PresenceService } from "../service/presence.service.js";
 
+const logger = createModuleLogger("PresenceProcessor");
 
 
 export class PresenceProcessor {
@@ -18,11 +19,11 @@ export class PresenceProcessor {
 
         )
         if (!device) {
-            logger.error("no device present ",payload.mac);
+            logger.error(`No device present: ${payload.mac}`);
             return
         };
 
-        logger.info("Presence recorded:", payload.mac);
+        logger.info(`Presence recorded: ${payload.mac}`);
         // Emit attendance event
         eventBus.emit("attendance:seen", {
             userId: device.userId,
@@ -34,11 +35,11 @@ export class PresenceProcessor {
 
 
     async handleDeviceDisconnected(payload: any) {
-        logger.info("Device disconnected:", payload.mac);
+        logger.info(`Device disconnected: ${payload.mac}`);
         const device = await this.service.identifyDevice(payload.mac);
 
         if (!device) {
-            logger.error("no device present ", payload.mac);
+            logger.error(`No device present: ${payload.mac}`);
             return;
         }
 

@@ -1,7 +1,9 @@
 import { env } from "../../../config/env.js";
-import logger from "../../../utils/logger.js";
+import { createModuleLogger } from "../../../utils/logger.js";
 import { AttendanceRepository } from "../repository/attendance.repository.js";
 import { AttendanceService } from "../service/attendance.service.js";
+
+const logger = createModuleLogger("AttendanceJob");
 
 class AttendanceMaintenanceJob {
     private timer: NodeJS.Timeout | null = null;

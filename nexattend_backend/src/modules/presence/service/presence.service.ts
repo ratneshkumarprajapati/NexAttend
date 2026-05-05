@@ -1,8 +1,9 @@
-import logger from "../../../utils/logger.js";
+import { createModuleLogger } from "../../../utils/logger.js";
 import { resolveAccessPoint } from "../../accesspoint/ap.resolver.js";
 import { deviceService } from "../../device/service/device.service.js";
 import type { PresenceRepository } from "../repository/presence.repository.js";
 
+const logger = createModuleLogger("PresenceService");
 
 
 export class PresenceService {
@@ -14,7 +15,7 @@ export class PresenceService {
         const device = await deviceService.identifyDevice(normalizeMac);
 
         if (!device) {
-            logger.warn("Unknown Device:-", normalizeMac);
+            logger.warn(`Unknown device: ${normalizeMac}`);
             return;
         }
 

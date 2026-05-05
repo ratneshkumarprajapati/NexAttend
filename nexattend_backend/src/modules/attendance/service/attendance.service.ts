@@ -1,7 +1,9 @@
 import { eventBus } from "../../../events/eventBus.js";
-import logger from "../../../utils/logger.js";
+import { createModuleLogger } from "../../../utils/logger.js";
 import type { AttendanceRepository } from "../repository/attendance.repository.js";
 import type { AdminStudentAttendanceQuery } from "../types/attendance.types.js";
+
+const logger = createModuleLogger("AttendanceService");
 
 const toDate = (value: Date | string | undefined) =>
     value instanceof Date ? value : value ? new Date(value) : new Date();

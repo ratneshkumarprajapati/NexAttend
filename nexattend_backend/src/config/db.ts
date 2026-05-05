@@ -4,8 +4,9 @@ import {
 } from "./constants.js";
 import prisma from "../services/prisma/prisma.client.js";
 import type { PrismaClient } from "../generated/prisma/client.js";
-import logger from "../utils/logger.js";
+import { createModuleLogger } from "../utils/logger.js";
 
+const logger = createModuleLogger("Database");
 const globalForPrisma = globalThis as typeof globalThis & {
   prismaConnectionPromise: Promise<PrismaClient> | undefined;
   prismaShutdownHandlersRegistered?: boolean;

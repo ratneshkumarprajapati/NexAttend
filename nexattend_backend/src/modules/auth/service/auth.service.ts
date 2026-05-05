@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { env } from "../../../config/env.js";
 import { withActiveSpan } from "../../../instrumentation/otel.js";
-import logger from "../../../utils/logger.js";
+import { createModuleLogger } from "../../../utils/logger.js";
 import { AppError } from "../../../utils/appError.js";
 import { toAuthResponseDto } from "../dto/auth.dto.js";
 import { toUserResponseDto } from "../../user/dto/user.dto.js";
@@ -14,6 +14,7 @@ import type {
 } from "../types/auth.types.js";
 
 const JWT_EXPIRES_IN = "7d";
+const logger = createModuleLogger("AuthService");
 
 export const authService = {
   generateToken(payload: AuthTokenPayload) {

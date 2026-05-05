@@ -16,8 +16,9 @@ import {
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { PrismaInstrumentation } from "@prisma/instrumentation";
 import { env } from "../config/env.js";
-import logger from "../utils/logger.js";
+import { createModuleLogger } from "../utils/logger.js";
 
+const logger = createModuleLogger("Telemetry");
 let sdk: NodeSDK | null = null;
 let telemetryStarted = false;
 

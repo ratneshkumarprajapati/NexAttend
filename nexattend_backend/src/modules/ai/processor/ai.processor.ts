@@ -1,7 +1,8 @@
 import { getDuration } from "../../../utils/getDuration.js";
-import logger from "../../../utils/logger.js";
+import { createModuleLogger } from "../../../utils/logger.js";
 import type { AIService } from "../service/ai.service.js";
 
+const logger = createModuleLogger("AIProcessor");
 
 
 export class AIProcessor {
@@ -20,7 +21,7 @@ export class AIProcessor {
          
          
             })
-         logger.info("AI Result:", result);
+         logger.info("AI result", result);
         //  TODO:Update db
     }
 

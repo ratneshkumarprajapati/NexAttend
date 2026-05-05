@@ -2,11 +2,12 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { env } from "../config/env.js";
 import prisma from "../services/prisma/prisma.client.js";
-import logger from "../utils/logger.js";
+import { createModuleLogger } from "../utils/logger.js";
 
 type XlsCellValue = string | number | Date | null | undefined;
 type XlsRow = Record<string, XlsCellValue>;
 
+const logger = createModuleLogger("LogDumpJob");
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 const pad2 = (value: number) => value.toString().padStart(2, "0");
@@ -175,6 +176,10 @@ class LogDumpJob {
       `Log dump job scheduled daily at ${pad2(env.LOG_DUMP.HOUR)}:${pad2(env.LOG_DUMP.MINUTE)}`,
     );
     this.scheduleNextRun();
+
+    if (env.LOG_DUMP.RUN_ON_STARTUP) {
+      void this.runOnStartup();
+    }
   }
 
   stop() {
@@ -187,6 +192,16 @@ class LogDumpJob {
   async runForPreviousDay(reference = new Date()) {
     const range = getPreviousLocalDayRange(reference);
     return this.createDump(range.start, range.end, range.name);
+  }
+
+  private async runOnStartup() {
+    logger.info("Running startup log dump for previous day");
+
+    try {
+      await this.runForPreviousDay();
+    } catch (error) {
+      logger.error("Startup log dump failed", error);
+    }
   }
 
   private scheduleNextRun() {
@@ -278,6 +293,10 @@ class LogDumpJob {
       logger.info(
         `Log dump created: ${zipPath} attendanceRows=${attendanceRows.length} presenceRows=${presenceRows.length}`,
       );
+
+      if (env.LOG_DUMP.CLEAN_AFTER_DUMP) {
+        await this.cleanDumpedRows(start, end);
+      }
 
       return zipPath;
     } catch (error) {
@@ -386,6 +405,31 @@ class LogDumpJob {
     }
 
     return rows;
+  }
+
+  private async cleanDumpedRows(start: Date, end: Date) {
+    const [attendanceDeleted, presenceDeleted] = await Promise.all([
+      prisma.attendanceLog.deleteMany({
+        where: {
+          timestamp: {
+            gte: start,
+            lt: end,
+          },
+        },
+      }),
+      prisma.presenceLog.deleteMany({
+        where: {
+          seenAt: {
+            gte: start,
+            lt: end,
+          },
+        },
+      }),
+    ]);
+
+    logger.info(
+      `Log dump cleanup completed attendanceRows=${attendanceDeleted.count} presenceRows=${presenceDeleted.count}`,
+    );
   }
 }
 

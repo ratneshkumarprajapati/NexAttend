@@ -1,5 +1,4 @@
 import { hashMac } from "../../../utils/hash.util.js"
-import logger from "../../../utils/logger.js";
 import { deviceRepository } from "../repository/device.repository.js";
 
 

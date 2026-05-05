@@ -2,7 +2,9 @@ import app, { startAppWorkers } from "./app.js";
 import { connectDB, registerDBShutdownHandlers } from "./config/db.js";
 import { env } from "./config/env.js";
 import { registerTelemetryShutdownHandlers } from "./instrumentation/otel.js";
-import logger from "./utils/logger.js";
+import { createModuleLogger } from "./utils/logger.js";
+
+const logger = createModuleLogger("Server");
 
 try {
   await connectDB();
