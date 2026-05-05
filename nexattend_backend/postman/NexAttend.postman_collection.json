@@ -31,6 +31,10 @@
       "value": "devices"
     },
     {
+      "key": "attendancePath",
+      "value": "attendance"
+    },
+    {
       "key": "authToken",
       "value": ""
     },
@@ -446,6 +450,70 @@
               ]
             },
             "description": "Fetch devices for the authenticated user."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Attendance APIs",
+      "description": "Admin attendance endpoints mounted at `/api/v1/attendance`. Login as an ADMIN first so `authToken` has admin access.",
+      "item": [
+        {
+          "name": "Admin Student Monitor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiBasePath}}/{{attendancePath}}/admin/students?date=2026-05-05&status=ALL&page=1&limit=25&department=CSE&year=4&search=Ratnesh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiBasePath}}",
+                "{{attendancePath}}",
+                "admin",
+                "students"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-05-05",
+                  "description": "Optional YYYY-MM-DD date for daily attendance totals. Defaults to today."
+                },
+                {
+                  "key": "status",
+                  "value": "ALL",
+                  "description": "Optional filter: ALL, PRESENT, or ABSENT."
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Optional page number. Defaults to 1."
+                },
+                {
+                  "key": "limit",
+                  "value": "25",
+                  "description": "Optional page size. Defaults to 25, max 100."
+                },
+                {
+                  "key": "department",
+                  "value": "CSE",
+                  "description": "Optional department filter."
+                },
+                {
+                  "key": "year",
+                  "value": "4",
+                  "description": "Optional student year filter."
+                },
+                {
+                  "key": "search",
+                  "value": "Ratnesh",
+                  "description": "Optional search across email, first name, last name, and enrolment number."
+                }
+              ]
+            },
+            "description": "Fetch current student monitoring data for the admin panel, including total students, present/absent counts, active devices, and per-student profile/device/attendance details."
           },
           "response": []
         }

@@ -11,3 +11,15 @@ export interface AttendanceDisconnectedPayload {
     userId: number;
     timestamp: Date;
 }
+
+export type AdminStudentAttendanceStatus = "ALL" | "PRESENT" | "ABSENT";
+
+export interface AdminStudentAttendanceQuery {
+    date?: string | undefined;
+    department?: string | undefined;
+    search?: string | undefined;
+    year?: number | undefined;
+    status: AdminStudentAttendanceStatus;
+    page: number;
+    limit: number;
+}

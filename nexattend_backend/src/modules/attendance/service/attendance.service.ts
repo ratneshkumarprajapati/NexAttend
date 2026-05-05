@@ -1,6 +1,7 @@
 import { eventBus } from "../../../events/eventBus.js";
 import logger from "../../../utils/logger.js";
 import type { AttendanceRepository } from "../repository/attendance.repository.js";
+import type { AdminStudentAttendanceQuery } from "../types/attendance.types.js";
 
 const toDate = (value: Date | string | undefined) =>
     value instanceof Date ? value : value ? new Date(value) : new Date();
@@ -18,6 +19,9 @@ const isSameUtcDay = (a: Date, b: Date) =>
 
 const durationSeconds = (startTime: Date, endTime: Date) =>
     Math.max(0, Math.floor((endTime.getTime() - startTime.getTime()) / 1000));
+
+const monitoringDate = (date?: string) =>
+    date ? startOfUtcDay(new Date(`${date}T00:00:00.000Z`)) : startOfUtcDay(new Date());
 
 export class AttendanceService {
     constructor(private repo: AttendanceRepository) { }
@@ -119,6 +123,51 @@ export class AttendanceService {
             openSessions,
             closedSessions,
             dailyRows,
+        };
+    }
+
+    async getAdminStudentMonitor(query: AdminStudentAttendanceQuery) {
+        const date = monitoringDate(query.date);
+        const [totalStudents, presentStudents, activeDevices, filteredStudents, students] =
+            await Promise.all([
+                this.repo.countStudentsForMonitor(query),
+                this.repo.countStudentsForMonitor(query, "PRESENT"),
+                this.repo.countActiveDevicesForMonitor(query),
+                this.repo.countStudentsForMonitor(query, query.status),
+                this.repo.findStudentMonitorRows(query, date),
+            ]);
+
+        return {
+            date: date.toISOString().slice(0, 10),
+            summary: {
+                totalStudents,
+                presentStudents,
+                absentStudents: Math.max(0, totalStudents - presentStudents),
+                activeDevices,
+            },
+            pagination: {
+                page: query.page,
+                limit: query.limit,
+                total: filteredStudents,
+                totalPages: Math.ceil(filteredStudents / query.limit),
+            },
+            students: students.map((student) => {
+                const activeSession = student.sessions[0] ?? null;
+                const dailyAttendance = student.attendanceDays[0] ?? null;
+
+                return {
+                    publicId: student.publicId,
+                    email: student.email,
+                    profile: student.profile,
+                    devices: student.devices,
+                    attendance: {
+                        currentStatus: activeSession ? "PRESENT" : "ABSENT",
+                        activeSession,
+                        daily: dailyAttendance,
+                    },
+                    createdAt: student.createdAt,
+                };
+            }),
         };
     }
 

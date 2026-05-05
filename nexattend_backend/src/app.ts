@@ -9,6 +9,7 @@ import authRoutes from "./modules/auth/routes/auth.routes.js";
 import profileRoutes from "./modules/profile/routes/profile.routes.js";
 import deviceRoutes from "./modules/device/routes/device.routes.js"
 import accessPointRoutes from "./modules/accesspoint/routes/accesspoint.routes.js";
+import attendanceRoutes from "./modules/attendance/routes/attendance.routes.js";
 import { poller } from "./jobs/routerPoller.job.js";
 import { logDumpJob } from "./jobs/logDump.job.js";
 import { initPresenceModule } from "./modules/presence/init/presence.init.js";
@@ -44,6 +45,7 @@ v1Router.use("/users", userRoutes);
 v1Router.use("/profiles", profileRoutes);
 v1Router.use("/devices", deviceRoutes);
 v1Router.use("/access-points", accessPointRoutes);
+v1Router.use("/attendance", attendanceRoutes);
 
 app.use(API_BASE_PATH, v1Router);
 

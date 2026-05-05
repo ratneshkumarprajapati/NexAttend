@@ -1,6 +1,99 @@
 import prisma from "../../../services/prisma/prisma.client.js";
+import type { Prisma } from "../../../generated/prisma/client.js";
+import type {
+    AdminStudentAttendanceQuery,
+    AdminStudentAttendanceStatus,
+} from "../types/attendance.types.js";
 
 export type AttendanceEventStatus = "PRESENT" | "ABSENT";
+
+const buildStudentMonitorWhere = (
+    query: Pick<AdminStudentAttendanceQuery, "department" | "search" | "year">,
+    status: AdminStudentAttendanceStatus = "ALL",
+): Prisma.UserWhereInput => {
+    const where: Prisma.UserWhereInput = {
+        role: "STUDENT",
+        deletedAt: null,
+    };
+
+    const profileFilters: Prisma.ProfileWhereInput = {};
+
+    if (query.department) {
+        profileFilters.department = {
+            equals: query.department,
+            mode: "insensitive",
+        };
+    }
+
+    if (query.year !== undefined) {
+        profileFilters.year = query.year;
+    }
+
+    if (Object.keys(profileFilters).length > 0) {
+        where.profile = {
+            is: profileFilters,
+        };
+    }
+
+    if (query.search) {
+        where.OR = [
+            {
+                email: {
+                    contains: query.search,
+                    mode: "insensitive",
+                },
+            },
+            {
+                profile: {
+                    is: {
+                        firstName: {
+                            contains: query.search,
+                            mode: "insensitive",
+                        },
+                    },
+                },
+            },
+            {
+                profile: {
+                    is: {
+                        lastName: {
+                            contains: query.search,
+                            mode: "insensitive",
+                        },
+                    },
+                },
+            },
+            {
+                profile: {
+                    is: {
+                        enrolmentNo: {
+                            contains: query.search,
+                            mode: "insensitive",
+                        },
+                    },
+                },
+            },
+        ];
+    }
+
+    if (status === "PRESENT") {
+        where.sessions = {
+            some: {
+                endTime: null,
+            },
+        };
+    }
+
+    if (status === "ABSENT") {
+        where.sessions = {
+            none: {
+                endTime: null,
+            },
+        };
+    }
+
+    return where;
+};
 
 export class AttendanceRepository {
     async findActiveSession(userId: number, deviceId: number) {
@@ -72,6 +165,113 @@ export class AttendanceRepository {
 
     async countDailyRows() {
         return prisma.attendanceDaily.count();
+    }
+
+    async countStudentsForMonitor(
+        query: Pick<AdminStudentAttendanceQuery, "department" | "search" | "year">,
+        status: AdminStudentAttendanceStatus = "ALL",
+    ) {
+        return prisma.user.count({
+            where: buildStudentMonitorWhere(query, status),
+        });
+    }
+
+    async countActiveDevicesForMonitor(
+        query: Pick<AdminStudentAttendanceQuery, "department" | "search" | "year">,
+    ) {
+        return prisma.device.count({
+            where: {
+                deletedAt: null,
+                isActive: true,
+                user: buildStudentMonitorWhere(query),
+            },
+        });
+    }
+
+    async findStudentMonitorRows(
+        query: AdminStudentAttendanceQuery,
+        date: Date,
+    ) {
+        return prisma.user.findMany({
+            where: buildStudentMonitorWhere(query, query.status),
+            orderBy: {
+                createdAt: "desc",
+            },
+            skip: (query.page - 1) * query.limit,
+            take: query.limit,
+            select: {
+                publicId: true,
+                email: true,
+                createdAt: true,
+                profile: {
+                    select: {
+                        firstName: true,
+                        lastName: true,
+                        phoneNo: true,
+                        avatarUrl: true,
+                        department: true,
+                        enrolmentNo: true,
+                        year: true,
+                    },
+                },
+                devices: {
+                    where: {
+                        deletedAt: null,
+                    },
+                    select: {
+                        publicId: true,
+                        deviceName: true,
+                        isActive: true,
+                        createdAt: true,
+                    },
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                },
+                sessions: {
+                    where: {
+                        endTime: null,
+                    },
+                    orderBy: {
+                        lastSeen: "desc",
+                    },
+                    take: 1,
+                    select: {
+                        publicId: true,
+                        startTime: true,
+                        lastSeen: true,
+                        status: true,
+                        confidenceScore: true,
+                        device: {
+                            select: {
+                                publicId: true,
+                                deviceName: true,
+                            },
+                        },
+                        accessPoint: {
+                            select: {
+                                publicId: true,
+                                name: true,
+                                location: true,
+                                routerName: true,
+                            },
+                        },
+                    },
+                },
+                attendanceDays: {
+                    where: {
+                        date,
+                    },
+                    take: 1,
+                    select: {
+                        date: true,
+                        totalDuration: true,
+                        firstSeen: true,
+                        lastSeen: true,
+                    },
+                },
+            },
+        });
     }
 
     async createLog(data: {
