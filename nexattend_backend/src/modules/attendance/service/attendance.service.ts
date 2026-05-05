@@ -65,8 +65,8 @@ export class AttendanceService {
         });
 
         if (activeSession) {
-            await this.closeSessionAt(activeSession, timestamp);
-            eventBus.emit("attendance:completed", activeSession);
+            const closedSession = await this.closeSessionAt(activeSession, timestamp);
+            eventBus.emit("attendance:completed", closedSession);
             logger.info(`Closed attendance session ${activeSession.id} on disconnect`);
         }
 

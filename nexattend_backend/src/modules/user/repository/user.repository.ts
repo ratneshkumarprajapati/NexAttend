@@ -87,31 +87,37 @@ export const userRepository = {
   },
 
   createBulkStudents: async (students: BulkStudentCreateData[]) =>
-    prisma.$transaction(async (tx) => {
-      const createdUsers = [];
+    prisma.$transaction(
+      async (tx) => {
+        const createdUsers = [];
 
-      for (const student of students) {
-        const createdUser = await tx.user.create({
-          data: {
-            email: student.email,
-            password: student.password,
-            role: "STUDENT",
-            profile: {
-              create: student.profile,
+        for (const student of students) {
+          const createdUser = await tx.user.create({
+            data: {
+              email: student.email,
+              password: student.password,
+              role: "STUDENT",
+              profile: {
+                create: student.profile,
+              },
+              devices: {
+                create: student.devices,
+              },
             },
-            devices: {
-              create: student.devices,
+            include: {
+              profile: true,
+              devices: true,
             },
-          },
-          include: {
-            profile: true,
-            devices: true,
-          },
-        });
+          });
 
-        createdUsers.push(createdUser);
+          createdUsers.push(createdUser);
+        }
+
+        return createdUsers;
+      },
+      {
+        maxWait: 15_000,
+        timeout: 30_000,
       }
-
-      return createdUsers;
-    }),
+    ),
 };
