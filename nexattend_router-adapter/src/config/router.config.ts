@@ -146,7 +146,7 @@ const Routers: RouterConfig[] = [
     retry: { attempts: 2, delayMs: 300 },
     tokenTtlMs: 300000,
     priority: 100,
-    enabled: true,
+    enabled: false,
   },
 
   {
@@ -191,7 +191,7 @@ const Routers: RouterConfig[] = [
     name: "Legacy UI Router",
     type: "SCRAPER",
     provider: "generic",
-    enabled: false,
+    enabled: true,
     priority: 100,
     baseUrl: "http://192.168.1.1",
     loginPath: "/admin/login.asp",
