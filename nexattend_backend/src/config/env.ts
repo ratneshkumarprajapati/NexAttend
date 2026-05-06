@@ -127,7 +127,7 @@ export const env = {
         ? "router-adapter"
         : "normal",
     ADAPTER_BASE_URL:
-      process.env.ROUTER_ADAPTER_BASE_URL || "http://localhost:3000",
+      process.env.ROUTER_ADAPTER_BASE_URL || "http://localhost:5000",
     CONFIGS: routers,
     BASE_URL: primaryRouter.baseUrl,
     LOGIN_API_URL: primaryRouter.loginApiUrl,
