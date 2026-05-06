@@ -40,6 +40,10 @@ export interface BulkStudentPayload {
     year?: number;
     deviceName?: string;
     macAddress?: string;
+    devices?: Array<{
+      deviceName?: string;
+      macAddress: string;
+    }>;
   }>;
 }
 

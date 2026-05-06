@@ -13,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { profileService } from '@/lib/services/profileService';
 import { userService, type UserRecord } from '@/lib/services/userService';
 
 type StudentFormState = {
@@ -25,6 +24,8 @@ type StudentFormState = {
   department: string;
   enrolmentNo: string;
   year: string;
+  deviceName: string;
+  macAddress: string;
 };
 
 const initialFormState: StudentFormState = {
@@ -36,6 +37,8 @@ const initialFormState: StudentFormState = {
   department: '',
   enrolmentNo: '',
   year: '',
+  deviceName: '',
+  macAddress: '',
 };
 
 const PAGE_SIZE = 10;
@@ -72,8 +75,22 @@ export default function StudentsPage() {
   };
 
   const handleAddStudent = async () => {
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
-      setError('First name, last name, email, and password are required');
+    const parsedYear = Number(formData.year);
+
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.password ||
+      !formData.department ||
+      !formData.enrolmentNo ||
+      !formData.year ||
+      !formData.deviceName ||
+      !formData.macAddress ||
+      !Number.isInteger(parsedYear) ||
+      parsedYear <= 0
+    ) {
+      setError('All student and device fields are required, and year must be a positive number');
       return;
     }
 
@@ -81,25 +98,22 @@ export default function StudentsPage() {
       setSaving(true);
       setError(null);
 
-      const createdUser = await userService.createUser({
-        email: formData.email.trim(),
-        password: formData.password,
-        role: 'STUDENT',
-        profile: {
+      await userService.bulkCreateStudents({
+        students: [{
+          email: formData.email.trim(),
+          password: formData.password,
           firstName: formData.firstName.trim(),
           lastName: formData.lastName.trim(),
           phoneNo: formData.phoneNo.trim() || undefined,
-        },
+          department: formData.department.trim(),
+          enrolmentNo: formData.enrolmentNo.trim(),
+          year: parsedYear,
+          devices: [{
+            deviceName: formData.deviceName.trim(),
+            macAddress: formData.macAddress.trim(),
+          }],
+        }],
       });
-
-      const year = formData.year ? Number(formData.year) : undefined;
-      if (createdUser.id && (formData.department || formData.enrolmentNo || year)) {
-        await profileService.updateProfile(createdUser.id, {
-          department: formData.department.trim() || undefined,
-          enrolmentNo: formData.enrolmentNo.trim() || undefined,
-          year,
-        });
-      }
 
       setFormData(initialFormState);
       setShowForm(false);
@@ -178,6 +192,7 @@ export default function StudentsPage() {
       {showForm && (
         <div className="glass rounded-xl p-6 space-y-4">
           <h3 className="text-lg font-semibold text-foreground">Add New Student</h3>
+          <p className="text-sm text-muted-foreground">Provide student profile details and the first registered device.</p>
           <div className="grid gap-4 md:grid-cols-2">
             <Input placeholder="First Name" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} className="bg-white/5" />
             <Input placeholder="Last Name" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} className="bg-white/5" />
@@ -187,6 +202,8 @@ export default function StudentsPage() {
             <Input placeholder="Department" value={formData.department} onChange={(e) => setFormData({ ...formData, department: e.target.value })} className="bg-white/5" />
             <Input placeholder="Enrolment Number" value={formData.enrolmentNo} onChange={(e) => setFormData({ ...formData, enrolmentNo: e.target.value })} className="bg-white/5" />
             <Input placeholder="Year" type="number" min="1" value={formData.year} onChange={(e) => setFormData({ ...formData, year: e.target.value })} className="bg-white/5" />
+            <Input placeholder="Device Name" value={formData.deviceName} onChange={(e) => setFormData({ ...formData, deviceName: e.target.value })} className="bg-white/5" />
+            <Input placeholder="MAC Address" value={formData.macAddress} onChange={(e) => setFormData({ ...formData, macAddress: e.target.value })} className="bg-white/5" />
           </div>
           <div className="flex gap-2 justify-end">
             <Button variant="ghost" onClick={() => setShowForm(false)}>Cancel</Button>
