@@ -11,8 +11,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ListPagination } from '@/components/list-pagination';
-import { PAGE_SIZE } from '../utils/constants';
-import { calculatePresenceDuration } from '../utils/helpers';
+import { PAGE_SIZE } from '../../utils/constants';
+import { calculatePresenceDuration } from '../../utils/helpers';
 import { StatusBadge } from '@/components/common/StatusBadge';
 
 interface AttendanceRecord {
@@ -122,7 +122,7 @@ export function AttendanceRecordsTable({
                     </TableCell>
                     <TableCell>
                       {duration ? (
-                        <div className="flex items-center gap-1 text-sm text-secondary-foreground">
+                        <div className="flex items-center gap-1 text-sm text-foreground">
                           <Clock className="h-3 w-3" />
                           {duration}
                         </div>

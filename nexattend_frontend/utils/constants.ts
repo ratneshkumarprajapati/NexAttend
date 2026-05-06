@@ -8,7 +8,7 @@ export const ATTENDANCE_COLORS = {
 } as const;
 
 export const CHART_COLORS = {
-  present: 'oklch(0.60 0.28 150)',         // Secondary cyan
+  present: 'oklch(0.6 0.18 250)',         // Secondary cyan
   absent: 'oklch(0.65 0.28 25)',           // Destructive red
   devices: 'oklch(0.65 0.3 160)',          // Accent
 } as const;
@@ -22,9 +22,9 @@ export const STATUS_CLASSES = {
 } as const;
 
 export const LEGEND_CLASSES = {
-  present: 'border-secondary/20 bg-secondary/10 text-secondary-foreground',
+  present: 'border-secondary/20 bg-secondary/10 text-destructive-foreground',
   absent: 'border-destructive/20 bg-destructive/10 text-destructive-foreground',
-  late: 'border-accent/20 bg-accent/10 text-accent-foreground',
+  late: 'border-accent/20 bg-accent/10 text-destructive-foreground',
 } as const;
 
 export const PAGE_SIZE = 10;

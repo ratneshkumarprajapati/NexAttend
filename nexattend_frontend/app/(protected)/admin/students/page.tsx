@@ -183,7 +183,7 @@ export default function StudentsPage() {
             className="pl-10 bg-white/5"
           />
         </div>
-        <Button onClick={() => setShowForm((current) => !current)} className="bg-gradient-to-r from-primary to-accent hover:opacity-90">
+        <Button onClick={() => setShowForm((current) => !current)} className="bg-primary  hover:opacity-90">
           <Plus className="w-4 h-4 mr-2" />
           Add Student
         </Button>
@@ -207,7 +207,7 @@ export default function StudentsPage() {
           </div>
           <div className="flex gap-2 justify-end">
             <Button variant="ghost" onClick={() => setShowForm(false)}>Cancel</Button>
-            <Button onClick={handleAddStudent} disabled={saving} className="bg-gradient-to-r from-primary to-accent hover:opacity-90">
+            <Button onClick={handleAddStudent} disabled={saving} className="bg-primary hover:opacity-90">
               {saving ? 'Adding...' : 'Add Student'}
             </Button>
           </div>

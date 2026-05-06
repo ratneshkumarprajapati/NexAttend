@@ -1,7 +1,7 @@
 'use client';
 
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import { CHART_COLORS } from '../utils/constants';
+import { CHART_COLORS } from '../../utils/constants';
 
 interface StatusDistributionChartProps {
   data: Array<{

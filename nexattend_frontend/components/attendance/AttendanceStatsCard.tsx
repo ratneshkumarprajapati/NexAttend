@@ -10,10 +10,10 @@ interface AttendanceStatsCardProps {
 }
 
 const VARIANT_STYLES = {
-  present: 'glass border-none text-foreground',
-  absent: 'glass border-none text-foreground',
-  late: 'glass border-none text-foreground',
-  default: 'glass border-none text-foreground',
+  present: 'glass  text-foreground',
+  absent: 'glass  text-foreground',
+  late: 'glass  text-foreground',
+  default: 'glass  text-foreground',
 } as const;
 
 export function AttendanceStatsCard({

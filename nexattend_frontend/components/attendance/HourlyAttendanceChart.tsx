@@ -9,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { CHART_COLORS } from '../utils/constants';
+import { CHART_COLORS } from '../../utils/constants';
 
 interface HourlyAttendanceChartProps {
   data: Array<{

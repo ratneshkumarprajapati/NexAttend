@@ -17,7 +17,7 @@ import {
   LayoutGrid,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 const studentNavigation = [
   {
@@ -103,12 +103,12 @@ export function Sidebar() {
           open ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className="flex flex-col h-full bg-gradient-to-b from-sidebar via-sidebar/95 to-sidebar/90">
+        <div className="flex flex-col h-full bg-linear-to-b from-sidebar via-sidebar/95 to-sidebar/90">
           {/* Logo Section */}
-          <div className="p-6 border-b border-white/10 bg-gradient-to-r from-primary/20 via-accent/10 to-transparent">
+          <div className="p-6 border-b border-white/10 bg-linear-to-r from-primary/20 via-accent/10 to-transparent">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-lg blur opacity-75 group-hover:opacity-100 smooth-transition" />
+                <div className="absolute inset-0 bg-linear-to-r from-primary to-accent rounded-lg blur opacity-75 group-hover:opacity-100 smooth-transition" />
                 <div className="relative bg-sidebar rounded-lg p-2">
                   <BarChart3 className="h-6 w-6 text-primary" />
                 </div>
@@ -134,7 +134,7 @@ export function Sidebar() {
                   className={cn(
                     'group flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 relative',
                     isActive
-                      ? 'bg-gradient-to-r from-primary/30 to-accent/20 text-primary border border-primary/30 shadow-lg shadow-primary/10'
+                      ? 'bg-primary/20 text-primary border border-primary/30 shadow-lg shadow-primary/10'
                       : 'text-muted-foreground hover:bg-white/10 hover:text-foreground'
                   )}
                 >
@@ -143,7 +143,7 @@ export function Sidebar() {
                   </div>
                   <span>{item.name}</span>
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-primary to-accent rounded-r-full" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-linear-to-b from-primary to-accent rounded-r-full" />
                   )}
                 </Link>
               );
@@ -151,7 +151,7 @@ export function Sidebar() {
           </nav>
 
           {/* Footer */}
-          <div className="border-t border-white/10 p-4 bg-gradient-to-t from-primary/5 to-transparent">
+          <div className="border-t border-white/10 p-4 bg-linear-to-t from-primary/5 to-transparent">
             <p className="text-xs text-muted-foreground">
               © 2026 NexAttend
             </p>

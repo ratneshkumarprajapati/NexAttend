@@ -1,12 +1,12 @@
 'use client';
 
 import { useMemo } from 'react';
-import { LEGEND_CLASSES, STATUS_CLASSES } from '../utils/constants';
+import { LEGEND_CLASSES, STATUS_CLASSES } from '../../utils/constants';
 import {
   generateStudentAttendanceCalendar,
   formatMonthLabel,
   type AttendanceCalendarDay,
-} from '../utils/helpers';
+} from '../../utils/helpers';
 
 interface StudentAttendanceCalendarProps {
   studentId: string;
@@ -38,7 +38,7 @@ export function StudentAttendanceCalendar({
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2">
         <div
           className={`rounded-3xl border p-4 backdrop-blur-xl ${LEGEND_CLASSES.present}`}
         >
@@ -74,13 +74,13 @@ export function StudentAttendanceCalendar({
             <p className="text-lg font-semibold text-foreground">{monthLabel}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 border-secondary/20 bg-secondary/10 text-secondary-foreground">
+            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 border-secondary/20 bg-secondary/10 text-destructive-foreground">
               <span className="h-2 w-2 rounded-full bg-secondary" /> Present
             </span>
             <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 border-destructive/20 bg-destructive/10 text-destructive-foreground">
               <span className="h-2 w-2 rounded-full bg-destructive" /> Absent
             </span>
-            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 border-accent/20 bg-accent/10 text-accent-foreground">
+            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 border-accent/20 bg-accent/10 text-destructive-foreground">
               <span className="h-2 w-2 rounded-full bg-accent" /> Late
             </span>
           </div>

@@ -14,18 +14,18 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { attendanceService, type AdminStudentMonitorResponse } from '@/lib/services/attendanceService';
-import { AttendanceStatsCard } from './components/AttendanceStatsCard';
-import { HourlyAttendanceChart } from './components/HourlyAttendanceChart';
-import { StatusDistributionChart } from './components/StatusDistributionChart';
-import { AttendanceRecordsTable } from './components/AttendanceRecordsTable';
-import { StudentAttendanceCalendar } from './components/StudentAttendanceCalendar';
+import { AttendanceStatsCard } from '../../../../components/attendance/AttendanceStatsCard';
+import { HourlyAttendanceChart } from '../../../../components/attendance/HourlyAttendanceChart';
+import { StatusDistributionChart } from '../../../../components/attendance/StatusDistributionChart';
+import { AttendanceRecordsTable } from '../../../../components/attendance/AttendanceRecordsTable';
+import { StudentAttendanceCalendar } from '../../../../components/attendance/StudentAttendanceCalendar';
 import {
   getLocalDateString,
   getStudentName,
   generateHourlyAttendanceData,
   calculatePresenceDuration,
   type AttendanceStatus,
-} from './utils/helpers';
+} from '../../../../utils/helpers';
 export default function AdminAttendancePage() {
   const [selectedDate, setSelectedDate] = useState(getLocalDateString());
   const [monitor, setMonitor] = useState<AdminStudentMonitorResponse | null>(null);
@@ -188,7 +188,7 @@ export default function AdminAttendancePage() {
         </div>
         <Button
           onClick={handleExport}
-          className="ml-auto bg-linear-to-r from-primary to-secondary hover:opacity-90"
+          className="ml-auto bg-primary bo hover:opacity-90"
           disabled={attendanceRecords.length === 0}
         >
           <Download className="w-4 h-4 mr-2" />
@@ -270,7 +270,7 @@ export default function AdminAttendancePage() {
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="secondary">Close</Button>
+              <Button >Close</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
