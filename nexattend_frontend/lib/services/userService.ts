@@ -4,15 +4,43 @@ export interface UserPayload {
   email: string;
   password: string;
   role: 'ADMIN' | 'STUDENT' | 'MANAGER';
+  profile?: {
+    firstName: string;
+    lastName: string;
+    phoneNo?: string;
+  };
 }
 
 export interface UserRecord {
-  id: string;
+  id: number;
   publicId?: string;
   email: string;
   role: string;
+  profile?: {
+    firstName: string;
+    lastName: string;
+    phoneNo?: string | null;
+    department?: string | null;
+    enrolmentNo?: string | null;
+    year?: number | null;
+  } | null;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface BulkStudentPayload {
+  students: Array<{
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    phoneNo?: string;
+    department?: string;
+    enrolmentNo?: string;
+    year?: number;
+    deviceName?: string;
+    macAddress?: string;
+  }>;
 }
 
 export const userService = {
@@ -38,6 +66,11 @@ export const userService = {
 
   async deleteUser(publicId: string) {
     const response = await api.delete<{ data: { success: boolean } }>(`/users/${publicId}`);
+    return response.data.data;
+  },
+
+  async bulkCreateStudents(payload: BulkStudentPayload) {
+    const response = await api.post<{ data: { count: number; users: UserRecord[] } }>('/users/bulk-students', payload);
     return response.data.data;
   },
 };

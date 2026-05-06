@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Upload, Check, AlertCircle, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { userService } from '@/lib/services/userService';
 
 interface UploadResult {
   success: number;
@@ -45,29 +46,74 @@ export default function BulkUploadPage() {
     setIsLoading(true);
 
     try {
-      // Parse CSV or Excel file
+      if (!file.name.toLowerCase().endsWith('.csv')) {
+        throw new Error('Only CSV files are supported right now');
+      }
+
       const text = await file.text();
       const lines = text.split('\n').filter(line => line.trim());
-      
-      let success = 0;
-      let failed = 0;
+      const students: Array<{
+        email: string;
+        password: string;
+        firstName: string;
+        lastName: string;
+        phoneNo?: string;
+        department?: string;
+        enrolmentNo?: string;
+        year?: number;
+        deviceName?: string;
+        macAddress?: string;
+      }> = [];
       const errors: string[] = [];
 
-      // Skip header and process rows
       lines.slice(1).forEach((line, index) => {
-        const [email, password, firstName, lastName, phoneNo] = line.split(',').map(s => s.trim());
-        
-        if (!email || !password) {
-          failed++;
-          errors.push(`Row ${index + 2}: Email and password are required`);
-        } else {
-          success++;
+        const [
+          email,
+          password,
+          firstName,
+          lastName,
+          phoneNo,
+          department,
+          enrolmentNo,
+          year,
+          deviceName,
+          macAddress,
+        ] = line.split(',').map((value) => value.trim());
+
+        if (!email || !password || !firstName || !lastName) {
+          errors.push(`Row ${index + 2}: email, password, firstName, and lastName are required`);
+          return;
         }
+
+        students.push({
+          email,
+          password,
+          firstName,
+          lastName,
+          phoneNo: phoneNo || undefined,
+          department: department || undefined,
+          enrolmentNo: enrolmentNo || undefined,
+          year: year ? Number(year) : undefined,
+          deviceName: deviceName || undefined,
+          macAddress: macAddress || undefined,
+        });
       });
 
-      setResult({ success, failed, errors });
+      if (students.length === 0) {
+        setResult({ success: 0, failed: errors.length || 1, errors: errors.length > 0 ? errors : ['No valid student rows found'] });
+        return;
+      }
+
+      if (errors.length > 0) {
+        setResult({ success: 0, failed: errors.length, errors });
+        return;
+      }
+
+      const uploadResult = await userService.bulkCreateStudents({ students });
+      setResult({ success: uploadResult.count, failed: 0, errors: [] });
     } catch (error: any) {
-      setResult({ success: 0, failed: 1, errors: [error.message] });
+      const message = error.response?.data?.message || error.message || 'Upload failed';
+      setResult({ success: 0, failed: 1, errors: [message] });
     } finally {
       setIsLoading(false);
     }
@@ -86,15 +132,15 @@ export default function BulkUploadPage() {
         <h3 className="font-semibold text-foreground">File Format Requirements</h3>
         <p className="text-sm text-muted-foreground">Your CSV/Excel file should have these columns:</p>
         <div className="bg-white/5 rounded-lg p-4 font-mono text-xs text-foreground overflow-x-auto">
-          email,password,firstName,lastName,phoneNo
+          email,password,firstName,lastName,phoneNo,department,enrolmentNo,year,deviceName,macAddress
         </div>
         <p className="text-xs text-muted-foreground mt-2">
-          Example: student1@example.com,Password@123,Ratnesh,Kumar,9876543210
+          Example: student1@example.com,Password@123,Ratnesh,Kumar,9876543210,CSE,ENR001,2,Lab-PC-01,AA:BB:CC:DD:EE:01
         </p>
         <Button
           className="mt-2 bg-gradient-to-r from-primary to-accent hover:opacity-90"
           onClick={() => {
-            const csv = 'email,password,firstName,lastName,phoneNo\nstudent1@example.com,Password@123,Ratnesh,Kumar,9876543210';
+            const csv = 'email,password,firstName,lastName,phoneNo,department,enrolmentNo,year,deviceName,macAddress\nstudent1@example.com,Password@123,Ratnesh,Kumar,9876543210,CSE,ENR001,2,Lab-PC-01,AA:BB:CC:DD:EE:01';
             const element = document.createElement('a');
             element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv));
             element.setAttribute('download', 'sample_students.csv');
@@ -129,11 +175,11 @@ export default function BulkUploadPage() {
               <p className="text-foreground font-medium">
                 {file ? file.name : 'Drag and drop your file here'}
               </p>
-              <p className="text-sm text-muted-foreground mt-1">or click to select a file</p>
+              <p className="text-sm text-muted-foreground mt-1">or click to select a CSV file</p>
             </div>
             <input
               type="file"
-              accept=".csv,.xlsx,.xls"
+              accept=".csv"
               onChange={handleFileSelect}
               className="hidden"
               id="file-input"

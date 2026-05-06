@@ -1,46 +1,134 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Calendar, Download } from 'lucide-react';
+import { ListPagination } from '@/components/list-pagination';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { attendanceService, type AdminStudentMonitorResponse } from '@/lib/services/attendanceService';
 
-const COLORS = ['#a78bfa', '#60a5fa', '#34d399', '#fbbf24'];
+const COLORS = ['#0f766e', '#dc2626', '#f59e0b'];
+const PAGE_SIZE = 10;
+
+function getLocalDateString(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getStudentName(student: NonNullable<AdminStudentMonitorResponse['students']>[number]) {
+  return [student.profile?.firstName, student.profile?.lastName].filter(Boolean).join(' ') || student.email;
+}
 
 export default function AdminAttendancePage() {
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(getLocalDateString());
+  const [monitor, setMonitor] = useState<AdminStudentMonitorResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    void fetchAttendance();
+  }, [selectedDate]);
+
+  const fetchAttendance = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await attendanceService.getAdminStudentMonitor({
+        date: selectedDate,
+        limit: 100,
+      });
+      setMonitor(data);
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message || 'Failed to load attendance data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const summary = monitor?.summary;
+  const students = monitor?.students || [];
 
   const dailyData = [
-    { name: 'Mon', present: 45, absent: 5, late: 3 },
-    { name: 'Tue', present: 48, absent: 2, late: 2 },
-    { name: 'Wed', present: 46, absent: 4, late: 2 },
-    { name: 'Thu', present: 47, absent: 3, late: 2 },
-    { name: 'Fri', present: 43, absent: 7, late: 2 },
+    {
+      name: selectedDate,
+      present: summary?.presentStudents || 0,
+      absent: summary?.absentStudents || 0,
+      activeDevices: summary?.activeDevices || 0,
+    },
   ];
 
   const statusData = [
-    { name: 'Present', value: 45, fill: COLORS[2] },
-    { name: 'Absent', value: 5, fill: COLORS[0] },
-    { name: 'Late', value: 3, fill: COLORS[3] },
+    { name: 'Present', value: summary?.presentStudents || 0, fill: COLORS[0] },
+    { name: 'Absent', value: summary?.absentStudents || 0, fill: COLORS[1] },
+    { name: 'Active Devices', value: summary?.activeDevices || 0, fill: COLORS[2] },
   ];
 
-  const attendanceRecords = [
-    { id: '1', name: 'Ratnesh Kumar', status: 'present', time: '08:45 AM', device: 'Device-1' },
-    { id: '2', name: 'John Doe', status: 'late', time: '09:15 AM', device: 'Device-2' },
-    { id: '3', name: 'Jane Smith', status: 'absent', time: '-', device: '-' },
-    { id: '4', name: 'Mike Wilson', status: 'present', time: '08:30 AM', device: 'Device-1' },
-  ];
+  const attendanceRecords = students.map((student) => ({
+    id: student.publicId,
+    name: getStudentName(student),
+    status: student.attendance?.currentStatus?.toLowerCase() || 'absent',
+    time: student.attendance?.activeSession?.lastSeen
+      ? new Date(student.attendance.activeSession.lastSeen).toLocaleTimeString()
+      : '-',
+    device: student.attendance?.activeSession?.device?.deviceName || student.devices?.[0]?.deviceName || '-',
+  }));
+  const totalPages = Math.max(1, Math.ceil(attendanceRecords.length / PAGE_SIZE));
+  const paginatedRecords = attendanceRecords.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedDate]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const handleExport = () => {
+    if (attendanceRecords.length === 0) return;
+
+    const csv = [
+      'name,status,time,device',
+      ...attendanceRecords.map((record) => [record.name, record.status, record.time, record.device].join(',')),
+    ].join('\n');
+
+    const element = document.createElement('a');
+    element.setAttribute('href', `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`);
+    element.setAttribute('download', `attendance-${selectedDate}.csv`);
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">Attendance Monitoring</h1>
-        <p className="text-muted-foreground mt-1">View and manage student attendance records</p>
+        <p className="text-muted-foreground mt-1">Live attendance records from the admin monitor API</p>
       </div>
 
-      {/* Date Filter and Export */}
+      {error && (
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+          {error}
+        </div>
+      )}
+
       <div className="flex gap-3 flex-wrap items-center">
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-muted-foreground" />
@@ -51,33 +139,30 @@ export default function AdminAttendancePage() {
             className="bg-white/5"
           />
         </div>
-        <Button className="bg-gradient-to-r from-primary to-accent hover:opacity-90 ml-auto">
+        <Button onClick={handleExport} className="bg-gradient-to-r from-primary to-accent hover:opacity-90 ml-auto" disabled={attendanceRecords.length === 0}>
           <Download className="w-4 h-4 mr-2" />
           Export Report
         </Button>
       </div>
 
-      {/* Charts Grid */}
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Weekly Trend */}
         <div className="glass rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Weekly Attendance</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-4">Selected Day Overview</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={dailyData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#ffffff/10" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" />
               <XAxis dataKey="name" stroke="#888888" />
               <YAxis stroke="#888888" />
               <Tooltip contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid rgba(255,255,255,0.1)' }} />
-              <Bar dataKey="present" fill={COLORS[2]} />
-              <Bar dataKey="absent" fill={COLORS[0]} />
-              <Bar dataKey="late" fill={COLORS[3]} />
+              <Bar dataKey="present" fill={COLORS[0]} />
+              <Bar dataKey="absent" fill={COLORS[1]} />
+              <Bar dataKey="activeDevices" fill={COLORS[2]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Today's Distribution */}
         <div className="glass rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Today&apos;s Status</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-4">Status Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -99,41 +184,50 @@ export default function AdminAttendancePage() {
         </div>
       </div>
 
-      {/* Attendance Records Table */}
       <div className="glass rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Today&apos;s Attendance Records</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border/50">
-              <tr className="text-left text-muted-foreground">
-                <th className="pb-3 font-semibold">Student Name</th>
-                <th className="pb-3 font-semibold">Status</th>
-                <th className="pb-3 font-semibold">Check-in Time</th>
-                <th className="pb-3 font-semibold">Device</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/30">
-              {attendanceRecords.map((record) => (
-                <tr key={record.id} className="text-foreground hover:bg-white/5 smooth-transition">
-                  <td className="py-3">{record.name}</td>
-                  <td className="py-3">
-                    <span className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium ${
-                      record.status === 'present'
-                        ? 'bg-green-500/20 text-green-400'
-                        : record.status === 'late'
-                        ? 'bg-yellow-500/20 text-yellow-400'
-                        : 'bg-red-500/20 text-red-400'
-                    }`}>
-                      {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="py-3">{record.time}</td>
-                  <td className="py-3 text-muted-foreground">{record.device}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Attendance Records</h3>
+        {loading ? (
+          <div className="py-8 text-center text-muted-foreground">Loading attendance records...</div>
+        ) : attendanceRecords.length === 0 ? (
+          <div className="py-8 text-center text-muted-foreground">No attendance records found</div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow className="border-border/50 hover:bg-transparent">
+                <TableHead>Student Name</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Last Seen</TableHead>
+                <TableHead>Device</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+                {paginatedRecords.map((record) => (
+                  <TableRow key={record.id} className="border-border/30 hover:bg-white/5">
+                    <TableCell className="text-foreground">{record.name}</TableCell>
+                    <TableCell>
+                      <span className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium ${
+                        record.status === 'present'
+                          ? 'bg-green-500/20 text-green-400'
+                          : 'bg-red-500/20 text-red-400'
+                      }`}>
+                        {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-foreground">{record.time}</TableCell>
+                    <TableCell className="text-muted-foreground">{record.device}</TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        )}
+        {!loading && attendanceRecords.length > 0 && (
+          <ListPagination
+            currentPage={currentPage}
+            totalItems={attendanceRecords.length}
+            pageSize={PAGE_SIZE}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );

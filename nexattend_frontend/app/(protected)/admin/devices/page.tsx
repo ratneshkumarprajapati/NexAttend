@@ -1,186 +1,201 @@
 'use client';
 
-import { useState } from 'react';
-import { Plus, Trash2, Wifi, WifiOff, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
+import { Search, Smartphone, Wifi, WifiOff } from 'lucide-react';
+import { ListPagination } from '@/components/list-pagination';
 import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { attendanceService } from '@/lib/services/attendanceService';
 
-interface Device {
+type AdminDeviceRecord = {
   id: string;
-  name: string;
-  macAddress: string;
-  location: string;
+  deviceName: string;
+  ownerName: string;
+  ownerEmail: string;
+  department: string;
   status: 'online' | 'offline';
-  lastSeen: string;
+  lastSeen: string | null;
+  createdAt: string | null;
+};
+
+const PAGE_SIZE = 10;
+
+function getLocalDateString(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 export default function AdminDevicesPage() {
-  const [devices, setDevices] = useState<Device[]>([
-    {
-      id: '1',
-      name: 'Device-1',
-      macAddress: 'AA:BB:CC:DD:EE:01',
-      location: 'Entrance',
-      status: 'online',
-      lastSeen: 'Just now',
-    },
-    {
-      id: '2',
-      name: 'Device-2',
-      macAddress: 'AA:BB:CC:DD:EE:02',
-      location: 'Hallway',
-      status: 'online',
-      lastSeen: '2 minutes ago',
-    },
-  ]);
+  const [devices, setDevices] = useState<AdminDeviceRecord[]>([]);
   const [search, setSearch] = useState('');
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ name: '', macAddress: '', location: '' });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredDevices = devices.filter(d =>
-    d.name.toLowerCase().includes(search.toLowerCase()) ||
-    d.macAddress.toLowerCase().includes(search.toLowerCase())
-  );
+  useEffect(() => {
+    void fetchDevices();
+  }, []);
 
-  const handleAddDevice = () => {
-    if (formData.name && formData.macAddress) {
-      setDevices([...devices, {
-        id: Math.random().toString(),
-        ...formData,
-        status: 'online',
-        lastSeen: 'Just now',
-      }]);
-      setFormData({ name: '', macAddress: '', location: '' });
-      setShowForm(false);
+  const fetchDevices = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const monitor = await attendanceService.getAdminStudentMonitor({
+        date: getLocalDateString(),
+        limit: 100,
+      });
+
+      const flattenedDevices = (monitor.students || []).flatMap((student) => {
+        const ownerName = [student.profile?.firstName, student.profile?.lastName].filter(Boolean).join(' ') || student.email;
+        const activeDeviceId = student.attendance?.activeSession?.device?.publicId;
+        const lastSeen = student.attendance?.activeSession?.lastSeen || null;
+
+        return (student.devices || []).map((device, index) => ({
+          id: device.publicId || `${student.publicId}-${index}`,
+          deviceName: device.deviceName || 'Unknown Device',
+          ownerName,
+          ownerEmail: student.email,
+          department: student.profile?.department || 'N/A',
+          status: device.publicId && activeDeviceId === device.publicId ? 'online' : 'offline',
+          lastSeen: device.publicId && activeDeviceId === device.publicId ? lastSeen : null,
+          createdAt: device.createdAt || null,
+        }));
+      });
+
+      setDevices(flattenedDevices);
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message || 'Failed to load devices');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDeleteDevice = (id: string) => {
-    setDevices(devices.filter(d => d.id !== id));
-  };
+  const filteredDevices = devices.filter((device) => {
+    const term = search.toLowerCase();
+    return (
+      device.deviceName.toLowerCase().includes(term) ||
+      device.ownerName.toLowerCase().includes(term) ||
+      device.ownerEmail.toLowerCase().includes(term)
+    );
+  });
+  const totalPages = Math.max(1, Math.ceil(filteredDevices.length / PAGE_SIZE));
+  const paginatedDevices = filteredDevices.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">Device Management</h1>
-        <p className="text-muted-foreground mt-1">Register and manage attendance devices</p>
+        <p className="text-muted-foreground mt-1">Live student device inventory from the attendance monitor</p>
       </div>
 
-      {/* Toolbar */}
-      <div className="flex gap-3 flex-wrap">
-        <div className="flex-1 min-w-64 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-          <Input
-            placeholder="Search devices by name or MAC address..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 bg-white/5"
-          />
-        </div>
-        <Button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Register Device
-        </Button>
-      </div>
-
-      {/* Add Device Form */}
-      {showForm && (
-        <div className="glass rounded-xl p-6 space-y-4">
-          <h3 className="text-lg font-semibold text-foreground">Register New Device</h3>
-          <div className="grid gap-4 md:grid-cols-3">
-            <Input
-              placeholder="Device Name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="bg-white/5"
-            />
-            <Input
-              placeholder="MAC Address (AA:BB:CC:DD:EE:FF)"
-              value={formData.macAddress}
-              onChange={(e) => setFormData({ ...formData, macAddress: e.target.value })}
-              className="bg-white/5"
-            />
-            <Input
-              placeholder="Location"
-              value={formData.location}
-              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              className="bg-white/5"
-            />
-          </div>
-          <div className="flex gap-2 justify-end">
-            <Button variant="ghost" onClick={() => setShowForm(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleAddDevice}
-              className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
-            >
-              Register Device
-            </Button>
-          </div>
+      {error && (
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+          {error}
         </div>
       )}
 
-      {/* Devices Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {filteredDevices.map((device) => (
-          <div key={device.id} className="glass rounded-xl p-6 space-y-4">
-            <div className="flex items-start justify-between">
-              <div>
-                <h3 className="font-semibold text-foreground">{device.name}</h3>
-                <p className="text-xs text-muted-foreground mt-1">{device.macAddress}</p>
-              </div>
-              <div className="flex gap-1">
-                {device.status === 'online' ? (
-                  <Wifi className="w-4 h-4 text-green-400" />
-                ) : (
-                  <WifiOff className="w-4 h-4 text-red-400" />
-                )}
-              </div>
-            </div>
-
-            <div className="space-y-2 pt-2 border-t border-border/30">
-              <div>
-                <p className="text-xs text-muted-foreground">Location</p>
-                <p className="text-sm text-foreground">{device.location}</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Last Seen</p>
-                <p className="text-sm text-foreground">{device.lastSeen}</p>
-              </div>
-              <div>
-                <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${
-                  device.status === 'online'
-                    ? 'bg-green-500/20 text-green-400'
-                    : 'bg-red-500/20 text-red-400'
-                }`}>
-                  {device.status === 'online' ? 'Online' : 'Offline'}
-                </span>
-              </div>
-            </div>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full text-red-400 hover:bg-red-500/10"
-              onClick={() => handleDeleteDevice(device.id)}
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Remove Device
-            </Button>
-          </div>
-        ))}
+      <div className="flex-1 min-w-64 relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+        <Input
+          placeholder="Search devices by name, owner, or email..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-10 bg-white/5"
+        />
       </div>
 
-      {filteredDevices.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">No devices found</p>
-        </div>
+      <div className="glass rounded-xl border border-border/40 p-6">
+        {loading ? (
+          <div className="py-8 text-center text-muted-foreground">
+            Loading devices...
+          </div>
+        ) : filteredDevices.length === 0 ? (
+          <div className="py-8 text-center text-muted-foreground">
+            No devices found
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow className="border-border/50 hover:bg-transparent">
+                <TableHead>Device</TableHead>
+                <TableHead>Owner</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Department</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Last Seen</TableHead>
+                <TableHead>Registered</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginatedDevices.map((device) => (
+                <TableRow key={device.id} className="border-border/30 hover:bg-white/5">
+                  <TableCell className="font-medium text-foreground">
+                    <div className="flex items-center gap-2">
+                      <Smartphone className="h-4 w-4 text-muted-foreground" />
+                      <span>{device.deviceName}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-foreground">{device.ownerName}</TableCell>
+                  <TableCell className="max-w-56 truncate text-muted-foreground">
+                    {device.ownerEmail}
+                  </TableCell>
+                  <TableCell className="text-foreground">{device.department}</TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center gap-2 rounded-md px-2.5 py-1 text-xs font-medium ${
+                      device.status === 'online' ? 'bg-green-500/15 text-green-400' : 'bg-red-500/15 text-red-400'
+                    }`}>
+                      {device.status === 'online' ? (
+                        <Wifi className="h-3 w-3" />
+                      ) : (
+                        <WifiOff className="h-3 w-3" />
+                      )}
+                      {device.status === 'online' ? 'Online' : 'Offline'}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-foreground">
+                    {device.lastSeen ? new Date(device.lastSeen).toLocaleString() : 'Offline'}
+                  </TableCell>
+                  <TableCell className="text-foreground">
+                    {device.createdAt ? new Date(device.createdAt).toLocaleDateString() : 'N/A'}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      {!loading && filteredDevices.length > 0 && (
+        <ListPagination
+          currentPage={currentPage}
+          totalItems={filteredDevices.length}
+          pageSize={PAGE_SIZE}
+          onPageChange={setCurrentPage}
+        />
       )}
+      </div>
+
     </div>
   );
 }

@@ -5,6 +5,14 @@ import { useAppSelector } from '@/lib/hooks';
 import { api } from '@/lib/api';
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Users, Smartphone, TrendingUp, Activity, AlertCircle, CheckCircle, XCircle, Clock } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 function StatCard({ icon: Icon, label, value, change, trend, subtext }: any) {
   return (
@@ -31,20 +39,28 @@ function StatCard({ icon: Icon, label, value, change, trend, subtext }: any) {
 }
 
 function StatusBadge({ status }: { status: string }) {
+  const normalizedStatus = status.toLowerCase();
   const configs: Record<string, { bg: string; text: string; icon: any }> = {
     present: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', icon: CheckCircle },
     absent: { bg: 'bg-red-500/20', text: 'text-red-400', icon: XCircle },
     late: { bg: 'bg-amber-500/20', text: 'text-amber-400', icon: Clock },
   };
-  const config = configs[status] || configs.absent;
+  const config = configs[normalizedStatus] || configs.absent;
   const Icon = config.icon;
 
   return (
     <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium ${config.bg} ${config.text}`}>
       <Icon className="w-3 h-3" />
-      {status}
+      {normalizedStatus}
     </span>
   );
+}
+
+function getLocalDateString(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 export default function DashboardPage() {
@@ -91,27 +107,34 @@ export default function DashboardPage() {
       setLoading(true);
       setError(null);
 
-      // Get today's date in YYYY-MM-DD format
-      const today = new Date().toISOString().split('T')[0];
+      // Get today's date in YYYY-MM-DD format using local time.
+      const today = getLocalDateString();
 
       // Fetch admin student monitor data (includes present/absent counts and students)
       const [studentsResponse, devicesResponse] = await Promise.all([
-        api.get(`/attendance/admin/students?date=${today}&limit=1000`).catch((err) => ({ data: { data: [] } })),
-        api.get(`/devices`).catch((err) => ({ data: { devices: [] } })),
+        api.get(`/attendance/admin/students?date=${today}&limit=50`).catch(() => ({ data: { data: { students: [], summary: null } } })),
+        api.get(`/devices`).catch(() => ({ data: { devices: [] } })),
       ]);
 
-      const studentsData = studentsResponse.data?.data || [];
+      const monitorData = studentsResponse.data?.data || {};
+      const studentsData = Array.isArray(monitorData.students)
+        ? monitorData.students
+        : Array.isArray(monitorData)
+          ? monitorData
+          : [];
+      const summary = monitorData.summary || {};
       const devicesData = devicesResponse.data?.devices || [];
 
       // Calculate stats from the admin student monitor endpoint
-      if (studentsData && Array.isArray(studentsData)) {
-        const presentCount = studentsData.filter((s: any) => s.attendanceStatus === 'PRESENT').length;
-        const absentCount = studentsData.filter((s: any) => s.attendanceStatus === 'ABSENT').length;
-        const totalCount = studentsData.length;
+      if (Array.isArray(studentsData)) {
+        const presentCount = summary.presentStudents ?? studentsData.filter((s: any) => s.attendance?.currentStatus === 'PRESENT').length;
+        const absentCount = summary.absentStudents ?? studentsData.filter((s: any) => s.attendance?.currentStatus === 'ABSENT').length;
+        const totalCount = summary.totalStudents ?? studentsData.length;
 
         setPresentToday(presentCount);
         setAbsentToday(absentCount);
         setTotalUsers(totalCount);
+        setStudentCount(totalCount);
 
         // Calculate attendance rate
         const rate = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 0;
@@ -125,37 +148,45 @@ export default function DashboardPage() {
 
         // Extract recent records (last 5)
         const recentList = studentsData.slice(0, 5).map((student: any, idx: number) => ({
-          id: idx,
+          id: student.publicId || idx,
           userId: student.publicId || `STU${idx + 1}`,
-          name: student.firstName ? `${student.firstName} ${student.lastName}` : 'N/A',
-          status: student.attendanceStatus || 'absent',
-          deviceId: student.deviceUsed || 'N/A',
-          time: student.checkInTime ? new Date(student.checkInTime).toLocaleTimeString() : 'N/A',
+          name: [student.profile?.firstName, student.profile?.lastName].filter(Boolean).join(' ') || student.email || 'N/A',
+          status: student.attendance?.currentStatus || 'ABSENT',
+          deviceId: student.attendance?.activeSession?.device?.deviceName || student.devices?.[0]?.deviceName || 'N/A',
+          time: student.attendance?.activeSession?.lastSeen
+            ? new Date(student.attendance.activeSession.lastSeen).toLocaleTimeString()
+            : 'N/A',
         }));
         setRecentRecords(recentList);
+
+        // Generate weekly data (mock based on current pattern)
+        setWeeklyData(generateWeeklyData(presentCount, absentCount));
       }
 
       // Count active devices
-      const activeCount = devicesData.filter((d: any) => d.status === 'active').length;
+      const activeCount = summary.activeDevices ?? devicesData.filter((d: any) => d.status === 'active' || d.isActive).length;
       setActiveDevices(activeCount);
 
       // Fetch user roles breakdown (total users)
       try {
         const usersResponse = await api.get(`/users`);
-        const users = usersResponse.data?.data || [];
+        const usersPayload = usersResponse.data?.data;
+        const users = Array.isArray(usersPayload)
+          ? usersPayload
+          : Array.isArray(usersPayload?.users)
+            ? usersPayload.users
+            : [];
         const students = users.filter((u: any) => u.role === 'STUDENT').length;
         const admins = users.filter((u: any) => u.role === 'ADMIN').length;
 
-        setStudentCount(students);
-        setAdminCount(admins);
-        setTotalUsers(users.length);
-      } catch (err) {
+        if (users.length > 0) {
+          setStudentCount(students);
+          setAdminCount(admins);
+          setTotalUsers(users.length);
+        }
+      } catch {
         console.log('Could not fetch users, using attendance data counts');
       }
-
-      // Generate weekly data (mock based on current pattern)
-      const weekData = generateWeeklyData(presentToday, absentToday);
-      setWeeklyData(weekData);
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
       setError('Failed to load dashboard data');
@@ -264,40 +295,38 @@ export default function DashboardPage() {
           <h3 className="text-lg font-semibold text-foreground">Recent Check-ins</h3>
           <p className="text-sm text-muted-foreground mt-1">Latest entries</p>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border/50">
-              <tr className="text-muted-foreground">
-                <th className="pb-3 text-left font-semibold">User Name</th>
-                <th className="pb-3 text-left font-semibold">Time</th>
-                <th className="pb-3 text-left font-semibold">Status</th>
-                <th className="pb-3 text-left font-semibold">Device</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/30">
-              {loading ? (
-                <tr>
-                  <td colSpan={4} className="py-3 text-center text-muted-foreground">Loading...</td>
-                </tr>
-              ) : recentRecords.length > 0 ? (
-                recentRecords.map((record) => (
-                  <tr key={record.id} className="hover:bg-white/5 dark:hover:bg-white/5 smooth-transition">
-                    <td className="py-3 text-foreground">{record.name}</td>
-                    <td className="py-3 text-foreground">{record.time}</td>
-                    <td className="py-3">
-                      <StatusBadge status={record.status} />
-                    </td>
-                    <td className="py-3 text-muted-foreground">{record.deviceId}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={4} className="py-3 text-center text-muted-foreground">No recent check-ins</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow className="border-border/50 hover:bg-transparent">
+              <TableHead>User Name</TableHead>
+              <TableHead>Time</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Device</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loading ? (
+              <TableRow className="border-border/30 hover:bg-transparent">
+                <TableCell colSpan={4} className="py-3 text-center text-muted-foreground">Loading...</TableCell>
+              </TableRow>
+            ) : recentRecords.length > 0 ? (
+              recentRecords.map((record) => (
+                <TableRow key={record.id} className="border-border/30 hover:bg-white/5">
+                  <TableCell className="text-foreground">{record.name}</TableCell>
+                  <TableCell className="text-foreground">{record.time}</TableCell>
+                  <TableCell>
+                    <StatusBadge status={record.status} />
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{record.deviceId}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow className="border-border/30 hover:bg-transparent">
+                <TableCell colSpan={4} className="py-3 text-center text-muted-foreground">No recent check-ins</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

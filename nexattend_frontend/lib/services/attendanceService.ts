@@ -11,8 +11,55 @@ export interface AttendanceMonitorFilters {
 }
 
 export interface AdminStudentMonitorResponse {
+  date?: string;
+  summary?: {
+    totalStudents: number;
+    presentStudents: number;
+    absentStudents: number;
+    activeDevices: number;
+  };
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+  students?: Array<{
+    id?: number;
+    publicId: string;
+    email: string;
+    profile?: {
+      firstName?: string | null;
+      lastName?: string | null;
+      phoneNo?: string | null;
+      avatarUrl?: string | null;
+      department?: string | null;
+      enrolmentNo?: string | null;
+      year?: number | null;
+    } | null;
+    devices?: Array<{
+      id?: number;
+      publicId?: string;
+      deviceName?: string | null;
+      isActive?: boolean;
+      createdAt?: string;
+    }>;
+    attendance?: {
+      currentStatus?: 'PRESENT' | 'ABSENT' | 'LATE' | string;
+      activeSession?: {
+        publicId?: string;
+        startTime?: string;
+        lastSeen?: string;
+        status?: string;
+        device?: {
+          publicId?: string;
+          deviceName?: string | null;
+        } | null;
+      } | null;
+    } | null;
+    createdAt?: string;
+  }>;
   total?: number;
-  students?: any[];
   presentCount?: number;
   absentCount?: number;
   activeDevices?: number;

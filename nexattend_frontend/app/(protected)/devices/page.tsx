@@ -1,247 +1,197 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '@/lib/hooks';
-import { setDevices, setDevicesLoading, setDeviceError, setDeviceFilters, addDevice } from '@/lib/slices/deviceSlice';
-import { api } from '@/lib/api';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Plus, Search, Smartphone } from 'lucide-react';
+import { ListPagination } from '@/components/list-pagination';
+import { deviceService, type DeviceRecord } from '@/lib/services/deviceService';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Smartphone, Plus, Search } from 'lucide-react';
-import { format } from 'date-fns';
+
+type DeviceForm = {
+  deviceName: string;
+  macAddress: string;
+};
+
+const initialForm: DeviceForm = {
+  deviceName: '',
+  macAddress: '',
+};
+
+const PAGE_SIZE = 6;
 
 export default function DevicesPage() {
-  const dispatch = useAppDispatch();
-  const { devices, isLoading, filters } = useAppSelector((state) => state.device);
+  const [devices, setDevices] = useState<DeviceRecord[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    identifier: '',
-    type: 'attendance_machine',
-  });
+  const [formData, setFormData] = useState<DeviceForm>(initialForm);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetchDevices();
+    void fetchDevices();
   }, []);
 
   const fetchDevices = async () => {
     try {
-      dispatch(setDevicesLoading(true));
-      const response = await api.get('/devices');
-      dispatch(setDevices(response.data.devices || []));
-    } catch (error: any) {
-      dispatch(setDeviceError(error.message));
+      setIsLoading(true);
+      setError(null);
+      const records = await deviceService.getMyDevices();
+      setDevices(records);
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message || 'Failed to load devices');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleRegisterDevice = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const response = await api.post('/devices', formData);
-      dispatch(addDevice(response.data.device));
-      setFormData({ name: '', identifier: '', type: 'attendance_machine' });
+      setIsSaving(true);
+      setError(null);
+      const device = await deviceService.registerDevice({
+        deviceName: formData.deviceName.trim(),
+        macAddress: formData.macAddress.trim(),
+      });
+      setDevices((current) => [device, ...current]);
+      setFormData(initialForm);
       setIsDialogOpen(false);
-    } catch (error: any) {
-      dispatch(setDeviceError(error.message));
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message || 'Failed to register device');
+    } finally {
+      setIsSaving(false);
     }
-  };
-
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    dispatch(setDeviceFilters({ ...filters, search: term }));
-  };
-
-  const handleStatusFilter = (status: string) => {
-    setStatusFilter(status);
-    dispatch(setDeviceFilters({ ...filters, status: status || undefined }));
   };
 
   const filteredDevices = devices.filter((device) => {
-    if (searchTerm && !device.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-      return false;
-    }
-    if (statusFilter && device.status !== statusFilter) {
-      return false;
-    }
-    return true;
+    const name = (device.deviceName || '').toLowerCase();
+    const term = searchTerm.toLowerCase();
+    return name.includes(term);
   });
+  const totalPages = Math.max(1, Math.ceil(filteredDevices.length / PAGE_SIZE));
+  const paginatedDevices = filteredDevices.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'bg-green-100 text-green-800';
-      case 'inactive':
-        return 'bg-gray-100 text-gray-800';
-      case 'maintenance':
-        return 'bg-yellow-100 text-yellow-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
     }
-  };
+  }, [currentPage, totalPages]);
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-balance">Device Management</h1>
-          <p className="text-muted-foreground mt-1">Register and manage your attendance devices</p>
+          <h1 className="text-3xl font-bold text-balance">My Devices</h1>
+          <p className="text-muted-foreground mt-1">Register and manage the devices linked to your account</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Register Device
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Register New Device</DialogTitle>
-              <DialogDescription>Add a new attendance tracking device</DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleRegisterDevice} className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Device Name</label>
-                <Input
-                  placeholder="Main Entrance"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Device ID</label>
-                <Input
-                  placeholder="DEV-001"
-                  value={formData.identifier}
-                  onChange={(e) => setFormData({ ...formData, identifier: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Device Type</label>
-                <select
-                  className="w-full px-3 py-2 border border-input rounded-md"
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                >
-                  <option value="attendance_machine">Attendance Machine</option>
-                  <option value="biometric">Biometric Scanner</option>
-                  <option value="mobile">Mobile Device</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <Button type="submit" className="w-full">
-                Register Device
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <Button className="gap-2" onClick={() => setIsDialogOpen((current) => !current)}>
+          <Plus className="h-4 w-4" />
+          Register Device
+        </Button>
       </div>
 
-      {/* Filters */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Filters</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <Input
-                placeholder="Search devices..."
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
-                className="gap-2"
-                icon={<Search className="h-4 w-4" />}
-              />
-            </div>
-            <select
-              className="px-3 py-2 border border-input rounded-md"
-              value={statusFilter}
-              onChange={(e) => handleStatusFilter(e.target.value)}
-            >
-              <option value="">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-              <option value="maintenance">Maintenance</option>
-            </select>
-          </div>
-        </CardContent>
-      </Card>
+      {error && (
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+          {error}
+        </div>
+      )}
 
-      {/* Devices Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Registered Devices</CardTitle>
-          <CardDescription>Total: {filteredDevices.length} devices</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="text-center py-8">Loading devices...</div>
-          ) : filteredDevices.length === 0 ? (
-            <div className="text-center py-8">
-              <Smartphone className="h-12 w-12 mx-auto text-muted-foreground opacity-50 mb-2" />
-              <p className="text-muted-foreground">No devices found</p>
+      {isDialogOpen && (
+        <div className="glass rounded-xl p-6 space-y-4">
+          <h3 className="text-lg font-semibold text-foreground">Register New Device</h3>
+          <form onSubmit={handleRegisterDevice} className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">Device Name</label>
+                <Input
+                  placeholder="Laptop or phone name"
+                  value={formData.deviceName}
+                  onChange={(e) => setFormData({ ...formData, deviceName: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">MAC Address</label>
+                <Input
+                  placeholder="AA:BB:CC:DD:EE:FF"
+                  value={formData.macAddress}
+                  onChange={(e) => setFormData({ ...formData, macAddress: e.target.value })}
+                  required
+                />
+              </div>
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Device Name</TableHead>
-                    <TableHead>Device ID</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Registered Date</TableHead>
-                    <TableHead>Last Seen</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredDevices.map((device) => (
-                    <TableRow key={device.id}>
-                      <TableCell className="font-medium">{device.name}</TableCell>
-                      <TableCell>{device.identifier}</TableCell>
-                      <TableCell className="capitalize">{device.type}</TableCell>
-                      <TableCell>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(device.status)}`}>
-                          {device.status}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        {device.registeredDate
-                          ? format(new Date(device.registeredDate), 'MMM dd, yyyy')
-                          : 'N/A'}
-                      </TableCell>
-                      <TableCell>
-                        {device.lastSeen
-                          ? format(new Date(device.lastSeen), 'MMM dd, HH:mm')
-                          : 'Never'}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSaving}>
+                {isSaving ? 'Registering...' : 'Register Device'}
+              </Button>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </form>
+        </div>
+      )}
+
+      <div className="flex-1 min-w-64 relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+        <Input
+          placeholder="Search devices..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10"
+        />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {isLoading ? (
+          <div className="col-span-full rounded-xl border border-border/40 bg-card/40 p-8 text-center text-muted-foreground">
+            Loading devices...
+          </div>
+        ) : filteredDevices.length === 0 ? (
+          <div className="col-span-full rounded-xl border border-border/40 bg-card/40 p-8 text-center text-muted-foreground">
+            <Smartphone className="h-12 w-12 mx-auto opacity-50 mb-3" />
+            No devices found
+          </div>
+        ) : (
+          paginatedDevices.map((device) => (
+            <div key={device.publicId || device.id} className="glass rounded-xl border border-border/40 p-6 space-y-3">
+              <div>
+                <h3 className="font-semibold text-foreground">{device.deviceName || 'Unnamed Device'}</h3>
+                <p className="text-xs text-muted-foreground mt-1">Status: {device.status || 'registered'}</p>
+              </div>
+              <div className="space-y-2 text-sm">
+                <div>
+                  <p className="text-xs text-muted-foreground">Registered</p>
+                  <p className="text-foreground">{device.createdAt ? new Date(device.createdAt).toLocaleString() : 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Last Seen</p>
+                  <p className="text-foreground">{device.lastSeen ? new Date(device.lastSeen).toLocaleString() : 'N/A'}</p>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {!isLoading && filteredDevices.length > 0 && (
+        <ListPagination
+          currentPage={currentPage}
+          totalItems={filteredDevices.length}
+          pageSize={PAGE_SIZE}
+          onPageChange={setCurrentPage}
+        />
+      )}
     </div>
   );
 }
