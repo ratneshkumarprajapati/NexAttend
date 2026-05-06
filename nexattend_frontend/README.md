@@ -10,6 +10,9 @@ A modern, feature-rich attendance tracking and device management system built wi
 - Current attendance distribution visualization
 - Live sync status indicator
 
+![alt text](image.png)
+![alt text](image-1.png)
+
 ### Device Management
 - Register and manage attendance devices
 - Filter devices by status and type
