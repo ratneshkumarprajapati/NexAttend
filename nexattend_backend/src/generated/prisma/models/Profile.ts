@@ -27,21 +27,16 @@ export type AggregateProfile = {
 }
 
 export type ProfileAvgAggregateOutputType = {
-  id: number | null
-  userId: number | null
   year: number | null
 }
 
 export type ProfileSumAggregateOutputType = {
-  id: number | null
-  userId: number | null
   year: number | null
 }
 
 export type ProfileMinAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  userId: number | null
+  id: string | null
+  userId: string | null
   firstName: string | null
   lastName: string | null
   phoneNo: string | null
@@ -53,9 +48,8 @@ export type ProfileMinAggregateOutputType = {
 }
 
 export type ProfileMaxAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  userId: number | null
+  id: string | null
+  userId: string | null
   firstName: string | null
   lastName: string | null
   phoneNo: string | null
@@ -68,7 +62,6 @@ export type ProfileMaxAggregateOutputType = {
 
 export type ProfileCountAggregateOutputType = {
   id: number
-  publicId: number
   userId: number
   firstName: number
   lastName: number
@@ -84,20 +77,15 @@ export type ProfileCountAggregateOutputType = {
 
 
 export type ProfileAvgAggregateInputType = {
-  id?: true
-  userId?: true
   year?: true
 }
 
 export type ProfileSumAggregateInputType = {
-  id?: true
-  userId?: true
   year?: true
 }
 
 export type ProfileMinAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   firstName?: true
   lastName?: true
@@ -111,7 +99,6 @@ export type ProfileMinAggregateInputType = {
 
 export type ProfileMaxAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   firstName?: true
   lastName?: true
@@ -125,7 +112,6 @@ export type ProfileMaxAggregateInputType = {
 
 export type ProfileCountAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   firstName?: true
   lastName?: true
@@ -226,9 +212,8 @@ export type ProfileGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 export type ProfileGroupByOutputType = {
-  id: number
-  publicId: string
-  userId: number
+  id: string
+  userId: string
   firstName: string
   lastName: string
   phoneNo: string | null
@@ -264,9 +249,8 @@ export type ProfileWhereInput = {
   AND?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
   OR?: Prisma.ProfileWhereInput[]
   NOT?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
-  id?: Prisma.IntFilter<"Profile"> | number
-  publicId?: Prisma.StringFilter<"Profile"> | string
-  userId?: Prisma.IntFilter<"Profile"> | number
+  id?: Prisma.StringFilter<"Profile"> | string
+  userId?: Prisma.StringFilter<"Profile"> | string
   firstName?: Prisma.StringFilter<"Profile"> | string
   lastName?: Prisma.StringFilter<"Profile"> | string
   phoneNo?: Prisma.StringNullableFilter<"Profile"> | string | null
@@ -281,7 +265,6 @@ export type ProfileWhereInput = {
 
 export type ProfileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -296,9 +279,8 @@ export type ProfileOrderByWithRelationInput = {
 }
 
 export type ProfileWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
-  publicId?: string
-  userId?: number
+  id?: string
+  userId?: string
   enrolmentNo?: string
   AND?: Prisma.ProfileWhereInput | Prisma.ProfileWhereInput[]
   OR?: Prisma.ProfileWhereInput[]
@@ -312,11 +294,10 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   preprationGoal?: Prisma.JsonNullableFilter<"Profile">
   createdAt?: Prisma.DateTimeFilter<"Profile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "publicId" | "userId" | "enrolmentNo">
+}, "id" | "userId" | "enrolmentNo">
 
 export type ProfileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -338,9 +319,8 @@ export type ProfileScalarWhereWithAggregatesInput = {
   AND?: Prisma.ProfileScalarWhereWithAggregatesInput | Prisma.ProfileScalarWhereWithAggregatesInput[]
   OR?: Prisma.ProfileScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ProfileScalarWhereWithAggregatesInput | Prisma.ProfileScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"Profile"> | number
-  publicId?: Prisma.StringWithAggregatesFilter<"Profile"> | string
-  userId?: Prisma.IntWithAggregatesFilter<"Profile"> | number
+  id?: Prisma.StringWithAggregatesFilter<"Profile"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"Profile"> | string
   firstName?: Prisma.StringWithAggregatesFilter<"Profile"> | string
   lastName?: Prisma.StringWithAggregatesFilter<"Profile"> | string
   phoneNo?: Prisma.StringNullableWithAggregatesFilter<"Profile"> | string | null
@@ -353,7 +333,7 @@ export type ProfileScalarWhereWithAggregatesInput = {
 }
 
 export type ProfileCreateInput = {
-  publicId?: string
+  id?: string
   firstName: string
   lastName: string
   phoneNo?: string | null
@@ -367,9 +347,8 @@ export type ProfileCreateInput = {
 }
 
 export type ProfileUncheckedCreateInput = {
-  id?: number
-  publicId?: string
-  userId: number
+  id?: string
+  userId: string
   firstName: string
   lastName: string
   phoneNo?: string | null
@@ -382,7 +361,7 @@ export type ProfileUncheckedCreateInput = {
 }
 
 export type ProfileUpdateInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -396,9 +375,8 @@ export type ProfileUpdateInput = {
 }
 
 export type ProfileUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -411,9 +389,8 @@ export type ProfileUncheckedUpdateInput = {
 }
 
 export type ProfileCreateManyInput = {
-  id?: number
-  publicId?: string
-  userId: number
+  id?: string
+  userId: string
   firstName: string
   lastName: string
   phoneNo?: string | null
@@ -426,7 +403,7 @@ export type ProfileCreateManyInput = {
 }
 
 export type ProfileUpdateManyMutationInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -439,9 +416,8 @@ export type ProfileUpdateManyMutationInput = {
 }
 
 export type ProfileUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -460,7 +436,6 @@ export type ProfileNullableScalarRelationFilter = {
 
 export type ProfileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -474,14 +449,11 @@ export type ProfileCountOrderByAggregateInput = {
 }
 
 export type ProfileAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   year?: Prisma.SortOrder
 }
 
 export type ProfileMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -495,7 +467,6 @@ export type ProfileMaxOrderByAggregateInput = {
 
 export type ProfileMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
@@ -508,8 +479,6 @@ export type ProfileMinOrderByAggregateInput = {
 }
 
 export type ProfileSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   year?: Prisma.SortOrder
 }
 
@@ -558,7 +527,7 @@ export type NullableIntFieldUpdateOperationsInput = {
 }
 
 export type ProfileCreateWithoutUserInput = {
-  publicId?: string
+  id?: string
   firstName: string
   lastName: string
   phoneNo?: string | null
@@ -571,8 +540,7 @@ export type ProfileCreateWithoutUserInput = {
 }
 
 export type ProfileUncheckedCreateWithoutUserInput = {
-  id?: number
-  publicId?: string
+  id?: string
   firstName: string
   lastName: string
   phoneNo?: string | null
@@ -601,7 +569,7 @@ export type ProfileUpdateToOneWithWhereWithoutUserInput = {
 }
 
 export type ProfileUpdateWithoutUserInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -614,8 +582,7 @@ export type ProfileUpdateWithoutUserInput = {
 }
 
 export type ProfileUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -631,7 +598,6 @@ export type ProfileUncheckedUpdateWithoutUserInput = {
 
 export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -647,7 +613,6 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type ProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -663,7 +628,6 @@ export type ProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type ProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -679,7 +643,6 @@ export type ProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type ProfileSelectScalar = {
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   firstName?: boolean
   lastName?: boolean
@@ -692,7 +655,7 @@ export type ProfileSelectScalar = {
   createdAt?: boolean
 }
 
-export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "userId" | "firstName" | "lastName" | "phoneNo" | "avatarUrl" | "department" | "enrolmentNo" | "year" | "preprationGoal" | "createdAt", ExtArgs["result"]["profile"]>
+export type ProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "phoneNo" | "avatarUrl" | "department" | "enrolmentNo" | "year" | "preprationGoal" | "createdAt", ExtArgs["result"]["profile"]>
 export type ProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -709,9 +672,8 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
-    publicId: string
-    userId: number
+    id: string
+    userId: string
     firstName: string
     lastName: string
     phoneNo: string | null
@@ -1145,9 +1107,8 @@ export interface Prisma__ProfileClient<T, Null = never, ExtArgs extends runtime.
  * Fields of the Profile model
  */
 export interface ProfileFieldRefs {
-  readonly id: Prisma.FieldRef<"Profile", 'Int'>
-  readonly publicId: Prisma.FieldRef<"Profile", 'String'>
-  readonly userId: Prisma.FieldRef<"Profile", 'Int'>
+  readonly id: Prisma.FieldRef<"Profile", 'String'>
+  readonly userId: Prisma.FieldRef<"Profile", 'String'>
   readonly firstName: Prisma.FieldRef<"Profile", 'String'>
   readonly lastName: Prisma.FieldRef<"Profile", 'String'>
   readonly phoneNo: Prisma.FieldRef<"Profile", 'String'>

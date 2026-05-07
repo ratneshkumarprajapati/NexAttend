@@ -27,18 +27,15 @@ export type AggregateAccessPoint = {
 }
 
 export type AccessPointAvgAggregateOutputType = {
-  id: number | null
   ssidIndex: number | null
 }
 
 export type AccessPointSumAggregateOutputType = {
-  id: number | null
   ssidIndex: number | null
 }
 
 export type AccessPointMinAggregateOutputType = {
-  id: number | null
-  publicId: string | null
+  id: string | null
   routerKey: string | null
   routerName: string | null
   routerProvider: string | null
@@ -50,8 +47,7 @@ export type AccessPointMinAggregateOutputType = {
 }
 
 export type AccessPointMaxAggregateOutputType = {
-  id: number | null
-  publicId: string | null
+  id: string | null
   routerKey: string | null
   routerName: string | null
   routerProvider: string | null
@@ -64,7 +60,6 @@ export type AccessPointMaxAggregateOutputType = {
 
 export type AccessPointCountAggregateOutputType = {
   id: number
-  publicId: number
   routerKey: number
   routerName: number
   routerProvider: number
@@ -78,18 +73,15 @@ export type AccessPointCountAggregateOutputType = {
 
 
 export type AccessPointAvgAggregateInputType = {
-  id?: true
   ssidIndex?: true
 }
 
 export type AccessPointSumAggregateInputType = {
-  id?: true
   ssidIndex?: true
 }
 
 export type AccessPointMinAggregateInputType = {
   id?: true
-  publicId?: true
   routerKey?: true
   routerName?: true
   routerProvider?: true
@@ -102,7 +94,6 @@ export type AccessPointMinAggregateInputType = {
 
 export type AccessPointMaxAggregateInputType = {
   id?: true
-  publicId?: true
   routerKey?: true
   routerName?: true
   routerProvider?: true
@@ -115,7 +106,6 @@ export type AccessPointMaxAggregateInputType = {
 
 export type AccessPointCountAggregateInputType = {
   id?: true
-  publicId?: true
   routerKey?: true
   routerName?: true
   routerProvider?: true
@@ -214,8 +204,7 @@ export type AccessPointGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 export type AccessPointGroupByOutputType = {
-  id: number
-  publicId: string
+  id: string
   routerKey: string
   routerName: string | null
   routerProvider: string | null
@@ -250,8 +239,7 @@ export type AccessPointWhereInput = {
   AND?: Prisma.AccessPointWhereInput | Prisma.AccessPointWhereInput[]
   OR?: Prisma.AccessPointWhereInput[]
   NOT?: Prisma.AccessPointWhereInput | Prisma.AccessPointWhereInput[]
-  id?: Prisma.IntFilter<"AccessPoint"> | number
-  publicId?: Prisma.StringFilter<"AccessPoint"> | string
+  id?: Prisma.StringFilter<"AccessPoint"> | string
   routerKey?: Prisma.StringFilter<"AccessPoint"> | string
   routerName?: Prisma.StringNullableFilter<"AccessPoint"> | string | null
   routerProvider?: Prisma.StringNullableFilter<"AccessPoint"> | string | null
@@ -266,7 +254,6 @@ export type AccessPointWhereInput = {
 
 export type AccessPointOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   routerKey?: Prisma.SortOrder
   routerName?: Prisma.SortOrderInput | Prisma.SortOrder
   routerProvider?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -280,8 +267,7 @@ export type AccessPointOrderByWithRelationInput = {
 }
 
 export type AccessPointWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
-  publicId?: string
+  id?: string
   routerKey_ssidIndex?: Prisma.AccessPointRouterKeySsidIndexCompoundUniqueInput
   AND?: Prisma.AccessPointWhereInput | Prisma.AccessPointWhereInput[]
   OR?: Prisma.AccessPointWhereInput[]
@@ -296,11 +282,10 @@ export type AccessPointWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"AccessPoint"> | Date | string
   sessions?: Prisma.AttendanceSessionListRelationFilter
   presenceLogs?: Prisma.PresenceLogListRelationFilter
-}, "id" | "publicId" | "routerKey_ssidIndex">
+}, "id" | "routerKey_ssidIndex">
 
 export type AccessPointOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   routerKey?: Prisma.SortOrder
   routerName?: Prisma.SortOrderInput | Prisma.SortOrder
   routerProvider?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -320,8 +305,7 @@ export type AccessPointScalarWhereWithAggregatesInput = {
   AND?: Prisma.AccessPointScalarWhereWithAggregatesInput | Prisma.AccessPointScalarWhereWithAggregatesInput[]
   OR?: Prisma.AccessPointScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AccessPointScalarWhereWithAggregatesInput | Prisma.AccessPointScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"AccessPoint"> | number
-  publicId?: Prisma.StringWithAggregatesFilter<"AccessPoint"> | string
+  id?: Prisma.StringWithAggregatesFilter<"AccessPoint"> | string
   routerKey?: Prisma.StringWithAggregatesFilter<"AccessPoint"> | string
   routerName?: Prisma.StringNullableWithAggregatesFilter<"AccessPoint"> | string | null
   routerProvider?: Prisma.StringNullableWithAggregatesFilter<"AccessPoint"> | string | null
@@ -333,7 +317,7 @@ export type AccessPointScalarWhereWithAggregatesInput = {
 }
 
 export type AccessPointCreateInput = {
-  publicId?: string
+  id?: string
   routerKey?: string
   routerName?: string | null
   routerProvider?: string | null
@@ -347,8 +331,7 @@ export type AccessPointCreateInput = {
 }
 
 export type AccessPointUncheckedCreateInput = {
-  id?: number
-  publicId?: string
+  id?: string
   routerKey?: string
   routerName?: string | null
   routerProvider?: string | null
@@ -362,7 +345,7 @@ export type AccessPointUncheckedCreateInput = {
 }
 
 export type AccessPointUpdateInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   routerKey?: Prisma.StringFieldUpdateOperationsInput | string
   routerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   routerProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -376,8 +359,7 @@ export type AccessPointUpdateInput = {
 }
 
 export type AccessPointUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   routerKey?: Prisma.StringFieldUpdateOperationsInput | string
   routerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   routerProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -391,8 +373,7 @@ export type AccessPointUncheckedUpdateInput = {
 }
 
 export type AccessPointCreateManyInput = {
-  id?: number
-  publicId?: string
+  id?: string
   routerKey?: string
   routerName?: string | null
   routerProvider?: string | null
@@ -404,7 +385,7 @@ export type AccessPointCreateManyInput = {
 }
 
 export type AccessPointUpdateManyMutationInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   routerKey?: Prisma.StringFieldUpdateOperationsInput | string
   routerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   routerProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -416,8 +397,7 @@ export type AccessPointUpdateManyMutationInput = {
 }
 
 export type AccessPointUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   routerKey?: Prisma.StringFieldUpdateOperationsInput | string
   routerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   routerProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -435,7 +415,6 @@ export type AccessPointRouterKeySsidIndexCompoundUniqueInput = {
 
 export type AccessPointCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   routerKey?: Prisma.SortOrder
   routerName?: Prisma.SortOrder
   routerProvider?: Prisma.SortOrder
@@ -447,13 +426,11 @@ export type AccessPointCountOrderByAggregateInput = {
 }
 
 export type AccessPointAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
   ssidIndex?: Prisma.SortOrder
 }
 
 export type AccessPointMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   routerKey?: Prisma.SortOrder
   routerName?: Prisma.SortOrder
   routerProvider?: Prisma.SortOrder
@@ -466,7 +443,6 @@ export type AccessPointMaxOrderByAggregateInput = {
 
 export type AccessPointMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   routerKey?: Prisma.SortOrder
   routerName?: Prisma.SortOrder
   routerProvider?: Prisma.SortOrder
@@ -478,7 +454,6 @@ export type AccessPointMinOrderByAggregateInput = {
 }
 
 export type AccessPointSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
   ssidIndex?: Prisma.SortOrder
 }
 
@@ -520,7 +495,7 @@ export type AccessPointUpdateOneWithoutPresenceLogsNestedInput = {
 }
 
 export type AccessPointCreateWithoutSessionsInput = {
-  publicId?: string
+  id?: string
   routerKey?: string
   routerName?: string | null
   routerProvider?: string | null
@@ -533,8 +508,7 @@ export type AccessPointCreateWithoutSessionsInput = {
 }
 
 export type AccessPointUncheckedCreateWithoutSessionsInput = {
-  id?: number
-  publicId?: string
+  id?: string
   routerKey?: string
   routerName?: string | null
   routerProvider?: string | null
@@ -563,7 +537,7 @@ export type AccessPointUpdateToOneWithWhereWithoutSessionsInput = {
 }
 
 export type AccessPointUpdateWithoutSessionsInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   routerKey?: Prisma.StringFieldUpdateOperationsInput | string
   routerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   routerProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -576,8 +550,7 @@ export type AccessPointUpdateWithoutSessionsInput = {
 }
 
 export type AccessPointUncheckedUpdateWithoutSessionsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   routerKey?: Prisma.StringFieldUpdateOperationsInput | string
   routerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   routerProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -590,7 +563,7 @@ export type AccessPointUncheckedUpdateWithoutSessionsInput = {
 }
 
 export type AccessPointCreateWithoutPresenceLogsInput = {
-  publicId?: string
+  id?: string
   routerKey?: string
   routerName?: string | null
   routerProvider?: string | null
@@ -603,8 +576,7 @@ export type AccessPointCreateWithoutPresenceLogsInput = {
 }
 
 export type AccessPointUncheckedCreateWithoutPresenceLogsInput = {
-  id?: number
-  publicId?: string
+  id?: string
   routerKey?: string
   routerName?: string | null
   routerProvider?: string | null
@@ -633,7 +605,7 @@ export type AccessPointUpdateToOneWithWhereWithoutPresenceLogsInput = {
 }
 
 export type AccessPointUpdateWithoutPresenceLogsInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   routerKey?: Prisma.StringFieldUpdateOperationsInput | string
   routerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   routerProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -646,8 +618,7 @@ export type AccessPointUpdateWithoutPresenceLogsInput = {
 }
 
 export type AccessPointUncheckedUpdateWithoutPresenceLogsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   routerKey?: Prisma.StringFieldUpdateOperationsInput | string
   routerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   routerProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -701,7 +672,6 @@ export type AccessPointCountOutputTypeCountPresenceLogsArgs<ExtArgs extends runt
 
 export type AccessPointSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   routerKey?: boolean
   routerName?: boolean
   routerProvider?: boolean
@@ -717,7 +687,6 @@ export type AccessPointSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type AccessPointSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   routerKey?: boolean
   routerName?: boolean
   routerProvider?: boolean
@@ -730,7 +699,6 @@ export type AccessPointSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type AccessPointSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   routerKey?: boolean
   routerName?: boolean
   routerProvider?: boolean
@@ -743,7 +711,6 @@ export type AccessPointSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type AccessPointSelectScalar = {
   id?: boolean
-  publicId?: boolean
   routerKey?: boolean
   routerName?: boolean
   routerProvider?: boolean
@@ -754,7 +721,7 @@ export type AccessPointSelectScalar = {
   createdAt?: boolean
 }
 
-export type AccessPointOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "routerKey" | "routerName" | "routerProvider" | "ssidIndex" | "name" | "location" | "isActive" | "createdAt", ExtArgs["result"]["accessPoint"]>
+export type AccessPointOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "routerKey" | "routerName" | "routerProvider" | "ssidIndex" | "name" | "location" | "isActive" | "createdAt", ExtArgs["result"]["accessPoint"]>
 export type AccessPointInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.AccessPoint$sessionsArgs<ExtArgs>
   presenceLogs?: boolean | Prisma.AccessPoint$presenceLogsArgs<ExtArgs>
@@ -770,8 +737,7 @@ export type $AccessPointPayload<ExtArgs extends runtime.Types.Extensions.Interna
     presenceLogs: Prisma.$PresenceLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
-    publicId: string
+    id: string
     routerKey: string
     routerName: string | null
     routerProvider: string | null
@@ -1205,8 +1171,7 @@ export interface Prisma__AccessPointClient<T, Null = never, ExtArgs extends runt
  * Fields of the AccessPoint model
  */
 export interface AccessPointFieldRefs {
-  readonly id: Prisma.FieldRef<"AccessPoint", 'Int'>
-  readonly publicId: Prisma.FieldRef<"AccessPoint", 'String'>
+  readonly id: Prisma.FieldRef<"AccessPoint", 'String'>
   readonly routerKey: Prisma.FieldRef<"AccessPoint", 'String'>
   readonly routerName: Prisma.FieldRef<"AccessPoint", 'String'>
   readonly routerProvider: Prisma.FieldRef<"AccessPoint", 'String'>

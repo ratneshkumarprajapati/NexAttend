@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserRecord {
   id: string;
-  publicId?: string;
   email: string;
   role: string;
   createdAt?: string;

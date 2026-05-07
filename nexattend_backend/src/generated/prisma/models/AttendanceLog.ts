@@ -20,43 +20,25 @@ export type AttendanceLogModel = runtime.Types.Result.DefaultSelection<Prisma.$A
 
 export type AggregateAttendanceLog = {
   _count: AttendanceLogCountAggregateOutputType | null
-  _avg: AttendanceLogAvgAggregateOutputType | null
-  _sum: AttendanceLogSumAggregateOutputType | null
   _min: AttendanceLogMinAggregateOutputType | null
   _max: AttendanceLogMaxAggregateOutputType | null
 }
 
-export type AttendanceLogAvgAggregateOutputType = {
-  id: number | null
-  sessionId: number | null
-  userId: number | null
-  deviceId: number | null
-}
-
-export type AttendanceLogSumAggregateOutputType = {
-  id: number | null
-  sessionId: number | null
-  userId: number | null
-  deviceId: number | null
-}
-
 export type AttendanceLogMinAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  sessionId: number | null
-  userId: number | null
-  deviceId: number | null
+  id: string | null
+  sessionId: string | null
+  userId: string | null
+  deviceId: string | null
   timestamp: Date | null
   status: $Enums.AttendanceStatus | null
   createdAt: Date | null
 }
 
 export type AttendanceLogMaxAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  sessionId: number | null
-  userId: number | null
-  deviceId: number | null
+  id: string | null
+  sessionId: string | null
+  userId: string | null
+  deviceId: string | null
   timestamp: Date | null
   status: $Enums.AttendanceStatus | null
   createdAt: Date | null
@@ -64,7 +46,6 @@ export type AttendanceLogMaxAggregateOutputType = {
 
 export type AttendanceLogCountAggregateOutputType = {
   id: number
-  publicId: number
   sessionId: number
   userId: number
   deviceId: number
@@ -75,23 +56,8 @@ export type AttendanceLogCountAggregateOutputType = {
 }
 
 
-export type AttendanceLogAvgAggregateInputType = {
-  id?: true
-  sessionId?: true
-  userId?: true
-  deviceId?: true
-}
-
-export type AttendanceLogSumAggregateInputType = {
-  id?: true
-  sessionId?: true
-  userId?: true
-  deviceId?: true
-}
-
 export type AttendanceLogMinAggregateInputType = {
   id?: true
-  publicId?: true
   sessionId?: true
   userId?: true
   deviceId?: true
@@ -102,7 +68,6 @@ export type AttendanceLogMinAggregateInputType = {
 
 export type AttendanceLogMaxAggregateInputType = {
   id?: true
-  publicId?: true
   sessionId?: true
   userId?: true
   deviceId?: true
@@ -113,7 +78,6 @@ export type AttendanceLogMaxAggregateInputType = {
 
 export type AttendanceLogCountAggregateInputType = {
   id?: true
-  publicId?: true
   sessionId?: true
   userId?: true
   deviceId?: true
@@ -161,18 +125,6 @@ export type AttendanceLogAggregateArgs<ExtArgs extends runtime.Types.Extensions.
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: AttendanceLogAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: AttendanceLogSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: AttendanceLogMinAggregateInputType
@@ -203,24 +155,19 @@ export type AttendanceLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   _count?: AttendanceLogCountAggregateInputType | true
-  _avg?: AttendanceLogAvgAggregateInputType
-  _sum?: AttendanceLogSumAggregateInputType
   _min?: AttendanceLogMinAggregateInputType
   _max?: AttendanceLogMaxAggregateInputType
 }
 
 export type AttendanceLogGroupByOutputType = {
-  id: number
-  publicId: string
-  sessionId: number | null
-  userId: number
-  deviceId: number
+  id: string
+  sessionId: string | null
+  userId: string
+  deviceId: string
   timestamp: Date
   status: $Enums.AttendanceStatus
   createdAt: Date
   _count: AttendanceLogCountAggregateOutputType | null
-  _avg: AttendanceLogAvgAggregateOutputType | null
-  _sum: AttendanceLogSumAggregateOutputType | null
   _min: AttendanceLogMinAggregateOutputType | null
   _max: AttendanceLogMaxAggregateOutputType | null
 }
@@ -244,11 +191,10 @@ export type AttendanceLogWhereInput = {
   AND?: Prisma.AttendanceLogWhereInput | Prisma.AttendanceLogWhereInput[]
   OR?: Prisma.AttendanceLogWhereInput[]
   NOT?: Prisma.AttendanceLogWhereInput | Prisma.AttendanceLogWhereInput[]
-  id?: Prisma.IntFilter<"AttendanceLog"> | number
-  publicId?: Prisma.StringFilter<"AttendanceLog"> | string
-  sessionId?: Prisma.IntNullableFilter<"AttendanceLog"> | number | null
-  userId?: Prisma.IntFilter<"AttendanceLog"> | number
-  deviceId?: Prisma.IntFilter<"AttendanceLog"> | number
+  id?: Prisma.StringFilter<"AttendanceLog"> | string
+  sessionId?: Prisma.StringNullableFilter<"AttendanceLog"> | string | null
+  userId?: Prisma.StringFilter<"AttendanceLog"> | string
+  deviceId?: Prisma.StringFilter<"AttendanceLog"> | string
   timestamp?: Prisma.DateTimeFilter<"AttendanceLog"> | Date | string
   status?: Prisma.EnumAttendanceStatusFilter<"AttendanceLog"> | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFilter<"AttendanceLog"> | Date | string
@@ -259,7 +205,6 @@ export type AttendanceLogWhereInput = {
 
 export type AttendanceLogOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
@@ -272,25 +217,23 @@ export type AttendanceLogOrderByWithRelationInput = {
 }
 
 export type AttendanceLogWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
-  publicId?: string
+  id?: string
   AND?: Prisma.AttendanceLogWhereInput | Prisma.AttendanceLogWhereInput[]
   OR?: Prisma.AttendanceLogWhereInput[]
   NOT?: Prisma.AttendanceLogWhereInput | Prisma.AttendanceLogWhereInput[]
-  sessionId?: Prisma.IntNullableFilter<"AttendanceLog"> | number | null
-  userId?: Prisma.IntFilter<"AttendanceLog"> | number
-  deviceId?: Prisma.IntFilter<"AttendanceLog"> | number
+  sessionId?: Prisma.StringNullableFilter<"AttendanceLog"> | string | null
+  userId?: Prisma.StringFilter<"AttendanceLog"> | string
+  deviceId?: Prisma.StringFilter<"AttendanceLog"> | string
   timestamp?: Prisma.DateTimeFilter<"AttendanceLog"> | Date | string
   status?: Prisma.EnumAttendanceStatusFilter<"AttendanceLog"> | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFilter<"AttendanceLog"> | Date | string
   session?: Prisma.XOR<Prisma.AttendanceSessionNullableScalarRelationFilter, Prisma.AttendanceSessionWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   device?: Prisma.XOR<Prisma.DeviceScalarRelationFilter, Prisma.DeviceWhereInput>
-}, "id" | "publicId">
+}, "id">
 
 export type AttendanceLogOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
@@ -298,28 +241,25 @@ export type AttendanceLogOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.AttendanceLogCountOrderByAggregateInput
-  _avg?: Prisma.AttendanceLogAvgOrderByAggregateInput
   _max?: Prisma.AttendanceLogMaxOrderByAggregateInput
   _min?: Prisma.AttendanceLogMinOrderByAggregateInput
-  _sum?: Prisma.AttendanceLogSumOrderByAggregateInput
 }
 
 export type AttendanceLogScalarWhereWithAggregatesInput = {
   AND?: Prisma.AttendanceLogScalarWhereWithAggregatesInput | Prisma.AttendanceLogScalarWhereWithAggregatesInput[]
   OR?: Prisma.AttendanceLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AttendanceLogScalarWhereWithAggregatesInput | Prisma.AttendanceLogScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"AttendanceLog"> | number
-  publicId?: Prisma.StringWithAggregatesFilter<"AttendanceLog"> | string
-  sessionId?: Prisma.IntNullableWithAggregatesFilter<"AttendanceLog"> | number | null
-  userId?: Prisma.IntWithAggregatesFilter<"AttendanceLog"> | number
-  deviceId?: Prisma.IntWithAggregatesFilter<"AttendanceLog"> | number
+  id?: Prisma.StringWithAggregatesFilter<"AttendanceLog"> | string
+  sessionId?: Prisma.StringNullableWithAggregatesFilter<"AttendanceLog"> | string | null
+  userId?: Prisma.StringWithAggregatesFilter<"AttendanceLog"> | string
+  deviceId?: Prisma.StringWithAggregatesFilter<"AttendanceLog"> | string
   timestamp?: Prisma.DateTimeWithAggregatesFilter<"AttendanceLog"> | Date | string
   status?: Prisma.EnumAttendanceStatusWithAggregatesFilter<"AttendanceLog"> | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AttendanceLog"> | Date | string
 }
 
 export type AttendanceLogCreateInput = {
-  publicId?: string
+  id?: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
@@ -329,18 +269,17 @@ export type AttendanceLogCreateInput = {
 }
 
 export type AttendanceLogUncheckedCreateInput = {
-  id?: number
-  publicId?: string
-  sessionId?: number | null
-  userId: number
-  deviceId: number
+  id?: string
+  sessionId?: string | null
+  userId: string
+  deviceId: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
 }
 
 export type AttendanceLogUpdateInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -350,40 +289,37 @@ export type AttendanceLogUpdateInput = {
 }
 
 export type AttendanceLogUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttendanceLogCreateManyInput = {
-  id?: number
-  publicId?: string
-  sessionId?: number | null
-  userId: number
-  deviceId: number
+  id?: string
+  sessionId?: string | null
+  userId: string
+  deviceId: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
 }
 
 export type AttendanceLogUpdateManyMutationInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttendanceLogUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -401,7 +337,6 @@ export type AttendanceLogOrderByRelationAggregateInput = {
 
 export type AttendanceLogCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
@@ -410,16 +345,8 @@ export type AttendanceLogCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type AttendanceLogAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  deviceId?: Prisma.SortOrder
-}
-
 export type AttendanceLogMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
@@ -430,20 +357,12 @@ export type AttendanceLogMaxOrderByAggregateInput = {
 
 export type AttendanceLogMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-}
-
-export type AttendanceLogSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  deviceId?: Prisma.SortOrder
 }
 
 export type AttendanceLogCreateNestedManyWithoutUserInput = {
@@ -577,7 +496,7 @@ export type EnumAttendanceStatusFieldUpdateOperationsInput = {
 }
 
 export type AttendanceLogCreateWithoutUserInput = {
-  publicId?: string
+  id?: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
@@ -586,10 +505,9 @@ export type AttendanceLogCreateWithoutUserInput = {
 }
 
 export type AttendanceLogUncheckedCreateWithoutUserInput = {
-  id?: number
-  publicId?: string
-  sessionId?: number | null
-  deviceId: number
+  id?: string
+  sessionId?: string | null
+  deviceId: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
@@ -625,18 +543,17 @@ export type AttendanceLogScalarWhereInput = {
   AND?: Prisma.AttendanceLogScalarWhereInput | Prisma.AttendanceLogScalarWhereInput[]
   OR?: Prisma.AttendanceLogScalarWhereInput[]
   NOT?: Prisma.AttendanceLogScalarWhereInput | Prisma.AttendanceLogScalarWhereInput[]
-  id?: Prisma.IntFilter<"AttendanceLog"> | number
-  publicId?: Prisma.StringFilter<"AttendanceLog"> | string
-  sessionId?: Prisma.IntNullableFilter<"AttendanceLog"> | number | null
-  userId?: Prisma.IntFilter<"AttendanceLog"> | number
-  deviceId?: Prisma.IntFilter<"AttendanceLog"> | number
+  id?: Prisma.StringFilter<"AttendanceLog"> | string
+  sessionId?: Prisma.StringNullableFilter<"AttendanceLog"> | string | null
+  userId?: Prisma.StringFilter<"AttendanceLog"> | string
+  deviceId?: Prisma.StringFilter<"AttendanceLog"> | string
   timestamp?: Prisma.DateTimeFilter<"AttendanceLog"> | Date | string
   status?: Prisma.EnumAttendanceStatusFilter<"AttendanceLog"> | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFilter<"AttendanceLog"> | Date | string
 }
 
 export type AttendanceLogCreateWithoutDeviceInput = {
-  publicId?: string
+  id?: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
@@ -645,10 +562,9 @@ export type AttendanceLogCreateWithoutDeviceInput = {
 }
 
 export type AttendanceLogUncheckedCreateWithoutDeviceInput = {
-  id?: number
-  publicId?: string
-  sessionId?: number | null
-  userId: number
+  id?: string
+  sessionId?: string | null
+  userId: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
@@ -681,7 +597,7 @@ export type AttendanceLogUpdateManyWithWhereWithoutDeviceInput = {
 }
 
 export type AttendanceLogCreateWithoutSessionInput = {
-  publicId?: string
+  id?: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
@@ -690,10 +606,9 @@ export type AttendanceLogCreateWithoutSessionInput = {
 }
 
 export type AttendanceLogUncheckedCreateWithoutSessionInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  deviceId: number
+  id?: string
+  userId: string
+  deviceId: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
@@ -726,17 +641,16 @@ export type AttendanceLogUpdateManyWithWhereWithoutSessionInput = {
 }
 
 export type AttendanceLogCreateManyUserInput = {
-  id?: number
-  publicId?: string
-  sessionId?: number | null
-  deviceId: number
+  id?: string
+  sessionId?: string | null
+  deviceId: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
 }
 
 export type AttendanceLogUpdateWithoutUserInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -745,37 +659,34 @@ export type AttendanceLogUpdateWithoutUserInput = {
 }
 
 export type AttendanceLogUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttendanceLogUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttendanceLogCreateManyDeviceInput = {
-  id?: number
-  publicId?: string
-  sessionId?: number | null
-  userId: number
+  id?: string
+  sessionId?: string | null
+  userId: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
 }
 
 export type AttendanceLogUpdateWithoutDeviceInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -784,37 +695,34 @@ export type AttendanceLogUpdateWithoutDeviceInput = {
 }
 
 export type AttendanceLogUncheckedUpdateWithoutDeviceInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttendanceLogUncheckedUpdateManyWithoutDeviceInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttendanceLogCreateManySessionInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  deviceId: number
+  id?: string
+  userId: string
+  deviceId: string
   timestamp: Date | string
   status: $Enums.AttendanceStatus
   createdAt?: Date | string
 }
 
 export type AttendanceLogUpdateWithoutSessionInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -823,20 +731,18 @@ export type AttendanceLogUpdateWithoutSessionInput = {
 }
 
 export type AttendanceLogUncheckedUpdateWithoutSessionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AttendanceLogUncheckedUpdateManyWithoutSessionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -846,7 +752,6 @@ export type AttendanceLogUncheckedUpdateManyWithoutSessionInput = {
 
 export type AttendanceLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   sessionId?: boolean
   userId?: boolean
   deviceId?: boolean
@@ -860,7 +765,6 @@ export type AttendanceLogSelect<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type AttendanceLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   sessionId?: boolean
   userId?: boolean
   deviceId?: boolean
@@ -874,7 +778,6 @@ export type AttendanceLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types
 
 export type AttendanceLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   sessionId?: boolean
   userId?: boolean
   deviceId?: boolean
@@ -888,7 +791,6 @@ export type AttendanceLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
 
 export type AttendanceLogSelectScalar = {
   id?: boolean
-  publicId?: boolean
   sessionId?: boolean
   userId?: boolean
   deviceId?: boolean
@@ -897,7 +799,7 @@ export type AttendanceLogSelectScalar = {
   createdAt?: boolean
 }
 
-export type AttendanceLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "sessionId" | "userId" | "deviceId" | "timestamp" | "status" | "createdAt", ExtArgs["result"]["attendanceLog"]>
+export type AttendanceLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sessionId" | "userId" | "deviceId" | "timestamp" | "status" | "createdAt", ExtArgs["result"]["attendanceLog"]>
 export type AttendanceLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   session?: boolean | Prisma.AttendanceLog$sessionArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -922,11 +824,10 @@ export type $AttendanceLogPayload<ExtArgs extends runtime.Types.Extensions.Inter
     device: Prisma.$DevicePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
-    publicId: string
-    sessionId: number | null
-    userId: number
-    deviceId: number
+    id: string
+    sessionId: string | null
+    userId: string
+    deviceId: string
     timestamp: Date
     status: $Enums.AttendanceStatus
     createdAt: Date
@@ -1356,11 +1257,10 @@ export interface Prisma__AttendanceLogClient<T, Null = never, ExtArgs extends ru
  * Fields of the AttendanceLog model
  */
 export interface AttendanceLogFieldRefs {
-  readonly id: Prisma.FieldRef<"AttendanceLog", 'Int'>
-  readonly publicId: Prisma.FieldRef<"AttendanceLog", 'String'>
-  readonly sessionId: Prisma.FieldRef<"AttendanceLog", 'Int'>
-  readonly userId: Prisma.FieldRef<"AttendanceLog", 'Int'>
-  readonly deviceId: Prisma.FieldRef<"AttendanceLog", 'Int'>
+  readonly id: Prisma.FieldRef<"AttendanceLog", 'String'>
+  readonly sessionId: Prisma.FieldRef<"AttendanceLog", 'String'>
+  readonly userId: Prisma.FieldRef<"AttendanceLog", 'String'>
+  readonly deviceId: Prisma.FieldRef<"AttendanceLog", 'String'>
   readonly timestamp: Prisma.FieldRef<"AttendanceLog", 'DateTime'>
   readonly status: Prisma.FieldRef<"AttendanceLog", 'AttendanceStatus'>
   readonly createdAt: Prisma.FieldRef<"AttendanceLog", 'DateTime'>

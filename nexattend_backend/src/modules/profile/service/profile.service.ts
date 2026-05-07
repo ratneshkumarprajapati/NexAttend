@@ -26,7 +26,7 @@ export const profileService = {
     }
   },
 
-  async getProfile(userId: number) {
+  async getProfile(userId: string) {
     const profile = await profileRepository.findByUserId(userId);
 
     if (!profile) {
@@ -36,7 +36,7 @@ export const profileService = {
     return profile;
   },
 
-  async updateProfile(userId: number, data: IUpdateInput) {
+  async updateProfile(userId: string, data: IUpdateInput) {
     try {
       return await profileRepository.update(userId, data);
     } catch (error: unknown) {

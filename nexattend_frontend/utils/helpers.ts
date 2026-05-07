@@ -25,7 +25,7 @@ export function getStudentName(
 }
 
 export function getAttendanceStatusForDay(
-  publicId: string,
+  id: string,
   date: Date,
   currentStatus: string,
 ): AttendanceStatus {
@@ -33,7 +33,7 @@ export function getAttendanceStatusForDay(
   const isFuture = date > today;
   if (isFuture) return 'future';
 
-  const seed = Array.from(`${publicId}:${date.toISOString()}`).reduce(
+  const seed = Array.from(`${id}:${date.toISOString()}`).reduce(
     (sum, char) => sum + char.charCodeAt(0),
     0,
   );
@@ -46,7 +46,7 @@ export function getAttendanceStatusForDay(
 }
 
 export function generateStudentAttendanceCalendar(
-  publicId: string,
+  id: string,
   currentStatus: string,
   monthDate = new Date(),
 ): AttendanceCalendarDay[] {
@@ -62,7 +62,7 @@ export function generateStudentAttendanceCalendar(
 
   for (let day = 1; day <= daysInMonth; day += 1) {
     const date = new Date(year, month, day);
-    const status = getAttendanceStatusForDay(publicId, date, currentStatus);
+    const status = getAttendanceStatusForDay(id, date, currentStatus);
     items.push({ date, status });
   }
 
@@ -77,17 +77,32 @@ export function formatMonthLabel(date: Date) {
   return date.toLocaleString('default', { month: 'long', year: 'numeric' });
 }
 
-export function generateHourlyAttendanceData(present: number) {
-  const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14]; // 6 AM - 2 PM
+export function generateHourlyAttendanceData(
+  students: NonNullable<AdminStudentMonitorResponse['students']> = [],
+) {
+  const hours = Array.from({ length: 24 }, (_, hour) => hour);
+
   return hours.map((hour) => ({
-    time: hour > 12 ? `${hour - 12}:00 PM` : `${hour}:00 AM`,
+    time:
+      hour === 0
+        ? '12 AM'
+        : hour < 12
+          ? `${hour} AM`
+          : hour === 12
+            ? '12 PM'
+            : `${hour - 12} PM`,
     hour,
-    Present: Math.max(
-      0,
-      Math.round(
-        present * (0.4 + (hour - 6) * 0.05 + Math.sin((hour - 6) / 2) * 0.05),
-      ),
-    ),
+    Present: students.filter((student) => {
+      const firstSeen = student.attendance?.daily?.firstSeen;
+      const lastSeen = student.attendance?.daily?.lastSeen;
+      if (!firstSeen || !lastSeen) return false;
+
+      const start = new Date(firstSeen);
+      const end = new Date(lastSeen);
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return false;
+
+      return hour >= start.getHours() && hour <= end.getHours();
+    }).length,
   }));
 }
 

@@ -57,17 +57,17 @@ export default function AdminDevicesPage() {
 
       const flattenedDevices = (monitor.students || []).flatMap((student) => {
         const ownerName = [student.profile?.firstName, student.profile?.lastName].filter(Boolean).join(' ') || student.email;
-        const activeDeviceId = student.attendance?.activeSession?.device?.publicId;
+        const activeDeviceId = student.attendance?.activeSession?.device?.id;
         const lastSeen = student.attendance?.activeSession?.lastSeen || null;
 
         return (student.devices || []).map((device, index) => ({
-          id: device.publicId || `${student.publicId}-${index}`,
+          id: device.id || `${student.id}-${index}`,
           deviceName: device.deviceName || 'Unknown Device',
           ownerName,
           ownerEmail: student.email,
           department: student.profile?.department || 'N/A',
-          status: device.publicId && activeDeviceId === device.publicId ? 'online' : 'offline',
-          lastSeen: device.publicId && activeDeviceId === device.publicId ? lastSeen : null,
+          status: device.id && activeDeviceId === device.id ? 'online' : 'offline',
+          lastSeen: device.id && activeDeviceId === device.id ? lastSeen : null,
           createdAt: device.createdAt || null,
         }));
       });

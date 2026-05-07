@@ -35,10 +35,10 @@ export const userRepository = {
       include: { profile: true },
     }),
 
-  findByPublicId: (publicId: string) =>
+  findById: (id: string) =>
     prisma.user.findFirst({
       where: {
-        publicId,
+        id,
         deletedAt: null,
       },
       include: { profile: true },
@@ -50,13 +50,13 @@ export const userRepository = {
       include: { profile: true },
     }),
 
-  update: async (publicId: string, data: any) => {
+  update: async (id: string, data: any) => {
     const user = await prisma.user.findFirst({
       where: {
-        publicId,
+        id,
         deletedAt: null,
       },
-      select: { publicId: true },
+      select: { id: true },
     });
 
     if (!user) {
@@ -64,16 +64,16 @@ export const userRepository = {
     }
 
     return prisma.user.update({
-      where: { publicId },
+      where: { id },
       data,
     });
   },
 
-  delete: async (publicId: string) => {
+  delete: async (id: string) => {
     const deletedAt = new Date();
     const result = await prisma.user.updateMany({
       where: {
-        publicId,
+        id,
         deletedAt: null,
       },
       data: { deletedAt },
@@ -83,7 +83,7 @@ export const userRepository = {
       return null;
     }
 
-    return { publicId, deletedAt };
+    return { id, deletedAt };
   },
 
   createBulkStudents: async (students: BulkStudentCreateData[]) =>

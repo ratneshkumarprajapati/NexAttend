@@ -43,14 +43,14 @@ const toUpdateData = (data: IUpdateInput): Prisma.ProfileUpdateInput => {
 };
 
 export const profileRepository = {
-  findByUserId: (userId: number) => prisma.profile.findUnique({ where: { userId } }),
+  findByUserId: (userId: string) => prisma.profile.findUnique({ where: { userId } }),
 
   create: (data: ICreateProfileInput) =>
     prisma.profile.create({
       data: toCreateData(data),
     }),
 
-  update: (userId: number, data: IUpdateInput) =>
+  update: (userId: string, data: IUpdateInput) =>
     prisma.profile.update({
       where: { userId },
       data: toUpdateData(data),

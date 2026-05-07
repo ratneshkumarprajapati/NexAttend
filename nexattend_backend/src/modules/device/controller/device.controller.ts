@@ -10,7 +10,7 @@ export const deviceController = {
     async register(req: Request, res: Response) {
         try {
             const parsed = registerDeviceSchema.parse(req.body);
-            const  userId  = req.user?.userId as number;
+            const  userId  = req.user?.userId as string;
             const deviceRes = await deviceService.registerDevice(userId, parsed);
             return sendSuccessResponse(res, 201, "device added successfully", deviceRes);
 

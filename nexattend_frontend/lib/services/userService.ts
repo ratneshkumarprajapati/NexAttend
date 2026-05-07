@@ -12,8 +12,7 @@ export interface UserPayload {
 }
 
 export interface UserRecord {
-  id: number;
-  publicId?: string;
+  id: string;
   email: string;
   role: string;
   profile?: {
@@ -58,18 +57,18 @@ export const userService = {
     return response.data.data;
   },
 
-  async getUserByPublicId(publicId: string) {
-    const response = await api.get<{ data: UserRecord }>(`/users/${publicId}`);
+  async getUserById(id: string) {
+    const response = await api.get<{ data: UserRecord }>(`/users/${id}`);
     return response.data.data;
   },
 
-  async updateUser(publicId: string, payload: Partial<UserPayload>) {
-    const response = await api.put<{ data: UserRecord }>(`/users/${publicId}`, payload);
+  async updateUser(id: string, payload: Partial<UserPayload>) {
+    const response = await api.put<{ data: UserRecord }>(`/users/${id}`, payload);
     return response.data.data;
   },
 
-  async deleteUser(publicId: string) {
-    const response = await api.delete<{ data: { success: boolean } }>(`/users/${publicId}`);
+  async deleteUser(id: string) {
+    const response = await api.delete<{ data: { success: boolean } }>(`/users/${id}`);
     return response.data.data;
   },
 

@@ -36,7 +36,7 @@ export const accessPointService = {
     return accessPointRepository.findAll();
   },
 
-  getAccessPointById: async (id: number) => {
+  getAccessPointById: async (id: string) => {
     const ap = await accessPointRepository.findById(id);
     if (!ap) {
       throw new AppError("Access point not found", 404);
@@ -45,14 +45,14 @@ export const accessPointService = {
   },
 
   updateAccessPoint: async (
-    id: number,
+    id: string,
     data: UpdateAccessPointInput,
   ) => {
     await accessPointService.getAccessPointById(id);
     return accessPointRepository.update(id, data);
   },
 
-  deleteAccessPoint: async (id: number) => {
+  deleteAccessPoint: async (id: string) => {
     await accessPointService.getAccessPointById(id);
     return accessPointRepository.delete(id);
   },

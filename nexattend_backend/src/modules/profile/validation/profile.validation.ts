@@ -9,10 +9,10 @@ const optionalTrimmedString = z
 
 
 export const userIdParamSchema = z.object({
-  userId: z.coerce.number().int().positive("userId must be a positive integer"),
+  userId: z.uuid("userId must be a valid UUID"),
 });
 export const createProfileSchema = z.object({
-  userId: z.number().int().positive("userId must be a positive integer"),
+  userId: z.uuid("userId must be a valid UUID"),
   firstName: z.string().trim().min(1, "First name is required"),
   lastName: z.string().trim().min(1, "Last name is required"),
   phoneNo: optionalTrimmedString.optional(),

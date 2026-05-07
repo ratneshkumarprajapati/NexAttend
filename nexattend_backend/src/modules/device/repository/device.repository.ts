@@ -12,12 +12,12 @@ export const deviceRepository={
         })
 
     ,
-    findByUserId:(userId:number)=>
+    findByUserId:(userId:string)=>
         prisma.device.findMany({
             where:{userId}
         })
     ,
-    delete:(id:number)=>
+    delete:(id:string)=>
         prisma.device.delete({
             where:{id}
         })

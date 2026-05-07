@@ -125,13 +125,13 @@ export default function StudentsPage() {
     }
   };
 
-  const handleDeleteStudent = async (publicId?: string) => {
-    if (!publicId) return;
+  const handleDeleteStudent = async (id?: string) => {
+    if (!id) return;
 
     try {
       setError(null);
-      await userService.deleteUser(publicId);
-      setStudents((current) => current.filter((student) => student.publicId !== publicId));
+      await userService.deleteUser(id);
+      setStudents((current) => current.filter((student) => student.id !== id));
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || 'Failed to delete student');
     }
@@ -234,7 +234,7 @@ export default function StudentsPage() {
             </TableHeader>
             <TableBody>
               {paginatedStudents.map((student) => (
-                <TableRow key={student.publicId || student.id} className="border-border/30 hover:bg-white/5">
+                <TableRow key={student.id} className="border-border/30 hover:bg-white/5">
                   <TableCell className="text-foreground">{getStudentName(student)}</TableCell>
                   <TableCell className="text-foreground">{student.email}</TableCell>
                   <TableCell className="text-foreground">{student.profile?.phoneNo || 'N/A'}</TableCell>
@@ -246,7 +246,7 @@ export default function StudentsPage() {
                       variant="ghost"
                       size="sm"
                       className="h-8 w-8 p-0 hover:text-red-400"
-                      onClick={() => void handleDeleteStudent(student.publicId)}
+                      onClick={() => void handleDeleteStudent(student.id)}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>

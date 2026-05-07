@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const accessPointIdParamSchema = z.object({
-  id: z.coerce.number().int().positive("Access point id must be valid"),
+  id: z.uuid("Access point id must be a valid UUID"),
 });
 
 export const createAccessPointSchema = z.object({

@@ -27,38 +27,28 @@ export type AggregatePresenceLog = {
 }
 
 export type PresenceLogAvgAggregateOutputType = {
-  id: number | null
-  deviceId: number | null
-  apId: number | null
-  sessionId: number | null
   rssi: number | null
 }
 
 export type PresenceLogSumAggregateOutputType = {
-  id: number | null
-  deviceId: number | null
-  apId: number | null
-  sessionId: number | null
   rssi: number | null
 }
 
 export type PresenceLogMinAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  deviceId: number | null
-  apId: number | null
-  sessionId: number | null
+  id: string | null
+  deviceId: string | null
+  apId: string | null
+  sessionId: string | null
   rssi: number | null
   seenAt: Date | null
   createdAt: Date | null
 }
 
 export type PresenceLogMaxAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  deviceId: number | null
-  apId: number | null
-  sessionId: number | null
+  id: string | null
+  deviceId: string | null
+  apId: string | null
+  sessionId: string | null
   rssi: number | null
   seenAt: Date | null
   createdAt: Date | null
@@ -66,7 +56,6 @@ export type PresenceLogMaxAggregateOutputType = {
 
 export type PresenceLogCountAggregateOutputType = {
   id: number
-  publicId: number
   deviceId: number
   apId: number
   sessionId: number
@@ -78,24 +67,15 @@ export type PresenceLogCountAggregateOutputType = {
 
 
 export type PresenceLogAvgAggregateInputType = {
-  id?: true
-  deviceId?: true
-  apId?: true
-  sessionId?: true
   rssi?: true
 }
 
 export type PresenceLogSumAggregateInputType = {
-  id?: true
-  deviceId?: true
-  apId?: true
-  sessionId?: true
   rssi?: true
 }
 
 export type PresenceLogMinAggregateInputType = {
   id?: true
-  publicId?: true
   deviceId?: true
   apId?: true
   sessionId?: true
@@ -106,7 +86,6 @@ export type PresenceLogMinAggregateInputType = {
 
 export type PresenceLogMaxAggregateInputType = {
   id?: true
-  publicId?: true
   deviceId?: true
   apId?: true
   sessionId?: true
@@ -117,7 +96,6 @@ export type PresenceLogMaxAggregateInputType = {
 
 export type PresenceLogCountAggregateInputType = {
   id?: true
-  publicId?: true
   deviceId?: true
   apId?: true
   sessionId?: true
@@ -214,11 +192,10 @@ export type PresenceLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 export type PresenceLogGroupByOutputType = {
-  id: number
-  publicId: string
-  deviceId: number
-  apId: number | null
-  sessionId: number | null
+  id: string
+  deviceId: string
+  apId: string | null
+  sessionId: string | null
   rssi: number | null
   seenAt: Date
   createdAt: Date
@@ -248,11 +225,10 @@ export type PresenceLogWhereInput = {
   AND?: Prisma.PresenceLogWhereInput | Prisma.PresenceLogWhereInput[]
   OR?: Prisma.PresenceLogWhereInput[]
   NOT?: Prisma.PresenceLogWhereInput | Prisma.PresenceLogWhereInput[]
-  id?: Prisma.IntFilter<"PresenceLog"> | number
-  publicId?: Prisma.StringFilter<"PresenceLog"> | string
-  deviceId?: Prisma.IntFilter<"PresenceLog"> | number
-  apId?: Prisma.IntNullableFilter<"PresenceLog"> | number | null
-  sessionId?: Prisma.IntNullableFilter<"PresenceLog"> | number | null
+  id?: Prisma.StringFilter<"PresenceLog"> | string
+  deviceId?: Prisma.StringFilter<"PresenceLog"> | string
+  apId?: Prisma.StringNullableFilter<"PresenceLog"> | string | null
+  sessionId?: Prisma.StringNullableFilter<"PresenceLog"> | string | null
   rssi?: Prisma.IntNullableFilter<"PresenceLog"> | number | null
   seenAt?: Prisma.DateTimeFilter<"PresenceLog"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"PresenceLog"> | Date | string
@@ -263,7 +239,6 @@ export type PresenceLogWhereInput = {
 
 export type PresenceLogOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrderInput | Prisma.SortOrder
   sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -276,25 +251,23 @@ export type PresenceLogOrderByWithRelationInput = {
 }
 
 export type PresenceLogWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
-  publicId?: string
+  id?: string
   AND?: Prisma.PresenceLogWhereInput | Prisma.PresenceLogWhereInput[]
   OR?: Prisma.PresenceLogWhereInput[]
   NOT?: Prisma.PresenceLogWhereInput | Prisma.PresenceLogWhereInput[]
-  deviceId?: Prisma.IntFilter<"PresenceLog"> | number
-  apId?: Prisma.IntNullableFilter<"PresenceLog"> | number | null
-  sessionId?: Prisma.IntNullableFilter<"PresenceLog"> | number | null
+  deviceId?: Prisma.StringFilter<"PresenceLog"> | string
+  apId?: Prisma.StringNullableFilter<"PresenceLog"> | string | null
+  sessionId?: Prisma.StringNullableFilter<"PresenceLog"> | string | null
   rssi?: Prisma.IntNullableFilter<"PresenceLog"> | number | null
   seenAt?: Prisma.DateTimeFilter<"PresenceLog"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"PresenceLog"> | Date | string
   device?: Prisma.XOR<Prisma.DeviceScalarRelationFilter, Prisma.DeviceWhereInput>
   accessPoint?: Prisma.XOR<Prisma.AccessPointNullableScalarRelationFilter, Prisma.AccessPointWhereInput> | null
   session?: Prisma.XOR<Prisma.AttendanceSessionNullableScalarRelationFilter, Prisma.AttendanceSessionWhereInput> | null
-}, "id" | "publicId">
+}, "id">
 
 export type PresenceLogOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrderInput | Prisma.SortOrder
   sessionId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -312,18 +285,17 @@ export type PresenceLogScalarWhereWithAggregatesInput = {
   AND?: Prisma.PresenceLogScalarWhereWithAggregatesInput | Prisma.PresenceLogScalarWhereWithAggregatesInput[]
   OR?: Prisma.PresenceLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PresenceLogScalarWhereWithAggregatesInput | Prisma.PresenceLogScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"PresenceLog"> | number
-  publicId?: Prisma.StringWithAggregatesFilter<"PresenceLog"> | string
-  deviceId?: Prisma.IntWithAggregatesFilter<"PresenceLog"> | number
-  apId?: Prisma.IntNullableWithAggregatesFilter<"PresenceLog"> | number | null
-  sessionId?: Prisma.IntNullableWithAggregatesFilter<"PresenceLog"> | number | null
+  id?: Prisma.StringWithAggregatesFilter<"PresenceLog"> | string
+  deviceId?: Prisma.StringWithAggregatesFilter<"PresenceLog"> | string
+  apId?: Prisma.StringNullableWithAggregatesFilter<"PresenceLog"> | string | null
+  sessionId?: Prisma.StringNullableWithAggregatesFilter<"PresenceLog"> | string | null
   rssi?: Prisma.IntNullableWithAggregatesFilter<"PresenceLog"> | number | null
   seenAt?: Prisma.DateTimeWithAggregatesFilter<"PresenceLog"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PresenceLog"> | Date | string
 }
 
 export type PresenceLogCreateInput = {
-  publicId?: string
+  id?: string
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
@@ -333,18 +305,17 @@ export type PresenceLogCreateInput = {
 }
 
 export type PresenceLogUncheckedCreateInput = {
-  id?: number
-  publicId?: string
-  deviceId: number
-  apId?: number | null
-  sessionId?: number | null
+  id?: string
+  deviceId: string
+  apId?: string | null
+  sessionId?: string | null
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
 }
 
 export type PresenceLogUpdateInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -354,40 +325,37 @@ export type PresenceLogUpdateInput = {
 }
 
 export type PresenceLogUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PresenceLogCreateManyInput = {
-  id?: number
-  publicId?: string
-  deviceId: number
-  apId?: number | null
-  sessionId?: number | null
+  id?: string
+  deviceId: string
+  apId?: string | null
+  sessionId?: string | null
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
 }
 
 export type PresenceLogUpdateManyMutationInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PresenceLogUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -405,7 +373,6 @@ export type PresenceLogOrderByRelationAggregateInput = {
 
 export type PresenceLogCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
@@ -415,16 +382,11 @@ export type PresenceLogCountOrderByAggregateInput = {
 }
 
 export type PresenceLogAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  deviceId?: Prisma.SortOrder
-  apId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
   rssi?: Prisma.SortOrder
 }
 
 export type PresenceLogMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
@@ -435,7 +397,6 @@ export type PresenceLogMaxOrderByAggregateInput = {
 
 export type PresenceLogMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
@@ -445,10 +406,6 @@ export type PresenceLogMinOrderByAggregateInput = {
 }
 
 export type PresenceLogSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  deviceId?: Prisma.SortOrder
-  apId?: Prisma.SortOrder
-  sessionId?: Prisma.SortOrder
   rssi?: Prisma.SortOrder
 }
 
@@ -579,7 +536,7 @@ export type PresenceLogUncheckedUpdateManyWithoutSessionNestedInput = {
 }
 
 export type PresenceLogCreateWithoutDeviceInput = {
-  publicId?: string
+  id?: string
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
@@ -588,10 +545,9 @@ export type PresenceLogCreateWithoutDeviceInput = {
 }
 
 export type PresenceLogUncheckedCreateWithoutDeviceInput = {
-  id?: number
-  publicId?: string
-  apId?: number | null
-  sessionId?: number | null
+  id?: string
+  apId?: string | null
+  sessionId?: string | null
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
@@ -627,18 +583,17 @@ export type PresenceLogScalarWhereInput = {
   AND?: Prisma.PresenceLogScalarWhereInput | Prisma.PresenceLogScalarWhereInput[]
   OR?: Prisma.PresenceLogScalarWhereInput[]
   NOT?: Prisma.PresenceLogScalarWhereInput | Prisma.PresenceLogScalarWhereInput[]
-  id?: Prisma.IntFilter<"PresenceLog"> | number
-  publicId?: Prisma.StringFilter<"PresenceLog"> | string
-  deviceId?: Prisma.IntFilter<"PresenceLog"> | number
-  apId?: Prisma.IntNullableFilter<"PresenceLog"> | number | null
-  sessionId?: Prisma.IntNullableFilter<"PresenceLog"> | number | null
+  id?: Prisma.StringFilter<"PresenceLog"> | string
+  deviceId?: Prisma.StringFilter<"PresenceLog"> | string
+  apId?: Prisma.StringNullableFilter<"PresenceLog"> | string | null
+  sessionId?: Prisma.StringNullableFilter<"PresenceLog"> | string | null
   rssi?: Prisma.IntNullableFilter<"PresenceLog"> | number | null
   seenAt?: Prisma.DateTimeFilter<"PresenceLog"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"PresenceLog"> | Date | string
 }
 
 export type PresenceLogCreateWithoutAccessPointInput = {
-  publicId?: string
+  id?: string
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
@@ -647,10 +602,9 @@ export type PresenceLogCreateWithoutAccessPointInput = {
 }
 
 export type PresenceLogUncheckedCreateWithoutAccessPointInput = {
-  id?: number
-  publicId?: string
-  deviceId: number
-  sessionId?: number | null
+  id?: string
+  deviceId: string
+  sessionId?: string | null
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
@@ -683,7 +637,7 @@ export type PresenceLogUpdateManyWithWhereWithoutAccessPointInput = {
 }
 
 export type PresenceLogCreateWithoutSessionInput = {
-  publicId?: string
+  id?: string
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
@@ -692,10 +646,9 @@ export type PresenceLogCreateWithoutSessionInput = {
 }
 
 export type PresenceLogUncheckedCreateWithoutSessionInput = {
-  id?: number
-  publicId?: string
-  deviceId: number
-  apId?: number | null
+  id?: string
+  deviceId: string
+  apId?: string | null
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
@@ -728,17 +681,16 @@ export type PresenceLogUpdateManyWithWhereWithoutSessionInput = {
 }
 
 export type PresenceLogCreateManyDeviceInput = {
-  id?: number
-  publicId?: string
-  apId?: number | null
-  sessionId?: number | null
+  id?: string
+  apId?: string | null
+  sessionId?: string | null
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
 }
 
 export type PresenceLogUpdateWithoutDeviceInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -747,37 +699,34 @@ export type PresenceLogUpdateWithoutDeviceInput = {
 }
 
 export type PresenceLogUncheckedUpdateWithoutDeviceInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PresenceLogUncheckedUpdateManyWithoutDeviceInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PresenceLogCreateManyAccessPointInput = {
-  id?: number
-  publicId?: string
-  deviceId: number
-  sessionId?: number | null
+  id?: string
+  deviceId: string
+  sessionId?: string | null
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
 }
 
 export type PresenceLogUpdateWithoutAccessPointInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -786,37 +735,34 @@ export type PresenceLogUpdateWithoutAccessPointInput = {
 }
 
 export type PresenceLogUncheckedUpdateWithoutAccessPointInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PresenceLogUncheckedUpdateManyWithoutAccessPointInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  sessionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PresenceLogCreateManySessionInput = {
-  id?: number
-  publicId?: string
-  deviceId: number
-  apId?: number | null
+  id?: string
+  deviceId: string
+  apId?: string | null
   rssi?: number | null
   seenAt: Date | string
   createdAt?: Date | string
 }
 
 export type PresenceLogUpdateWithoutSessionInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -825,20 +771,18 @@ export type PresenceLogUpdateWithoutSessionInput = {
 }
 
 export type PresenceLogUncheckedUpdateWithoutSessionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PresenceLogUncheckedUpdateManyWithoutSessionInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rssi?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   seenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -848,7 +792,6 @@ export type PresenceLogUncheckedUpdateManyWithoutSessionInput = {
 
 export type PresenceLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   deviceId?: boolean
   apId?: boolean
   sessionId?: boolean
@@ -862,7 +805,6 @@ export type PresenceLogSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type PresenceLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   deviceId?: boolean
   apId?: boolean
   sessionId?: boolean
@@ -876,7 +818,6 @@ export type PresenceLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type PresenceLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   deviceId?: boolean
   apId?: boolean
   sessionId?: boolean
@@ -890,7 +831,6 @@ export type PresenceLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 
 export type PresenceLogSelectScalar = {
   id?: boolean
-  publicId?: boolean
   deviceId?: boolean
   apId?: boolean
   sessionId?: boolean
@@ -899,7 +839,7 @@ export type PresenceLogSelectScalar = {
   createdAt?: boolean
 }
 
-export type PresenceLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "deviceId" | "apId" | "sessionId" | "rssi" | "seenAt" | "createdAt", ExtArgs["result"]["presenceLog"]>
+export type PresenceLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "deviceId" | "apId" | "sessionId" | "rssi" | "seenAt" | "createdAt", ExtArgs["result"]["presenceLog"]>
 export type PresenceLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   device?: boolean | Prisma.DeviceDefaultArgs<ExtArgs>
   accessPoint?: boolean | Prisma.PresenceLog$accessPointArgs<ExtArgs>
@@ -924,11 +864,10 @@ export type $PresenceLogPayload<ExtArgs extends runtime.Types.Extensions.Interna
     session: Prisma.$AttendanceSessionPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
-    publicId: string
-    deviceId: number
-    apId: number | null
-    sessionId: number | null
+    id: string
+    deviceId: string
+    apId: string | null
+    sessionId: string | null
     rssi: number | null
     seenAt: Date
     createdAt: Date
@@ -1358,11 +1297,10 @@ export interface Prisma__PresenceLogClient<T, Null = never, ExtArgs extends runt
  * Fields of the PresenceLog model
  */
 export interface PresenceLogFieldRefs {
-  readonly id: Prisma.FieldRef<"PresenceLog", 'Int'>
-  readonly publicId: Prisma.FieldRef<"PresenceLog", 'String'>
-  readonly deviceId: Prisma.FieldRef<"PresenceLog", 'Int'>
-  readonly apId: Prisma.FieldRef<"PresenceLog", 'Int'>
-  readonly sessionId: Prisma.FieldRef<"PresenceLog", 'Int'>
+  readonly id: Prisma.FieldRef<"PresenceLog", 'String'>
+  readonly deviceId: Prisma.FieldRef<"PresenceLog", 'String'>
+  readonly apId: Prisma.FieldRef<"PresenceLog", 'String'>
+  readonly sessionId: Prisma.FieldRef<"PresenceLog", 'String'>
   readonly rssi: Prisma.FieldRef<"PresenceLog", 'Int'>
   readonly seenAt: Prisma.FieldRef<"PresenceLog", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"PresenceLog", 'DateTime'>

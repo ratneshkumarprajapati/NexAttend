@@ -1119,7 +1119,6 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  publicId: 'publicId',
   email: 'email',
   password: 'password',
   role: 'role',
@@ -1133,7 +1132,6 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 
 export const ProfileScalarFieldEnum = {
   id: 'id',
-  publicId: 'publicId',
   userId: 'userId',
   firstName: 'firstName',
   lastName: 'lastName',
@@ -1151,7 +1149,6 @@ export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeo
 
 export const DeviceScalarFieldEnum = {
   id: 'id',
-  publicId: 'publicId',
   userId: 'userId',
   deviceName: 'deviceName',
   hashedMac: 'hashedMac',
@@ -1165,7 +1162,6 @@ export type DeviceScalarFieldEnum = (typeof DeviceScalarFieldEnum)[keyof typeof 
 
 export const AccessPointScalarFieldEnum = {
   id: 'id',
-  publicId: 'publicId',
   routerKey: 'routerKey',
   routerName: 'routerName',
   routerProvider: 'routerProvider',
@@ -1181,7 +1177,6 @@ export type AccessPointScalarFieldEnum = (typeof AccessPointScalarFieldEnum)[key
 
 export const AttendanceSessionScalarFieldEnum = {
   id: 'id',
-  publicId: 'publicId',
   userId: 'userId',
   deviceId: 'deviceId',
   apId: 'apId',
@@ -1199,7 +1194,6 @@ export type AttendanceSessionScalarFieldEnum = (typeof AttendanceSessionScalarFi
 
 export const AttendanceLogScalarFieldEnum = {
   id: 'id',
-  publicId: 'publicId',
   sessionId: 'sessionId',
   userId: 'userId',
   deviceId: 'deviceId',
@@ -1213,7 +1207,6 @@ export type AttendanceLogScalarFieldEnum = (typeof AttendanceLogScalarFieldEnum)
 
 export const AttendanceDailyScalarFieldEnum = {
   id: 'id',
-  publicId: 'publicId',
   userId: 'userId',
   date: 'date',
   totalDuration: 'totalDuration',
@@ -1228,7 +1221,6 @@ export type AttendanceDailyScalarFieldEnum = (typeof AttendanceDailyScalarFieldE
 
 export const PresenceLogScalarFieldEnum = {
   id: 'id',
-  publicId: 'publicId',
   deviceId: 'deviceId',
   apId: 'apId',
   sessionId: 'sessionId',
@@ -1242,7 +1234,6 @@ export type PresenceLogScalarFieldEnum = (typeof PresenceLogScalarFieldEnum)[key
 
 export const AnomalyLogScalarFieldEnum = {
   id: 'id',
-  publicId: 'publicId',
   sessionId: 'sessionId',
   type: 'type',
   severity: 'severity',
@@ -1301,20 +1292,6 @@ export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof Json
 
 
 /**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
  * Reference to a field of type 'String'
  */
 export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
@@ -1353,6 +1330,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 

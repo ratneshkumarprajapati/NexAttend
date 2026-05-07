@@ -25,8 +25,7 @@ export interface AdminStudentMonitorResponse {
     totalPages: number;
   };
   students?: Array<{
-    id?: number;
-    publicId: string;
+    id: string;
     email: string;
     profile?: {
       firstName?: string | null;
@@ -38,21 +37,26 @@ export interface AdminStudentMonitorResponse {
       year?: number | null;
     } | null;
     devices?: Array<{
-      id?: number;
-      publicId?: string;
+      id: string;
       deviceName?: string | null;
       isActive?: boolean;
       createdAt?: string;
     }>;
     attendance?: {
       currentStatus?: 'PRESENT' | 'ABSENT' | 'LATE' | string;
+      daily?: {
+        date?: string;
+        totalDuration?: number;
+        firstSeen?: string | null;
+        lastSeen?: string | null;
+      } | null;
       activeSession?: {
-        publicId?: string;
+        id?: string;
         startTime?: string;
         lastSeen?: string;
         status?: string;
         device?: {
-          publicId?: string;
+          id?: string;
           deviceName?: string | null;
         } | null;
       } | null;

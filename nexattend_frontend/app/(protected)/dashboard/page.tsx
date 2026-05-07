@@ -133,8 +133,8 @@ export default function DashboardPage() {
 
         // Extract recent records (last 5)
         const recentList = studentsData.slice(0, 5).map((student: any, idx: number) => ({
-          id: student.publicId || idx,
-          userId: student.publicId || `STU${idx + 1}`,
+          id: student.id || idx,
+          userId: student.id || `STU${idx + 1}`,
           name: [student.profile?.firstName, student.profile?.lastName].filter(Boolean).join(' ') || student.email || 'N/A',
           status: student.attendance?.currentStatus || 'ABSENT',
           deviceId: student.attendance?.activeSession?.device?.deviceName || student.devices?.[0]?.deviceName || 'N/A',

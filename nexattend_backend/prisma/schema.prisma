@@ -48,8 +48,7 @@ enum AnomalySeverity {
 //MODELS
 
 model User {
-  id             Int                 @id @default(autoincrement())
-  publicId       String              @unique @default(cuid())
+  id             String              @id @default(uuid(7))
   email          String              @unique
   password       String
   role           UserRole            @default(STUDENT)
@@ -67,9 +66,8 @@ model User {
 
 ////////////////
 model Profile {
-  id             Int      @id @default(autoincrement())
-  publicId       String   @unique @default(cuid())
-  userId         Int      @unique
+  id             String   @id @default(uuid(7))
+  userId         String   @unique
   firstName      String
   lastName       String
   phoneNo        String?
@@ -85,9 +83,8 @@ model Profile {
 //////////////////////
 
 model Device {
-  id             Int                 @id @default(autoincrement())
-  publicId       String              @unique @default(cuid())
-  userId         Int
+  id             String              @id @default(uuid(7))
+  userId         String
   deviceName     String?
   hashedMac      String              @unique
   isActive       Boolean             @default(true)
@@ -103,8 +100,7 @@ model Device {
 }
 
 model AccessPoint {
-  id             Int                 @id @default(autoincrement())
-  publicId       String              @unique @default(cuid())
+  id             String              @id @default(uuid(7))
   routerKey      String              @default("default")
   routerName     String?
   routerProvider String?
@@ -121,11 +117,10 @@ model AccessPoint {
 }
 
 model AttendanceSession {
-  id              Int             @id @default(autoincrement())
-  publicId        String          @unique @default(cuid())
-  userId          Int
-  deviceId        Int
-  apId            Int?
+  id              String          @id @default(uuid(7))
+  userId          String
+  deviceId        String
+  apId            String?
   startTime       DateTime
   lastSeen        DateTime
   endTime         DateTime?
@@ -149,12 +144,11 @@ model AttendanceSession {
 }
 
 model AttendanceLog {
-  id       Int    @id @default(autoincrement())
-  publicId String @unique @default(cuid())
+  id String @id @default(uuid(7))
 
-  sessionId Int?
-  userId    Int
-  deviceId  Int
+  sessionId String?
+  userId    String
+  deviceId  String
 
   timestamp DateTime
   status    AttendanceStatus
@@ -174,9 +168,8 @@ model AttendanceLog {
 }
 
 model AttendanceDaily {
-  id            Int       @id @default(autoincrement())
-  publicId      String    @unique @default(cuid())
-  userId        Int
+  id            String    @id @default(uuid(7))
+  userId        String
   date          DateTime  @db.Date
   totalDuration Int       @default(0)
   firstSeen     DateTime?
@@ -192,12 +185,11 @@ model AttendanceDaily {
 }
 
 model PresenceLog {
-  id       Int    @id @default(autoincrement())
-  publicId String @unique @default(cuid())
+  id String @id @default(uuid(7))
 
-  deviceId  Int
-  apId      Int?
-  sessionId Int?
+  deviceId  String
+  apId      String?
+  sessionId String?
 
   rssi   Int?
   seenAt DateTime
@@ -213,10 +205,9 @@ model PresenceLog {
 }
 
 model AnomalyLog {
-  id       Int    @id @default(autoincrement())
-  publicId String @unique @default(cuid())
+  id String @id @default(uuid(7))
 
-  sessionId Int
+  sessionId String
 
   type     AnomalyType
   severity AnomalySeverity

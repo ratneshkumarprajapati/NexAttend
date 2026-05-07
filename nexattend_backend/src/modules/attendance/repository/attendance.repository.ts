@@ -7,9 +7,18 @@ import type {
 
 export type AttendanceEventStatus = "PRESENT" | "ABSENT";
 
+export type DailyAttendanceSummary = {
+    userId: string;
+    date: Date;
+    totalDuration: number;
+    firstSeen: Date | null;
+    lastSeen: Date | null;
+};
+
 const buildStudentMonitorWhere = (
     query: Pick<AdminStudentAttendanceQuery, "department" | "search" | "year">,
     status: AdminStudentAttendanceStatus = "ALL",
+    date?: Date,
 ): Prisma.UserWhereInput => {
     const where: Prisma.UserWhereInput = {
         role: "STUDENT",
@@ -76,27 +85,32 @@ const buildStudentMonitorWhere = (
         ];
     }
 
-    if (status === "PRESENT") {
-        where.sessions = {
-            some: {
-                endTime: null,
-            },
-        };
-    }
-
-    if (status === "ABSENT") {
-        where.sessions = {
-            none: {
-                endTime: null,
-            },
-        };
+    if (status !== "ALL") {
+        if (date) {
+            const nextDate = new Date(date);
+            nextDate.setUTCDate(nextDate.getUTCDate() + 1);
+            where.attendanceLogs = {
+                [status === "PRESENT" ? "some" : "none"]: {
+                    timestamp: {
+                        gte: date,
+                        lt: nextDate,
+                    },
+                },
+            };
+        } else {
+            where.sessions = {
+                [status === "PRESENT" ? "some" : "none"]: {
+                    endTime: null,
+                },
+            };
+        }
     }
 
     return where;
 };
 
 export class AttendanceRepository {
-    async findActiveSession(userId: number, deviceId: number) {
+    async findActiveSession(userId: string, deviceId: string) {
         return prisma.attendanceSession.findFirst({
             where: {
                 userId,
@@ -110,8 +124,8 @@ export class AttendanceRepository {
     }
 
     async createSession(data: {
-        userId: number;
-        deviceId: number;
+        userId: string;
+        deviceId: string;
         startTime: Date;
         lastSeen?: Date;
     }) {
@@ -127,14 +141,14 @@ export class AttendanceRepository {
         });
     }
 
-    async updateLastSeen(sessionId: number, lastSeen: Date) {
+    async updateLastSeen(sessionId: string, lastSeen: Date) {
         return prisma.attendanceSession.update({
             where: { id: sessionId },
             data: { lastSeen },
         });
     }
 
-    async closeSession(sessionId: number, endTime: Date, duration: number) {
+    async closeSession(sessionId: string, endTime: Date, duration: number) {
         return prisma.attendanceSession.update({
             where: { id: sessionId },
             data: {
@@ -170,9 +184,10 @@ export class AttendanceRepository {
     async countStudentsForMonitor(
         query: Pick<AdminStudentAttendanceQuery, "department" | "search" | "year">,
         status: AdminStudentAttendanceStatus = "ALL",
+        date?: Date,
     ) {
         return prisma.user.count({
-            where: buildStudentMonitorWhere(query, status),
+            where: buildStudentMonitorWhere(query, status, date),
         });
     }
 
@@ -193,14 +208,14 @@ export class AttendanceRepository {
         date: Date,
     ) {
         return prisma.user.findMany({
-            where: buildStudentMonitorWhere(query, query.status),
+            where: buildStudentMonitorWhere(query, query.status, date),
             orderBy: {
                 createdAt: "desc",
             },
             skip: (query.page - 1) * query.limit,
             take: query.limit,
             select: {
-                publicId: true,
+                id: true,
                 email: true,
                 createdAt: true,
                 profile: {
@@ -219,7 +234,7 @@ export class AttendanceRepository {
                         deletedAt: null,
                     },
                     select: {
-                        publicId: true,
+                        id: true,
                         deviceName: true,
                         isActive: true,
                         createdAt: true,
@@ -237,20 +252,20 @@ export class AttendanceRepository {
                     },
                     take: 1,
                     select: {
-                        publicId: true,
+                        id: true,
                         startTime: true,
                         lastSeen: true,
                         status: true,
                         confidenceScore: true,
                         device: {
                             select: {
-                                publicId: true,
+                                id: true,
                                 deviceName: true,
                             },
                         },
                         accessPoint: {
                             select: {
-                                publicId: true,
+                                id: true,
                                 name: true,
                                 location: true,
                                 routerName: true,
@@ -274,10 +289,81 @@ export class AttendanceRepository {
         });
     }
 
+    async countPresentStudentsForDate(
+        query: Pick<AdminStudentAttendanceQuery, "department" | "search" | "year">,
+        date: Date,
+    ) {
+        const nextDate = new Date(date);
+        nextDate.setUTCDate(nextDate.getUTCDate() + 1);
+
+        return prisma.user.count({
+            where: {
+                ...buildStudentMonitorWhere(query),
+                attendanceLogs: {
+                    some: {
+                        timestamp: {
+                            gte: date,
+                            lt: nextDate,
+                        },
+                    },
+                },
+            },
+        });
+    }
+
+    async findDailyAttendanceForUsers(userIds: string[], date: Date) {
+        if (userIds.length === 0) {
+            return new Map<string, DailyAttendanceSummary>();
+        }
+
+        const nextDate = new Date(date);
+        nextDate.setUTCDate(nextDate.getUTCDate() + 1);
+
+        const rows = await prisma.attendanceLog.groupBy({
+            by: ["userId"],
+            where: {
+                userId: {
+                    in: userIds,
+                },
+                timestamp: {
+                    gte: date,
+                    lt: nextDate,
+                },
+            },
+            _min: {
+                timestamp: true,
+            },
+            _max: {
+                timestamp: true,
+            },
+        });
+
+        return new Map(
+            rows.map((row) => {
+                const firstSeen = row._min.timestamp;
+                const lastSeen = row._max.timestamp;
+
+                return [
+                    row.userId,
+                    {
+                        userId: row.userId,
+                        date,
+                        firstSeen,
+                        lastSeen,
+                        totalDuration:
+                            firstSeen && lastSeen
+                                ? Math.max(0, Math.floor((lastSeen.getTime() - firstSeen.getTime()) / 1000))
+                                : 0,
+                    },
+                ];
+            }),
+        );
+    }
+
     async createLog(data: {
-        sessionId?: number | null;
-        userId: number;
-        deviceId: number;
+        sessionId?: string | null;
+        userId: string;
+        deviceId: string;
         timestamp: Date;
         status: AttendanceEventStatus;
     }) {
@@ -315,32 +401,74 @@ export class AttendanceRepository {
     }
 
     async upsertDailyFromSessions() {
-        return prisma.$executeRaw`
-            INSERT INTO "AttendanceDaily" (
-                "publicId",
-                "userId",
-                "date",
-                "totalDuration",
-                "firstSeen",
-                "lastSeen",
-                "updatedAt"
-            )
-            SELECT
-                CONCAT('day_', md5(CONCAT("userId"::text, ':', date_trunc('day', "startTime")::date::text))),
-                "userId",
-                date_trunc('day', "startTime")::date,
-                COALESCE(SUM("duration"), 0)::integer,
-                MIN("startTime"),
-                MAX("endTime"),
-                NOW()
-            FROM "AttendanceSession"
-            WHERE "endTime" IS NOT NULL
-            GROUP BY "userId", date_trunc('day', "startTime")::date
-            ON CONFLICT ("userId", "date") DO UPDATE SET
-                "totalDuration" = EXCLUDED."totalDuration",
-                "firstSeen" = EXCLUDED."firstSeen",
-                "lastSeen" = EXCLUDED."lastSeen",
-                "updatedAt" = NOW()
-        `;
+        const rows = await prisma.attendanceLog.groupBy({
+            by: ["userId", "timestamp"],
+            _min: {
+                timestamp: true,
+            },
+            _max: {
+                timestamp: true,
+            },
+        });
+
+        const dailyRows = new Map<
+            string,
+            {
+                userId: string;
+                date: Date;
+                totalDuration: number;
+                firstSeen: Date;
+                lastSeen: Date | null;
+            }
+        >();
+
+        for (const row of rows) {
+            const date = new Date(Date.UTC(
+                row.timestamp.getUTCFullYear(),
+                row.timestamp.getUTCMonth(),
+                row.timestamp.getUTCDate(),
+            ));
+            const key = `${row.userId}:${date.toISOString()}`;
+            const existing = dailyRows.get(key);
+            const firstSeen = row._min.timestamp ?? row.timestamp;
+            const lastSeen = row._max.timestamp ?? row.timestamp;
+            const nextFirstSeen = existing
+                ? existing.firstSeen < firstSeen ? existing.firstSeen : firstSeen
+                : firstSeen;
+            const nextLastSeen =
+                existing?.lastSeen && lastSeen
+                    ? existing.lastSeen > lastSeen ? existing.lastSeen : lastSeen
+                    : existing?.lastSeen ?? lastSeen;
+
+            dailyRows.set(key, {
+                userId: row.userId,
+                date,
+                totalDuration: nextLastSeen
+                    ? Math.max(0, Math.floor((nextLastSeen.getTime() - nextFirstSeen.getTime()) / 1000))
+                    : 0,
+                firstSeen: nextFirstSeen,
+                lastSeen: nextLastSeen,
+            });
+        }
+
+        const upserts = [...dailyRows.values()].map((row) =>
+            prisma.attendanceDaily.upsert({
+                where: {
+                    userId_date: {
+                        userId: row.userId,
+                        date: row.date,
+                    },
+                },
+                create: row,
+                update: {
+                    totalDuration: row.totalDuration,
+                    firstSeen: row.firstSeen,
+                    lastSeen: row.lastSeen,
+                },
+            }),
+        );
+
+        await prisma.$transaction(upserts);
+        return upserts.length;
     }
 }

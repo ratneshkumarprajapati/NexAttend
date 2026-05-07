@@ -1,9 +1,8 @@
 import type { Prisma } from "../../../generated/prisma/client.js";
 
 export interface IProfile {
-  id: number;
-  publicId: string;
-  userId: number;
+  id: string;
+  userId: string;
   firstName: string;
   lastName: string;
   phoneNo: string | null;
@@ -16,7 +15,7 @@ export interface IProfile {
 }
 
 export interface ICreateProfileInput {
-  userId: number;
+  userId: string;
   firstName: string;
   lastName: string;
   phoneNo?: string | undefined;

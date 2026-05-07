@@ -75,7 +75,7 @@ export const userService = {
                             : undefined,
                     });
 
-                    logger.info(`User created successfully with publicId: ${user.publicId}`);
+                    logger.info(`User created successfully with id: ${user.id}`);
 
                     return user;
                 } catch (error) {
@@ -101,12 +101,12 @@ export const userService = {
         return user;
     },
 
-    async getUser(publicId: string) {
-        logger.info(`Fetching user with publicId: ${publicId}`);
-        const user = await userRepository.findByPublicId(publicId);
+    async getUser(id: string) {
+        logger.info(`Fetching user with id: ${id}`);
+        const user = await userRepository.findById(id);
 
         if (!user) {
-            logger.warn(`User not found for publicId: ${publicId}`);
+            logger.warn(`User not found for id: ${id}`);
             throw new AppError("User not found", 404);
         }
 
@@ -120,8 +120,8 @@ export const userService = {
         return users;
     },
 
-    async updateUser(publicId: string, data: UpdateUserInput) {
-        logger.info(`Updating user with publicId: ${publicId}`);
+    async updateUser(id: string, data: UpdateUserInput) {
+        logger.info(`Updating user with id: ${id}`);
         const updateData: UpdateUserInput = {};
 
         if (data.email !== undefined) {
@@ -136,27 +136,27 @@ export const userService = {
             updateData.role = data.role;
         }
 
-        const user = await userRepository.update(publicId, updateData);
+        const user = await userRepository.update(id, updateData);
 
         if (!user) {
-            logger.warn(`User update failed because user was not found: ${publicId}`);
+            logger.warn(`User update failed because user was not found: ${id}`);
             throw new AppError("User not found", 404);
         }
 
-        logger.info(`User updated successfully with publicId: ${publicId}`);
+        logger.info(`User updated successfully with id: ${id}`);
         return user;
     },
 
-    async deleteUser(publicId: string) {
-        logger.info(`Soft deleting user with publicId: ${publicId}`);
-        const deletedUser = await userRepository.delete(publicId);
+    async deleteUser(id: string) {
+        logger.info(`Soft deleting user with id: ${id}`);
+        const deletedUser = await userRepository.delete(id);
 
         if (!deletedUser) {
-            logger.warn(`User delete failed because user was not found: ${publicId}`);
+            logger.warn(`User delete failed because user was not found: ${id}`);
             throw new AppError("User not found", 404);
         }
 
-        logger.info(`User soft deleted successfully with publicId: ${publicId}`);
+        logger.info(`User soft deleted successfully with id: ${id}`);
         return deletedUser;
     },
 

@@ -4,7 +4,7 @@ import { deviceRepository } from "../repository/device.repository.js";
 
 
 export const deviceService={
-    async registerDevice(userId:number,data:any){
+    async registerDevice(userId:string,data:any){
         const hashedMac=hashMac(data.macAddress);
         //check if already exist
 
@@ -22,7 +22,7 @@ export const deviceService={
         return deviceRepoRes
 
     },
-    async getUserDevice(userId:number){
+    async getUserDevice(userId:string){
         return deviceRepository.findByUserId(userId)
     },
     async identifyDevice(macAddress:string){

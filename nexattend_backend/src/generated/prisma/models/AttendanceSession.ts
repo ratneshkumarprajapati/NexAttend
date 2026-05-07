@@ -27,29 +27,20 @@ export type AggregateAttendanceSession = {
 }
 
 export type AttendanceSessionAvgAggregateOutputType = {
-  id: number | null
-  userId: number | null
-  deviceId: number | null
-  apId: number | null
   duration: number | null
   confidenceScore: number | null
 }
 
 export type AttendanceSessionSumAggregateOutputType = {
-  id: number | null
-  userId: number | null
-  deviceId: number | null
-  apId: number | null
   duration: number | null
   confidenceScore: number | null
 }
 
 export type AttendanceSessionMinAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  userId: number | null
-  deviceId: number | null
-  apId: number | null
+  id: string | null
+  userId: string | null
+  deviceId: string | null
+  apId: string | null
   startTime: Date | null
   lastSeen: Date | null
   endTime: Date | null
@@ -60,11 +51,10 @@ export type AttendanceSessionMinAggregateOutputType = {
 }
 
 export type AttendanceSessionMaxAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  userId: number | null
-  deviceId: number | null
-  apId: number | null
+  id: string | null
+  userId: string | null
+  deviceId: string | null
+  apId: string | null
   startTime: Date | null
   lastSeen: Date | null
   endTime: Date | null
@@ -76,7 +66,6 @@ export type AttendanceSessionMaxAggregateOutputType = {
 
 export type AttendanceSessionCountAggregateOutputType = {
   id: number
-  publicId: number
   userId: number
   deviceId: number
   apId: number
@@ -92,26 +81,17 @@ export type AttendanceSessionCountAggregateOutputType = {
 
 
 export type AttendanceSessionAvgAggregateInputType = {
-  id?: true
-  userId?: true
-  deviceId?: true
-  apId?: true
   duration?: true
   confidenceScore?: true
 }
 
 export type AttendanceSessionSumAggregateInputType = {
-  id?: true
-  userId?: true
-  deviceId?: true
-  apId?: true
   duration?: true
   confidenceScore?: true
 }
 
 export type AttendanceSessionMinAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   deviceId?: true
   apId?: true
@@ -126,7 +106,6 @@ export type AttendanceSessionMinAggregateInputType = {
 
 export type AttendanceSessionMaxAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   deviceId?: true
   apId?: true
@@ -141,7 +120,6 @@ export type AttendanceSessionMaxAggregateInputType = {
 
 export type AttendanceSessionCountAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   deviceId?: true
   apId?: true
@@ -242,11 +220,10 @@ export type AttendanceSessionGroupByArgs<ExtArgs extends runtime.Types.Extension
 }
 
 export type AttendanceSessionGroupByOutputType = {
-  id: number
-  publicId: string
-  userId: number
-  deviceId: number
-  apId: number | null
+  id: string
+  userId: string
+  deviceId: string
+  apId: string | null
   startTime: Date
   lastSeen: Date
   endTime: Date | null
@@ -280,11 +257,10 @@ export type AttendanceSessionWhereInput = {
   AND?: Prisma.AttendanceSessionWhereInput | Prisma.AttendanceSessionWhereInput[]
   OR?: Prisma.AttendanceSessionWhereInput[]
   NOT?: Prisma.AttendanceSessionWhereInput | Prisma.AttendanceSessionWhereInput[]
-  id?: Prisma.IntFilter<"AttendanceSession"> | number
-  publicId?: Prisma.StringFilter<"AttendanceSession"> | string
-  userId?: Prisma.IntFilter<"AttendanceSession"> | number
-  deviceId?: Prisma.IntFilter<"AttendanceSession"> | number
-  apId?: Prisma.IntNullableFilter<"AttendanceSession"> | number | null
+  id?: Prisma.StringFilter<"AttendanceSession"> | string
+  userId?: Prisma.StringFilter<"AttendanceSession"> | string
+  deviceId?: Prisma.StringFilter<"AttendanceSession"> | string
+  apId?: Prisma.StringNullableFilter<"AttendanceSession"> | string | null
   startTime?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
   lastSeen?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"AttendanceSession"> | Date | string | null
@@ -302,7 +278,6 @@ export type AttendanceSessionWhereInput = {
 
 export type AttendanceSessionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -322,14 +297,13 @@ export type AttendanceSessionOrderByWithRelationInput = {
 }
 
 export type AttendanceSessionWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
-  publicId?: string
+  id?: string
   AND?: Prisma.AttendanceSessionWhereInput | Prisma.AttendanceSessionWhereInput[]
   OR?: Prisma.AttendanceSessionWhereInput[]
   NOT?: Prisma.AttendanceSessionWhereInput | Prisma.AttendanceSessionWhereInput[]
-  userId?: Prisma.IntFilter<"AttendanceSession"> | number
-  deviceId?: Prisma.IntFilter<"AttendanceSession"> | number
-  apId?: Prisma.IntNullableFilter<"AttendanceSession"> | number | null
+  userId?: Prisma.StringFilter<"AttendanceSession"> | string
+  deviceId?: Prisma.StringFilter<"AttendanceSession"> | string
+  apId?: Prisma.StringNullableFilter<"AttendanceSession"> | string | null
   startTime?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
   lastSeen?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"AttendanceSession"> | Date | string | null
@@ -343,11 +317,10 @@ export type AttendanceSessionWhereUniqueInput = Prisma.AtLeast<{
   anomalies?: Prisma.AnomalyLogListRelationFilter
   logs?: Prisma.AttendanceLogListRelationFilter
   presenceLogs?: Prisma.PresenceLogListRelationFilter
-}, "id" | "publicId">
+}, "id">
 
 export type AttendanceSessionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -369,11 +342,10 @@ export type AttendanceSessionScalarWhereWithAggregatesInput = {
   AND?: Prisma.AttendanceSessionScalarWhereWithAggregatesInput | Prisma.AttendanceSessionScalarWhereWithAggregatesInput[]
   OR?: Prisma.AttendanceSessionScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AttendanceSessionScalarWhereWithAggregatesInput | Prisma.AttendanceSessionScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"AttendanceSession"> | number
-  publicId?: Prisma.StringWithAggregatesFilter<"AttendanceSession"> | string
-  userId?: Prisma.IntWithAggregatesFilter<"AttendanceSession"> | number
-  deviceId?: Prisma.IntWithAggregatesFilter<"AttendanceSession"> | number
-  apId?: Prisma.IntNullableWithAggregatesFilter<"AttendanceSession"> | number | null
+  id?: Prisma.StringWithAggregatesFilter<"AttendanceSession"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"AttendanceSession"> | string
+  deviceId?: Prisma.StringWithAggregatesFilter<"AttendanceSession"> | string
+  apId?: Prisma.StringNullableWithAggregatesFilter<"AttendanceSession"> | string | null
   startTime?: Prisma.DateTimeWithAggregatesFilter<"AttendanceSession"> | Date | string
   lastSeen?: Prisma.DateTimeWithAggregatesFilter<"AttendanceSession"> | Date | string
   endTime?: Prisma.DateTimeNullableWithAggregatesFilter<"AttendanceSession"> | Date | string | null
@@ -384,7 +356,7 @@ export type AttendanceSessionScalarWhereWithAggregatesInput = {
 }
 
 export type AttendanceSessionCreateInput = {
-  publicId?: string
+  id?: string
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -401,11 +373,10 @@ export type AttendanceSessionCreateInput = {
 }
 
 export type AttendanceSessionUncheckedCreateInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  deviceId: number
-  apId?: number | null
+  id?: string
+  userId: string
+  deviceId: string
+  apId?: string | null
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -419,7 +390,7 @@ export type AttendanceSessionUncheckedCreateInput = {
 }
 
 export type AttendanceSessionUpdateInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -436,11 +407,10 @@ export type AttendanceSessionUpdateInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -454,11 +424,10 @@ export type AttendanceSessionUncheckedUpdateInput = {
 }
 
 export type AttendanceSessionCreateManyInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  deviceId: number
-  apId?: number | null
+  id?: string
+  userId: string
+  deviceId: string
+  apId?: string | null
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -469,7 +438,7 @@ export type AttendanceSessionCreateManyInput = {
 }
 
 export type AttendanceSessionUpdateManyMutationInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -480,11 +449,10 @@ export type AttendanceSessionUpdateManyMutationInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -506,7 +474,6 @@ export type AttendanceSessionOrderByRelationAggregateInput = {
 
 export type AttendanceSessionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrder
@@ -520,17 +487,12 @@ export type AttendanceSessionCountOrderByAggregateInput = {
 }
 
 export type AttendanceSessionAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  deviceId?: Prisma.SortOrder
-  apId?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   confidenceScore?: Prisma.SortOrder
 }
 
 export type AttendanceSessionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrder
@@ -545,7 +507,6 @@ export type AttendanceSessionMaxOrderByAggregateInput = {
 
 export type AttendanceSessionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceId?: Prisma.SortOrder
   apId?: Prisma.SortOrder
@@ -559,10 +520,6 @@ export type AttendanceSessionMinOrderByAggregateInput = {
 }
 
 export type AttendanceSessionSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  deviceId?: Prisma.SortOrder
-  apId?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   confidenceScore?: Prisma.SortOrder
 }
@@ -762,7 +719,7 @@ export type AttendanceSessionUpdateOneRequiredWithoutAnomaliesNestedInput = {
 }
 
 export type AttendanceSessionCreateWithoutUserInput = {
-  publicId?: string
+  id?: string
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -778,10 +735,9 @@ export type AttendanceSessionCreateWithoutUserInput = {
 }
 
 export type AttendanceSessionUncheckedCreateWithoutUserInput = {
-  id?: number
-  publicId?: string
-  deviceId: number
-  apId?: number | null
+  id?: string
+  deviceId: string
+  apId?: string | null
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -824,11 +780,10 @@ export type AttendanceSessionScalarWhereInput = {
   AND?: Prisma.AttendanceSessionScalarWhereInput | Prisma.AttendanceSessionScalarWhereInput[]
   OR?: Prisma.AttendanceSessionScalarWhereInput[]
   NOT?: Prisma.AttendanceSessionScalarWhereInput | Prisma.AttendanceSessionScalarWhereInput[]
-  id?: Prisma.IntFilter<"AttendanceSession"> | number
-  publicId?: Prisma.StringFilter<"AttendanceSession"> | string
-  userId?: Prisma.IntFilter<"AttendanceSession"> | number
-  deviceId?: Prisma.IntFilter<"AttendanceSession"> | number
-  apId?: Prisma.IntNullableFilter<"AttendanceSession"> | number | null
+  id?: Prisma.StringFilter<"AttendanceSession"> | string
+  userId?: Prisma.StringFilter<"AttendanceSession"> | string
+  deviceId?: Prisma.StringFilter<"AttendanceSession"> | string
+  apId?: Prisma.StringNullableFilter<"AttendanceSession"> | string | null
   startTime?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
   lastSeen?: Prisma.DateTimeFilter<"AttendanceSession"> | Date | string
   endTime?: Prisma.DateTimeNullableFilter<"AttendanceSession"> | Date | string | null
@@ -839,7 +794,7 @@ export type AttendanceSessionScalarWhereInput = {
 }
 
 export type AttendanceSessionCreateWithoutDeviceInput = {
-  publicId?: string
+  id?: string
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -855,10 +810,9 @@ export type AttendanceSessionCreateWithoutDeviceInput = {
 }
 
 export type AttendanceSessionUncheckedCreateWithoutDeviceInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  apId?: number | null
+  id?: string
+  userId: string
+  apId?: string | null
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -898,7 +852,7 @@ export type AttendanceSessionUpdateManyWithWhereWithoutDeviceInput = {
 }
 
 export type AttendanceSessionCreateWithoutAccessPointInput = {
-  publicId?: string
+  id?: string
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -914,10 +868,9 @@ export type AttendanceSessionCreateWithoutAccessPointInput = {
 }
 
 export type AttendanceSessionUncheckedCreateWithoutAccessPointInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  deviceId: number
+  id?: string
+  userId: string
+  deviceId: string
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -957,7 +910,7 @@ export type AttendanceSessionUpdateManyWithWhereWithoutAccessPointInput = {
 }
 
 export type AttendanceSessionCreateWithoutLogsInput = {
-  publicId?: string
+  id?: string
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -973,11 +926,10 @@ export type AttendanceSessionCreateWithoutLogsInput = {
 }
 
 export type AttendanceSessionUncheckedCreateWithoutLogsInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  deviceId: number
-  apId?: number | null
+  id?: string
+  userId: string
+  deviceId: string
+  apId?: string | null
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -1006,7 +958,7 @@ export type AttendanceSessionUpdateToOneWithWhereWithoutLogsInput = {
 }
 
 export type AttendanceSessionUpdateWithoutLogsInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1022,11 +974,10 @@ export type AttendanceSessionUpdateWithoutLogsInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateWithoutLogsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1039,7 +990,7 @@ export type AttendanceSessionUncheckedUpdateWithoutLogsInput = {
 }
 
 export type AttendanceSessionCreateWithoutPresenceLogsInput = {
-  publicId?: string
+  id?: string
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -1055,11 +1006,10 @@ export type AttendanceSessionCreateWithoutPresenceLogsInput = {
 }
 
 export type AttendanceSessionUncheckedCreateWithoutPresenceLogsInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  deviceId: number
-  apId?: number | null
+  id?: string
+  userId: string
+  deviceId: string
+  apId?: string | null
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -1088,7 +1038,7 @@ export type AttendanceSessionUpdateToOneWithWhereWithoutPresenceLogsInput = {
 }
 
 export type AttendanceSessionUpdateWithoutPresenceLogsInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1104,11 +1054,10 @@ export type AttendanceSessionUpdateWithoutPresenceLogsInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateWithoutPresenceLogsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1121,7 +1070,7 @@ export type AttendanceSessionUncheckedUpdateWithoutPresenceLogsInput = {
 }
 
 export type AttendanceSessionCreateWithoutAnomaliesInput = {
-  publicId?: string
+  id?: string
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -1137,11 +1086,10 @@ export type AttendanceSessionCreateWithoutAnomaliesInput = {
 }
 
 export type AttendanceSessionUncheckedCreateWithoutAnomaliesInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  deviceId: number
-  apId?: number | null
+  id?: string
+  userId: string
+  deviceId: string
+  apId?: string | null
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -1170,7 +1118,7 @@ export type AttendanceSessionUpdateToOneWithWhereWithoutAnomaliesInput = {
 }
 
 export type AttendanceSessionUpdateWithoutAnomaliesInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1186,11 +1134,10 @@ export type AttendanceSessionUpdateWithoutAnomaliesInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateWithoutAnomaliesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1203,10 +1150,9 @@ export type AttendanceSessionUncheckedUpdateWithoutAnomaliesInput = {
 }
 
 export type AttendanceSessionCreateManyUserInput = {
-  id?: number
-  publicId?: string
-  deviceId: number
-  apId?: number | null
+  id?: string
+  deviceId: string
+  apId?: string | null
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -1217,7 +1163,7 @@ export type AttendanceSessionCreateManyUserInput = {
 }
 
 export type AttendanceSessionUpdateWithoutUserInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1233,10 +1179,9 @@ export type AttendanceSessionUpdateWithoutUserInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1250,10 +1195,9 @@ export type AttendanceSessionUncheckedUpdateWithoutUserInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1264,10 +1208,9 @@ export type AttendanceSessionUncheckedUpdateManyWithoutUserInput = {
 }
 
 export type AttendanceSessionCreateManyDeviceInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  apId?: number | null
+  id?: string
+  userId: string
+  apId?: string | null
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -1278,7 +1221,7 @@ export type AttendanceSessionCreateManyDeviceInput = {
 }
 
 export type AttendanceSessionUpdateWithoutDeviceInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1294,10 +1237,9 @@ export type AttendanceSessionUpdateWithoutDeviceInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateWithoutDeviceInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1311,10 +1253,9 @@ export type AttendanceSessionUncheckedUpdateWithoutDeviceInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateManyWithoutDeviceInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  apId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  apId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1325,10 +1266,9 @@ export type AttendanceSessionUncheckedUpdateManyWithoutDeviceInput = {
 }
 
 export type AttendanceSessionCreateManyAccessPointInput = {
-  id?: number
-  publicId?: string
-  userId: number
-  deviceId: number
+  id?: string
+  userId: string
+  deviceId: string
   startTime: Date | string
   lastSeen: Date | string
   endTime?: Date | string | null
@@ -1339,7 +1279,7 @@ export type AttendanceSessionCreateManyAccessPointInput = {
 }
 
 export type AttendanceSessionUpdateWithoutAccessPointInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1355,10 +1295,9 @@ export type AttendanceSessionUpdateWithoutAccessPointInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateWithoutAccessPointInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1372,10 +1311,9 @@ export type AttendanceSessionUncheckedUpdateWithoutAccessPointInput = {
 }
 
 export type AttendanceSessionUncheckedUpdateManyWithoutAccessPointInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  deviceId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.StringFieldUpdateOperationsInput | string
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastSeen?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1436,7 +1374,6 @@ export type AttendanceSessionCountOutputTypeCountPresenceLogsArgs<ExtArgs extend
 
 export type AttendanceSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   deviceId?: boolean
   apId?: boolean
@@ -1458,7 +1395,6 @@ export type AttendanceSessionSelect<ExtArgs extends runtime.Types.Extensions.Int
 
 export type AttendanceSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   deviceId?: boolean
   apId?: boolean
@@ -1476,7 +1412,6 @@ export type AttendanceSessionSelectCreateManyAndReturn<ExtArgs extends runtime.T
 
 export type AttendanceSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   deviceId?: boolean
   apId?: boolean
@@ -1494,7 +1429,6 @@ export type AttendanceSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.T
 
 export type AttendanceSessionSelectScalar = {
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   deviceId?: boolean
   apId?: boolean
@@ -1507,7 +1441,7 @@ export type AttendanceSessionSelectScalar = {
   createdAt?: boolean
 }
 
-export type AttendanceSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "userId" | "deviceId" | "apId" | "startTime" | "lastSeen" | "endTime" | "duration" | "confidenceScore" | "status" | "createdAt", ExtArgs["result"]["attendanceSession"]>
+export type AttendanceSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "deviceId" | "apId" | "startTime" | "lastSeen" | "endTime" | "duration" | "confidenceScore" | "status" | "createdAt", ExtArgs["result"]["attendanceSession"]>
 export type AttendanceSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   device?: boolean | Prisma.DeviceDefaultArgs<ExtArgs>
@@ -1539,11 +1473,10 @@ export type $AttendanceSessionPayload<ExtArgs extends runtime.Types.Extensions.I
     presenceLogs: Prisma.$PresenceLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
-    publicId: string
-    userId: number
-    deviceId: number
-    apId: number | null
+    id: string
+    userId: string
+    deviceId: string
+    apId: string | null
     startTime: Date
     lastSeen: Date
     endTime: Date | null
@@ -1980,11 +1913,10 @@ export interface Prisma__AttendanceSessionClient<T, Null = never, ExtArgs extend
  * Fields of the AttendanceSession model
  */
 export interface AttendanceSessionFieldRefs {
-  readonly id: Prisma.FieldRef<"AttendanceSession", 'Int'>
-  readonly publicId: Prisma.FieldRef<"AttendanceSession", 'String'>
-  readonly userId: Prisma.FieldRef<"AttendanceSession", 'Int'>
-  readonly deviceId: Prisma.FieldRef<"AttendanceSession", 'Int'>
-  readonly apId: Prisma.FieldRef<"AttendanceSession", 'Int'>
+  readonly id: Prisma.FieldRef<"AttendanceSession", 'String'>
+  readonly userId: Prisma.FieldRef<"AttendanceSession", 'String'>
+  readonly deviceId: Prisma.FieldRef<"AttendanceSession", 'String'>
+  readonly apId: Prisma.FieldRef<"AttendanceSession", 'String'>
   readonly startTime: Prisma.FieldRef<"AttendanceSession", 'DateTime'>
   readonly lastSeen: Prisma.FieldRef<"AttendanceSession", 'DateTime'>
   readonly endTime: Prisma.FieldRef<"AttendanceSession", 'DateTime'>
