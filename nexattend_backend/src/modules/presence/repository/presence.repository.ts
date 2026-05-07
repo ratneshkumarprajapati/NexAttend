@@ -4,8 +4,8 @@ import prisma from "../../../services/prisma/prisma.client.js";
 
 export class PresenceRepository {
     async createPresenceLog(params: {
-        deviceId: number;
-        apId?: number|undefined|null;
+        deviceId: string;
+        apId?: string|undefined|null;
         rssi?: number|undefined;
         seenAt: Date|undefined;
     }) {

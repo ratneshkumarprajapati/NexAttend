@@ -1,8 +1,8 @@
 type Status="VALID" | "SUSPICIOUS" | "REJECTED"
 export interface AISessionInput{
-    sessionId:number;
-    userId:number;
-    deviceId:number;
+    sessionId:string;
+    userId:string;
+    deviceId:string;
     startTime:Date;
     endTime:Date;
     duration:number;

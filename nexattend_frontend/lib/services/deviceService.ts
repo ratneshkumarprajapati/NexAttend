@@ -7,7 +7,6 @@ export interface DeviceRegisterPayload {
 
 export interface DeviceRecord {
   id: string;
-  publicId?: string;
   deviceName: string;
   hashedMac?: string;
   status?: string;

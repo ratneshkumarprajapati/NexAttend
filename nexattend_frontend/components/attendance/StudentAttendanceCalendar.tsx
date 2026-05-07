@@ -1,12 +1,14 @@
 'use client';
 
 import { useMemo } from 'react';
-import { LEGEND_CLASSES, STATUS_CLASSES } from '../../utils/constants';
+import { STATUS_CLASSES } from '../../utils/constants';
 import {
   generateStudentAttendanceCalendar,
   formatMonthLabel,
   type AttendanceCalendarDay,
 } from '../../utils/helpers';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 interface StudentAttendanceCalendarProps {
   studentId: string;
@@ -37,72 +39,83 @@ export function StudentAttendanceCalendar({
   }, [studentCalendar]);
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-2">
-        <div
-          className={`rounded-3xl border p-4 backdrop-blur-xl ${LEGEND_CLASSES.present}`}
-        >
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Present Days
-          </p>
-          <p className="mt-2 text-2xl font-semibold">{summary.present}</p>
-        </div>
-        <div
-          className={`rounded-3xl border p-4 backdrop-blur-xl ${LEGEND_CLASSES.absent}`}
-        >
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Absent Days
-          </p>
-          <p className="mt-2 text-2xl font-semibold">{summary.absent}</p>
-        </div>
-        <div
-          className={`rounded-3xl border p-4 backdrop-blur-xl ${LEGEND_CLASSES.late}`}
-        >
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Late Days
-          </p>
-          <p className="mt-2 text-2xl font-semibold">{summary.late}</p>
-        </div>
-      </div>
-
-      <div className={`rounded-3xl border p-4 backdrop-blur-xl ${LEGEND_CLASSES.present}`}>
-        <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground">
-              Attendance calendar for
-            </p>
-            <p className="text-lg font-semibold text-foreground">{monthLabel}</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 border-secondary/20 bg-secondary/10 text-destructive-foreground">
-              <span className="h-2 w-2 rounded-full bg-secondary" /> Present
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 border-destructive/20 bg-destructive/10 text-destructive-foreground">
-              <span className="h-2 w-2 rounded-full bg-destructive" /> Absent
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 border-accent/20 bg-accent/10 text-destructive-foreground">
-              <span className="h-2 w-2 rounded-full bg-accent" /> Late
-            </span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-7 gap-1 text-[0.65rem] uppercase text-muted-foreground mb-2">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div
-              key={day}
-              className="text-center font-semibold text-foreground"
-            >
-              {day}
+    <div className="space-y-3 ">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <Card className="border-secondary/20 bg-secondary/5">
+          <CardContent className="p-2">
+            <div className="text-center">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide leading-tight">
+                Present
+              </p>
+              <p className="text-xl font-bold text-foreground">
+                {summary.present}
+              </p>
             </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-7 gap-1">
-          {studentCalendar.map((item, index) => (
-            <CalendarDay key={index} item={item} />
-          ))}
-        </div>
+          </CardContent>
+        </Card>
+        <Card className="border-destructive/20 bg-destructive/5">
+          <CardContent className="p-2">
+            <div className="text-center">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide leading-tight">
+                Absent
+              </p>
+              <p className="text-xl font-bold text-foreground">
+                {summary.absent}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-amber-500/20 bg-amber-500/5">
+          <CardContent className="p-2">
+            <div className="text-center">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide leading-tight">
+                Late
+              </p>
+              <p className="text-xl font-bold text-foreground">
+                {summary.late}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Calendar Card */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm">
+            {monthLabel}
+          </CardTitle>
+          <div className="flex flex-wrap gap-1.5 mt-1">
+            <Badge variant="secondary" className="text-xs px-2 py-0.5 h-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-secondary mr-1" />
+              Present
+            </Badge>
+            <Badge variant="destructive" className="text-xs px-2 py-0.5 h-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-destructive mr-1" />
+              Absent
+            </Badge>
+            <Badge variant="outline" className="text-xs px-2 py-0.5 h-5 border-amber-500/20 bg-amber-500/10">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1" />
+              Late
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="grid grid-cols-7 gap-0.5 text-center text-xs font-medium text-muted-foreground mb-2">
+            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, idx) => (
+              <div key={idx} className="h-8 w-8 flex items-center justify-center">
+                {day}
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-7 gap-0.5">
+            {studentCalendar.map((item, index) => (
+              <CalendarDay key={index} item={item} />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
@@ -117,26 +130,16 @@ function CalendarDay({ item }: { item: AttendanceCalendarDay }) {
 
   return (
     <div
-      className={`min-h-10 rounded-2xl border p-1.5 text-center text-xs transition-colors duration-300 ${getStatusClass(item.status)}`}
+      className={`h-8 w-8 flex items-center justify-center rounded-md border text-xs font-medium transition-colors hover:scale-105 ${item.date
+          ? `${getStatusClass(item.status)} cursor-pointer`
+          : 'bg-muted/20 border-border/50'
+        }`}
     >
       {item.date ? (
-        <>
-          <span className="block font-semibold text-foreground">
-            {item.date.getDate()}
-          </span>
-          <span className="block mt-1 text-[0.55rem] uppercase tracking-[0.18em] text-muted-foreground">
-            {item.status === 'present'
-              ? 'P'
-              : item.status === 'late'
-                ? 'L'
-                : item.status === 'absent'
-                  ? 'A'
-                  : ''}
-          </span>
-        </>
-      ) : (
-        <span className="block h-full" />
-      )}
+        <span className="text-foreground">
+          {item.date.getDate()}
+        </span>
+      ) : null}
     </div>
   );
 }

@@ -15,12 +15,10 @@ export interface ILoginInput {
 }
 
 export interface AuthTokenPayload {
-    userId:number,
-    publicId: string;
+    userId:string,
     email: string;
     role: UserRole;
 }
 export interface AuthRequest extends Request {
   user?: AuthTokenPayload;
 }
-

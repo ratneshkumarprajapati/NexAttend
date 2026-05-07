@@ -71,11 +71,6 @@ export default function AdminAttendancePage() {
   const summary = monitor?.summary;
   const students = monitor?.students || [];
 
-  const hourlyData = useMemo(
-    () => generateHourlyAttendanceData(summary?.presentStudents || 0),
-    [summary?.presentStudents],
-  );
-
   const statusData = useMemo(
     () => [
       { name: 'Present', value: summary?.presentStudents || 0 },
@@ -85,24 +80,29 @@ export default function AdminAttendancePage() {
     [summary],
   );
 
+  const hourlyData = useMemo(
+    () => generateHourlyAttendanceData(students),
+    [students],
+  );
+
   const attendanceRecords = useMemo(
     () =>
       students.map((student) => ({
-        id: student.publicId,
+        id: student.id,
         name: getStudentName(student),
         status: student.attendance?.currentStatus?.toLowerCase() || 'absent',
         time:
-          student.attendance?.activeSession?.lastSeen
+          student.attendance?.daily?.lastSeen
             ? new Date(
-                student.attendance.activeSession.lastSeen,
+                student.attendance.daily.lastSeen,
               ).toLocaleTimeString()
             : '-',
         device:
           student.attendance?.activeSession?.device?.deviceName ||
           student.devices?.[0]?.deviceName ||
           '-',
-        arrivalTime: student.attendance?.activeSession?.startTime,
-        departureTime: student.attendance?.activeSession?.lastSeen,
+        arrivalTime: student.attendance?.daily?.firstSeen || undefined,
+        departureTime: student.attendance?.daily?.lastSeen || undefined,
       })),
     [students],
   );
@@ -251,12 +251,12 @@ export default function AdminAttendancePage() {
 
       {/* Student Calendar Dialog */}
       <Dialog open={studentDialogOpen} onOpenChange={setStudentDialogOpen}>
-        <DialogContent className="max-w-4xl bg-slate-950/90 backdrop-blur-2xl ring-1 ring-white/10 border border-white/10 shadow-2xl shadow-black/40 overflow-hidden">
+        <DialogContent className="max-w-2xl bg-card/98 backdrop-blur-2xl border border-border/30 shadow-2xl ring-1 ring-black/5 dark:ring-white/10">
           <DialogHeader>
             <DialogTitle>
               {selectedStudent?.name || 'Student'} Attendance Overview
             </DialogTitle>
-            <DialogDescription className="text-slate-300">
+            <DialogDescription className="text-muted-foreground">
               Monthly attendance calendar for the current month
             </DialogDescription>
           </DialogHeader>
@@ -270,7 +270,7 @@ export default function AdminAttendancePage() {
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button >Close</Button>
+              <Button>Close</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

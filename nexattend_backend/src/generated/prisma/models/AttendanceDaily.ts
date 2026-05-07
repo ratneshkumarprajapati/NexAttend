@@ -27,21 +27,16 @@ export type AggregateAttendanceDaily = {
 }
 
 export type AttendanceDailyAvgAggregateOutputType = {
-  id: number | null
-  userId: number | null
   totalDuration: number | null
 }
 
 export type AttendanceDailySumAggregateOutputType = {
-  id: number | null
-  userId: number | null
   totalDuration: number | null
 }
 
 export type AttendanceDailyMinAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  userId: number | null
+  id: string | null
+  userId: string | null
   date: Date | null
   totalDuration: number | null
   firstSeen: Date | null
@@ -51,9 +46,8 @@ export type AttendanceDailyMinAggregateOutputType = {
 }
 
 export type AttendanceDailyMaxAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  userId: number | null
+  id: string | null
+  userId: string | null
   date: Date | null
   totalDuration: number | null
   firstSeen: Date | null
@@ -64,7 +58,6 @@ export type AttendanceDailyMaxAggregateOutputType = {
 
 export type AttendanceDailyCountAggregateOutputType = {
   id: number
-  publicId: number
   userId: number
   date: number
   totalDuration: number
@@ -77,20 +70,15 @@ export type AttendanceDailyCountAggregateOutputType = {
 
 
 export type AttendanceDailyAvgAggregateInputType = {
-  id?: true
-  userId?: true
   totalDuration?: true
 }
 
 export type AttendanceDailySumAggregateInputType = {
-  id?: true
-  userId?: true
   totalDuration?: true
 }
 
 export type AttendanceDailyMinAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   date?: true
   totalDuration?: true
@@ -102,7 +90,6 @@ export type AttendanceDailyMinAggregateInputType = {
 
 export type AttendanceDailyMaxAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   date?: true
   totalDuration?: true
@@ -114,7 +101,6 @@ export type AttendanceDailyMaxAggregateInputType = {
 
 export type AttendanceDailyCountAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   date?: true
   totalDuration?: true
@@ -212,9 +198,8 @@ export type AttendanceDailyGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 export type AttendanceDailyGroupByOutputType = {
-  id: number
-  publicId: string
-  userId: number
+  id: string
+  userId: string
   date: Date
   totalDuration: number
   firstSeen: Date | null
@@ -247,9 +232,8 @@ export type AttendanceDailyWhereInput = {
   AND?: Prisma.AttendanceDailyWhereInput | Prisma.AttendanceDailyWhereInput[]
   OR?: Prisma.AttendanceDailyWhereInput[]
   NOT?: Prisma.AttendanceDailyWhereInput | Prisma.AttendanceDailyWhereInput[]
-  id?: Prisma.IntFilter<"AttendanceDaily"> | number
-  publicId?: Prisma.StringFilter<"AttendanceDaily"> | string
-  userId?: Prisma.IntFilter<"AttendanceDaily"> | number
+  id?: Prisma.StringFilter<"AttendanceDaily"> | string
+  userId?: Prisma.StringFilter<"AttendanceDaily"> | string
   date?: Prisma.DateTimeFilter<"AttendanceDaily"> | Date | string
   totalDuration?: Prisma.IntFilter<"AttendanceDaily"> | number
   firstSeen?: Prisma.DateTimeNullableFilter<"AttendanceDaily"> | Date | string | null
@@ -261,7 +245,6 @@ export type AttendanceDailyWhereInput = {
 
 export type AttendanceDailyOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   totalDuration?: Prisma.SortOrder
@@ -273,13 +256,12 @@ export type AttendanceDailyOrderByWithRelationInput = {
 }
 
 export type AttendanceDailyWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
-  publicId?: string
+  id?: string
   userId_date?: Prisma.AttendanceDailyUserIdDateCompoundUniqueInput
   AND?: Prisma.AttendanceDailyWhereInput | Prisma.AttendanceDailyWhereInput[]
   OR?: Prisma.AttendanceDailyWhereInput[]
   NOT?: Prisma.AttendanceDailyWhereInput | Prisma.AttendanceDailyWhereInput[]
-  userId?: Prisma.IntFilter<"AttendanceDaily"> | number
+  userId?: Prisma.StringFilter<"AttendanceDaily"> | string
   date?: Prisma.DateTimeFilter<"AttendanceDaily"> | Date | string
   totalDuration?: Prisma.IntFilter<"AttendanceDaily"> | number
   firstSeen?: Prisma.DateTimeNullableFilter<"AttendanceDaily"> | Date | string | null
@@ -287,11 +269,10 @@ export type AttendanceDailyWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"AttendanceDaily"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AttendanceDaily"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "publicId" | "userId_date">
+}, "id" | "userId_date">
 
 export type AttendanceDailyOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   totalDuration?: Prisma.SortOrder
@@ -310,9 +291,8 @@ export type AttendanceDailyScalarWhereWithAggregatesInput = {
   AND?: Prisma.AttendanceDailyScalarWhereWithAggregatesInput | Prisma.AttendanceDailyScalarWhereWithAggregatesInput[]
   OR?: Prisma.AttendanceDailyScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AttendanceDailyScalarWhereWithAggregatesInput | Prisma.AttendanceDailyScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"AttendanceDaily"> | number
-  publicId?: Prisma.StringWithAggregatesFilter<"AttendanceDaily"> | string
-  userId?: Prisma.IntWithAggregatesFilter<"AttendanceDaily"> | number
+  id?: Prisma.StringWithAggregatesFilter<"AttendanceDaily"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"AttendanceDaily"> | string
   date?: Prisma.DateTimeWithAggregatesFilter<"AttendanceDaily"> | Date | string
   totalDuration?: Prisma.IntWithAggregatesFilter<"AttendanceDaily"> | number
   firstSeen?: Prisma.DateTimeNullableWithAggregatesFilter<"AttendanceDaily"> | Date | string | null
@@ -322,7 +302,7 @@ export type AttendanceDailyScalarWhereWithAggregatesInput = {
 }
 
 export type AttendanceDailyCreateInput = {
-  publicId?: string
+  id?: string
   date: Date | string
   totalDuration?: number
   firstSeen?: Date | string | null
@@ -333,9 +313,8 @@ export type AttendanceDailyCreateInput = {
 }
 
 export type AttendanceDailyUncheckedCreateInput = {
-  id?: number
-  publicId?: string
-  userId: number
+  id?: string
+  userId: string
   date: Date | string
   totalDuration?: number
   firstSeen?: Date | string | null
@@ -345,7 +324,7 @@ export type AttendanceDailyUncheckedCreateInput = {
 }
 
 export type AttendanceDailyUpdateInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalDuration?: Prisma.IntFieldUpdateOperationsInput | number
   firstSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -356,9 +335,8 @@ export type AttendanceDailyUpdateInput = {
 }
 
 export type AttendanceDailyUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalDuration?: Prisma.IntFieldUpdateOperationsInput | number
   firstSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -368,9 +346,8 @@ export type AttendanceDailyUncheckedUpdateInput = {
 }
 
 export type AttendanceDailyCreateManyInput = {
-  id?: number
-  publicId?: string
-  userId: number
+  id?: string
+  userId: string
   date: Date | string
   totalDuration?: number
   firstSeen?: Date | string | null
@@ -380,7 +357,7 @@ export type AttendanceDailyCreateManyInput = {
 }
 
 export type AttendanceDailyUpdateManyMutationInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalDuration?: Prisma.IntFieldUpdateOperationsInput | number
   firstSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -390,9 +367,8 @@ export type AttendanceDailyUpdateManyMutationInput = {
 }
 
 export type AttendanceDailyUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalDuration?: Prisma.IntFieldUpdateOperationsInput | number
   firstSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -412,13 +388,12 @@ export type AttendanceDailyOrderByRelationAggregateInput = {
 }
 
 export type AttendanceDailyUserIdDateCompoundUniqueInput = {
-  userId: number
+  userId: string
   date: Date | string
 }
 
 export type AttendanceDailyCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   totalDuration?: Prisma.SortOrder
@@ -429,14 +404,11 @@ export type AttendanceDailyCountOrderByAggregateInput = {
 }
 
 export type AttendanceDailyAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   totalDuration?: Prisma.SortOrder
 }
 
 export type AttendanceDailyMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   totalDuration?: Prisma.SortOrder
@@ -448,7 +420,6 @@ export type AttendanceDailyMaxOrderByAggregateInput = {
 
 export type AttendanceDailyMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   totalDuration?: Prisma.SortOrder
@@ -459,8 +430,6 @@ export type AttendanceDailyMinOrderByAggregateInput = {
 }
 
 export type AttendanceDailySumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   totalDuration?: Prisma.SortOrder
 }
 
@@ -506,8 +475,16 @@ export type AttendanceDailyUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.AttendanceDailyScalarWhereInput | Prisma.AttendanceDailyScalarWhereInput[]
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type AttendanceDailyCreateWithoutUserInput = {
-  publicId?: string
+  id?: string
   date: Date | string
   totalDuration?: number
   firstSeen?: Date | string | null
@@ -517,8 +494,7 @@ export type AttendanceDailyCreateWithoutUserInput = {
 }
 
 export type AttendanceDailyUncheckedCreateWithoutUserInput = {
-  id?: number
-  publicId?: string
+  id?: string
   date: Date | string
   totalDuration?: number
   firstSeen?: Date | string | null
@@ -557,9 +533,8 @@ export type AttendanceDailyScalarWhereInput = {
   AND?: Prisma.AttendanceDailyScalarWhereInput | Prisma.AttendanceDailyScalarWhereInput[]
   OR?: Prisma.AttendanceDailyScalarWhereInput[]
   NOT?: Prisma.AttendanceDailyScalarWhereInput | Prisma.AttendanceDailyScalarWhereInput[]
-  id?: Prisma.IntFilter<"AttendanceDaily"> | number
-  publicId?: Prisma.StringFilter<"AttendanceDaily"> | string
-  userId?: Prisma.IntFilter<"AttendanceDaily"> | number
+  id?: Prisma.StringFilter<"AttendanceDaily"> | string
+  userId?: Prisma.StringFilter<"AttendanceDaily"> | string
   date?: Prisma.DateTimeFilter<"AttendanceDaily"> | Date | string
   totalDuration?: Prisma.IntFilter<"AttendanceDaily"> | number
   firstSeen?: Prisma.DateTimeNullableFilter<"AttendanceDaily"> | Date | string | null
@@ -569,8 +544,7 @@ export type AttendanceDailyScalarWhereInput = {
 }
 
 export type AttendanceDailyCreateManyUserInput = {
-  id?: number
-  publicId?: string
+  id?: string
   date: Date | string
   totalDuration?: number
   firstSeen?: Date | string | null
@@ -580,7 +554,7 @@ export type AttendanceDailyCreateManyUserInput = {
 }
 
 export type AttendanceDailyUpdateWithoutUserInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalDuration?: Prisma.IntFieldUpdateOperationsInput | number
   firstSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -590,8 +564,7 @@ export type AttendanceDailyUpdateWithoutUserInput = {
 }
 
 export type AttendanceDailyUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalDuration?: Prisma.IntFieldUpdateOperationsInput | number
   firstSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -601,8 +574,7 @@ export type AttendanceDailyUncheckedUpdateWithoutUserInput = {
 }
 
 export type AttendanceDailyUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   totalDuration?: Prisma.IntFieldUpdateOperationsInput | number
   firstSeen?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -615,7 +587,6 @@ export type AttendanceDailyUncheckedUpdateManyWithoutUserInput = {
 
 export type AttendanceDailySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   date?: boolean
   totalDuration?: boolean
@@ -628,7 +599,6 @@ export type AttendanceDailySelect<ExtArgs extends runtime.Types.Extensions.Inter
 
 export type AttendanceDailySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   date?: boolean
   totalDuration?: boolean
@@ -641,7 +611,6 @@ export type AttendanceDailySelectCreateManyAndReturn<ExtArgs extends runtime.Typ
 
 export type AttendanceDailySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   date?: boolean
   totalDuration?: boolean
@@ -654,7 +623,6 @@ export type AttendanceDailySelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
 
 export type AttendanceDailySelectScalar = {
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   date?: boolean
   totalDuration?: boolean
@@ -664,7 +632,7 @@ export type AttendanceDailySelectScalar = {
   updatedAt?: boolean
 }
 
-export type AttendanceDailyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "userId" | "date" | "totalDuration" | "firstSeen" | "lastSeen" | "createdAt" | "updatedAt", ExtArgs["result"]["attendanceDaily"]>
+export type AttendanceDailyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "date" | "totalDuration" | "firstSeen" | "lastSeen" | "createdAt" | "updatedAt", ExtArgs["result"]["attendanceDaily"]>
 export type AttendanceDailyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -681,9 +649,8 @@ export type $AttendanceDailyPayload<ExtArgs extends runtime.Types.Extensions.Int
     user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
-    publicId: string
-    userId: number
+    id: string
+    userId: string
     date: Date
     totalDuration: number
     firstSeen: Date | null
@@ -1114,9 +1081,8 @@ export interface Prisma__AttendanceDailyClient<T, Null = never, ExtArgs extends 
  * Fields of the AttendanceDaily model
  */
 export interface AttendanceDailyFieldRefs {
-  readonly id: Prisma.FieldRef<"AttendanceDaily", 'Int'>
-  readonly publicId: Prisma.FieldRef<"AttendanceDaily", 'String'>
-  readonly userId: Prisma.FieldRef<"AttendanceDaily", 'Int'>
+  readonly id: Prisma.FieldRef<"AttendanceDaily", 'String'>
+  readonly userId: Prisma.FieldRef<"AttendanceDaily", 'String'>
   readonly date: Prisma.FieldRef<"AttendanceDaily", 'DateTime'>
   readonly totalDuration: Prisma.FieldRef<"AttendanceDaily", 'Int'>
   readonly firstSeen: Prisma.FieldRef<"AttendanceDaily", 'DateTime'>

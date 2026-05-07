@@ -58,13 +58,13 @@ export const userController = {
     },
     async getOne(req: Request, res: Response) {
         try {
-            const publicId = req.params.id as string;
+            const id = req.params.id as string;
 
-            if (!publicId) {
-                return sendErrorResponse(res, 400, "publicId is required");
+            if (!id) {
+                return sendErrorResponse(res, 400, "id is required");
             }
 
-            const user = await userService.getUser(publicId);
+            const user = await userService.getUser(id);
 
             return sendSuccessResponse(
                 res,
@@ -79,15 +79,15 @@ export const userController = {
     },
     async update(req: Request, res: Response) {
         try {
-            const publicId = req.params.id as string;
+            const id = req.params.id as string;
 
-            if (!publicId) {
-                return sendErrorResponse(res, 400, "publicId is required");
+            if (!id) {
+                return sendErrorResponse(res, 400, "id is required");
             }
 
             const parsed = updateUserSchema.parse(req.body);
 
-            const user = await userService.updateUser(publicId, parsed);
+            const user = await userService.updateUser(id, parsed);
 
             return sendSuccessResponse(
                 res,
@@ -102,13 +102,13 @@ export const userController = {
 
     async delete(req: Request, res: Response) {
         try {
-            const publicId = req.params.id as string;
+            const id = req.params.id as string;
 
-            if (!publicId) {
-                return sendErrorResponse(res, 400, "publicId is required");
+            if (!id) {
+                return sendErrorResponse(res, 400, "id is required");
             }
 
-            await userService.deleteUser(publicId);
+            await userService.deleteUser(id);
 
             return sendSuccessResponse(res, 200, "User deleted successfully");
         } catch (error) {

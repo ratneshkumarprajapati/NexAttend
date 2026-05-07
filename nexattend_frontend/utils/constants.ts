@@ -17,14 +17,14 @@ export const CHART_COLORS = {
 export const STATUS_CLASSES = {
   present: 'bg-secondary/20 border-secondary/30 text-secondary-foreground',
   absent: 'bg-destructive/20 border-destructive/30 text-destructive-foreground',
-  late: 'bg-accent/20 border-accent/30 text-accent-foreground',
+  late: 'bg-amber-500/20 border-amber-500/30 text-amber-700 dark:text-amber-300',
   empty: 'bg-muted/10 border-border/50 text-muted-foreground',
 } as const;
 
 export const LEGEND_CLASSES = {
   present: 'border-secondary/20 bg-secondary/10 text-destructive-foreground',
   absent: 'border-destructive/20 bg-destructive/10 text-destructive-foreground',
-  late: 'border-accent/20 bg-accent/10 text-destructive-foreground',
+  late: 'border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-300',
 } as const;
 
 export const PAGE_SIZE = 10;

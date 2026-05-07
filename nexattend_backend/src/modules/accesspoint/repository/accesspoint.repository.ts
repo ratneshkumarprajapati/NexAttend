@@ -62,18 +62,18 @@ export const accessPointRepository = {
       orderBy: { createdAt: "desc" },
     }),
 
-  findById: (id: number) =>
+  findById: (id: string) =>
     prisma.accessPoint.findUnique({
       where: { id },
     }),
 
-  update: (id: number, data: UpdateAccessPointInput) =>
+  update: (id: string, data: UpdateAccessPointInput) =>
     prisma.accessPoint.update({
       where: { id },
       data: toUpdateData(data),
     }),
 
-  delete: (id: number) =>
+  delete: (id: string) =>
     prisma.accessPoint.delete({
       where: { id },
     }),

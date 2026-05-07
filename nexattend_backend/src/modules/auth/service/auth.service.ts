@@ -48,12 +48,11 @@ export const authService = {
 
       const token = this.generateToken({
         userId: user.id,           
-        publicId: user.publicId,   
         email: user.email,
         role: user.role,
       });
 
-      logger.info(`User registered successfully with publicId: ${user.publicId}`);
+      logger.info(`User registered successfully with id: ${user.id}`);
       return toAuthResponseDto(toUserResponseDto(user), token);
     };
 
@@ -89,14 +88,13 @@ export const authService = {
 
     const token = this.generateToken({
       userId:user.id,
-      publicId: user.publicId,
       email: user.email,
       role: user.role,
     });
 
     this.verifyToken(token);
 
-    logger.info(`User logged in successfully with publicId: ${user.publicId}`);
+    logger.info(`User logged in successfully with id: ${user.id}`);
     return toAuthResponseDto(toUserResponseDto(user), token);
   },
 };

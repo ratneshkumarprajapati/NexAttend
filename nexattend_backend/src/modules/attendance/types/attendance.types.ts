@@ -1,14 +1,14 @@
 export type AttendanceStatus = "PRESENT" | "ABSENT";
 
 export interface AttendanceSeenPayload {
-    deviceId: number;
-    userId: number;
+    deviceId: string;
+    userId: string;
     timestamp: Date;
 }
 
 export interface AttendanceDisconnectedPayload {
-    deviceId: number;
-    userId: number;
+    deviceId: string;
+    userId: string;
     timestamp: Date;
 }
 

@@ -164,7 +164,7 @@ export default function DevicesPage() {
           </div>
         ) : (
           paginatedDevices.map((device) => (
-            <div key={device.publicId || device.id} className="glass rounded-xl border border-border/40 p-6 space-y-3">
+            <div key={device.id} className="glass rounded-xl border border-border/40 p-6 space-y-3">
               <div>
                 <h3 className="font-semibold text-foreground">{device.deviceName || 'Unnamed Device'}</h3>
                 <p className="text-xs text-muted-foreground mt-1">Status: {device.status || 'registered'}</p>

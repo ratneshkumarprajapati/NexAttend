@@ -28,7 +28,7 @@ const monitoringDate = (date?: string) =>
 export class AttendanceService {
     constructor(private repo: AttendanceRepository) { }
 
-    async handleSeen(userId: number, deviceId: number, timestampValue?: Date | string) {
+    async handleSeen(userId: string, deviceId: string, timestampValue?: Date | string) {
         const timestamp = toDate(timestampValue);
         let activeSession = await this.repo.findActiveSession(userId, deviceId);
 
@@ -58,7 +58,7 @@ export class AttendanceService {
         return activeSession;
     }
 
-    async handleDisconnected(userId: number, deviceId: number, timestampValue?: Date | string) {
+    async handleDisconnected(userId: string, deviceId: string, timestampValue?: Date | string) {
         const timestamp = toDate(timestampValue);
         const activeSession = await this.repo.findActiveSession(userId, deviceId);
 
@@ -133,11 +133,15 @@ export class AttendanceService {
         const [totalStudents, presentStudents, activeDevices, filteredStudents, students] =
             await Promise.all([
                 this.repo.countStudentsForMonitor(query),
-                this.repo.countStudentsForMonitor(query, "PRESENT"),
+                this.repo.countPresentStudentsForDate(query, date),
                 this.repo.countActiveDevicesForMonitor(query),
-                this.repo.countStudentsForMonitor(query, query.status),
+                this.repo.countStudentsForMonitor(query, query.status, date),
                 this.repo.findStudentMonitorRows(query, date),
             ]);
+        const dailyAttendanceByUserId = await this.repo.findDailyAttendanceForUsers(
+            students.map((student) => student.id),
+            date,
+        );
 
         return {
             date: date.toISOString().slice(0, 10),
@@ -155,15 +159,15 @@ export class AttendanceService {
             },
             students: students.map((student) => {
                 const activeSession = student.sessions[0] ?? null;
-                const dailyAttendance = student.attendanceDays[0] ?? null;
+                const dailyAttendance = dailyAttendanceByUserId.get(student.id) ?? student.attendanceDays[0] ?? null;
 
                 return {
-                    publicId: student.publicId,
+                    id: student.id,
                     email: student.email,
                     profile: student.profile,
                     devices: student.devices,
                     attendance: {
-                        currentStatus: activeSession ? "PRESENT" : "ABSENT",
+                        currentStatus: activeSession || dailyAttendance ? "PRESENT" : "ABSENT",
                         activeSession,
                         daily: dailyAttendance,
                     },
@@ -174,9 +178,9 @@ export class AttendanceService {
     }
 
     private async splitSessionAtDayBoundary(session: {
-        id: number;
-        userId: number;
-        deviceId: number;
+        id: string;
+        userId: string;
+        deviceId: string;
         startTime: Date;
         lastSeen: Date;
     }, nextSeen: Date) {
@@ -193,7 +197,7 @@ export class AttendanceService {
     }
 
     private async closeSessionAt(session: {
-        id: number;
+        id: string;
         startTime: Date;
     }, endTime: Date) {
         return this.repo.closeSession(

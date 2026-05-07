@@ -146,7 +146,7 @@ const Routers: RouterConfig[] = [
     retry: { attempts: 2, delayMs: 300 },
     tokenTtlMs: 300000,
     priority: 100,
-    enabled: false,
+    enabled: true,
   },
 
   {
@@ -191,7 +191,7 @@ const Routers: RouterConfig[] = [
     name: "Legacy UI Router",
     type: "SCRAPER",
     provider: "generic",
-    enabled: true,
+    enabled: false,
     priority: 100,
     baseUrl: "http://192.168.1.1",
     loginPath: "/admin/login.asp",
@@ -220,7 +220,7 @@ export function loadConfig(): AppConfig {
     : Routers;
 
   return AppConfigSchema.parse({
-    port: Number(process.env.PORT ?? 3000),
+    port: Number(process.env.PORT ?? 5000),
     logLevel: process.env.LOG_LEVEL ?? "info",
     pollIntervalMs: Number(process.env.ROUTER_POLL_INTERVAL_MS ?? 5000),
     routers: routersFromEnv

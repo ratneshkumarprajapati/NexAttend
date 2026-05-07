@@ -251,7 +251,6 @@ class LogDumpJob {
 
       const attendanceColumns = [
         "id",
-        "publicId",
         "sessionId",
         "userId",
         "userEmail",
@@ -263,7 +262,6 @@ class LogDumpJob {
       ];
       const presenceColumns = [
         "id",
-        "publicId",
         "deviceId",
         "deviceName",
         "userId",
@@ -309,7 +307,7 @@ class LogDumpJob {
 
   private async loadAttendanceRows(start: Date, end: Date) {
     const rows: XlsRow[] = [];
-    let cursorId = 0;
+    let cursorId = "";
 
     while (true) {
       const batch = await prisma.attendanceLog.findMany({
@@ -335,7 +333,6 @@ class LogDumpJob {
       for (const row of batch) {
         rows.push({
           id: row.id,
-          publicId: row.publicId,
           sessionId: row.sessionId,
           userId: row.userId,
           userEmail: row.user.email,
@@ -356,7 +353,7 @@ class LogDumpJob {
 
   private async loadPresenceRows(start: Date, end: Date) {
     const rows: XlsRow[] = [];
-    let cursorId = 0;
+    let cursorId = "";
 
     while (true) {
       const batch = await prisma.presenceLog.findMany({
@@ -386,7 +383,6 @@ class LogDumpJob {
       for (const row of batch) {
         rows.push({
           id: row.id,
-          publicId: row.publicId,
           deviceId: row.deviceId,
           deviceName: row.device.deviceName,
           userId: row.device.userId,

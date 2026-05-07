@@ -16,7 +16,6 @@ export interface AuthLoginPayload {
 
 export interface AuthUser {
   id: string;
-  publicId?: string;
   email: string;
   role: string;
   name?: string;

@@ -20,26 +20,13 @@ export type DeviceModel = runtime.Types.Result.DefaultSelection<Prisma.$DevicePa
 
 export type AggregateDevice = {
   _count: DeviceCountAggregateOutputType | null
-  _avg: DeviceAvgAggregateOutputType | null
-  _sum: DeviceSumAggregateOutputType | null
   _min: DeviceMinAggregateOutputType | null
   _max: DeviceMaxAggregateOutputType | null
 }
 
-export type DeviceAvgAggregateOutputType = {
-  id: number | null
-  userId: number | null
-}
-
-export type DeviceSumAggregateOutputType = {
-  id: number | null
-  userId: number | null
-}
-
 export type DeviceMinAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  userId: number | null
+  id: string | null
+  userId: string | null
   deviceName: string | null
   hashedMac: string | null
   isActive: boolean | null
@@ -48,9 +35,8 @@ export type DeviceMinAggregateOutputType = {
 }
 
 export type DeviceMaxAggregateOutputType = {
-  id: number | null
-  publicId: string | null
-  userId: number | null
+  id: string | null
+  userId: string | null
   deviceName: string | null
   hashedMac: string | null
   isActive: boolean | null
@@ -60,7 +46,6 @@ export type DeviceMaxAggregateOutputType = {
 
 export type DeviceCountAggregateOutputType = {
   id: number
-  publicId: number
   userId: number
   deviceName: number
   hashedMac: number
@@ -71,19 +56,8 @@ export type DeviceCountAggregateOutputType = {
 }
 
 
-export type DeviceAvgAggregateInputType = {
-  id?: true
-  userId?: true
-}
-
-export type DeviceSumAggregateInputType = {
-  id?: true
-  userId?: true
-}
-
 export type DeviceMinAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   deviceName?: true
   hashedMac?: true
@@ -94,7 +68,6 @@ export type DeviceMinAggregateInputType = {
 
 export type DeviceMaxAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   deviceName?: true
   hashedMac?: true
@@ -105,7 +78,6 @@ export type DeviceMaxAggregateInputType = {
 
 export type DeviceCountAggregateInputType = {
   id?: true
-  publicId?: true
   userId?: true
   deviceName?: true
   hashedMac?: true
@@ -153,18 +125,6 @@ export type DeviceAggregateArgs<ExtArgs extends runtime.Types.Extensions.Interna
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: DeviceAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: DeviceSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: DeviceMinAggregateInputType
@@ -195,24 +155,19 @@ export type DeviceGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   _count?: DeviceCountAggregateInputType | true
-  _avg?: DeviceAvgAggregateInputType
-  _sum?: DeviceSumAggregateInputType
   _min?: DeviceMinAggregateInputType
   _max?: DeviceMaxAggregateInputType
 }
 
 export type DeviceGroupByOutputType = {
-  id: number
-  publicId: string
-  userId: number
+  id: string
+  userId: string
   deviceName: string | null
   hashedMac: string
   isActive: boolean
   deletedAt: Date | null
   createdAt: Date
   _count: DeviceCountAggregateOutputType | null
-  _avg: DeviceAvgAggregateOutputType | null
-  _sum: DeviceSumAggregateOutputType | null
   _min: DeviceMinAggregateOutputType | null
   _max: DeviceMaxAggregateOutputType | null
 }
@@ -236,9 +191,8 @@ export type DeviceWhereInput = {
   AND?: Prisma.DeviceWhereInput | Prisma.DeviceWhereInput[]
   OR?: Prisma.DeviceWhereInput[]
   NOT?: Prisma.DeviceWhereInput | Prisma.DeviceWhereInput[]
-  id?: Prisma.IntFilter<"Device"> | number
-  publicId?: Prisma.StringFilter<"Device"> | string
-  userId?: Prisma.IntFilter<"Device"> | number
+  id?: Prisma.StringFilter<"Device"> | string
+  userId?: Prisma.StringFilter<"Device"> | string
   deviceName?: Prisma.StringNullableFilter<"Device"> | string | null
   hashedMac?: Prisma.StringFilter<"Device"> | string
   isActive?: Prisma.BoolFilter<"Device"> | boolean
@@ -252,7 +206,6 @@ export type DeviceWhereInput = {
 
 export type DeviceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrderInput | Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
@@ -266,13 +219,12 @@ export type DeviceOrderByWithRelationInput = {
 }
 
 export type DeviceWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
-  publicId?: string
+  id?: string
   hashedMac?: string
   AND?: Prisma.DeviceWhereInput | Prisma.DeviceWhereInput[]
   OR?: Prisma.DeviceWhereInput[]
   NOT?: Prisma.DeviceWhereInput | Prisma.DeviceWhereInput[]
-  userId?: Prisma.IntFilter<"Device"> | number
+  userId?: Prisma.StringFilter<"Device"> | string
   deviceName?: Prisma.StringNullableFilter<"Device"> | string | null
   isActive?: Prisma.BoolFilter<"Device"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"Device"> | Date | string | null
@@ -281,11 +233,10 @@ export type DeviceWhereUniqueInput = Prisma.AtLeast<{
   sessions?: Prisma.AttendanceSessionListRelationFilter
   attendanceLogs?: Prisma.AttendanceLogListRelationFilter
   presenceLogs?: Prisma.PresenceLogListRelationFilter
-}, "id" | "publicId" | "hashedMac">
+}, "id" | "hashedMac">
 
 export type DeviceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrderInput | Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
@@ -293,19 +244,16 @@ export type DeviceOrderByWithAggregationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.DeviceCountOrderByAggregateInput
-  _avg?: Prisma.DeviceAvgOrderByAggregateInput
   _max?: Prisma.DeviceMaxOrderByAggregateInput
   _min?: Prisma.DeviceMinOrderByAggregateInput
-  _sum?: Prisma.DeviceSumOrderByAggregateInput
 }
 
 export type DeviceScalarWhereWithAggregatesInput = {
   AND?: Prisma.DeviceScalarWhereWithAggregatesInput | Prisma.DeviceScalarWhereWithAggregatesInput[]
   OR?: Prisma.DeviceScalarWhereWithAggregatesInput[]
   NOT?: Prisma.DeviceScalarWhereWithAggregatesInput | Prisma.DeviceScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"Device"> | number
-  publicId?: Prisma.StringWithAggregatesFilter<"Device"> | string
-  userId?: Prisma.IntWithAggregatesFilter<"Device"> | number
+  id?: Prisma.StringWithAggregatesFilter<"Device"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"Device"> | string
   deviceName?: Prisma.StringNullableWithAggregatesFilter<"Device"> | string | null
   hashedMac?: Prisma.StringWithAggregatesFilter<"Device"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"Device"> | boolean
@@ -314,7 +262,7 @@ export type DeviceScalarWhereWithAggregatesInput = {
 }
 
 export type DeviceCreateInput = {
-  publicId?: string
+  id?: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -327,9 +275,8 @@ export type DeviceCreateInput = {
 }
 
 export type DeviceUncheckedCreateInput = {
-  id?: number
-  publicId?: string
-  userId: number
+  id?: string
+  userId: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -341,7 +288,7 @@ export type DeviceUncheckedCreateInput = {
 }
 
 export type DeviceUpdateInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -354,9 +301,8 @@ export type DeviceUpdateInput = {
 }
 
 export type DeviceUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -368,9 +314,8 @@ export type DeviceUncheckedUpdateInput = {
 }
 
 export type DeviceCreateManyInput = {
-  id?: number
-  publicId?: string
-  userId: number
+  id?: string
+  userId: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -379,7 +324,7 @@ export type DeviceCreateManyInput = {
 }
 
 export type DeviceUpdateManyMutationInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -388,9 +333,8 @@ export type DeviceUpdateManyMutationInput = {
 }
 
 export type DeviceUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -410,7 +354,6 @@ export type DeviceOrderByRelationAggregateInput = {
 
 export type DeviceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
@@ -419,14 +362,8 @@ export type DeviceCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type DeviceAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-}
-
 export type DeviceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
@@ -437,18 +374,12 @@ export type DeviceMaxOrderByAggregateInput = {
 
 export type DeviceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  publicId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-}
-
-export type DeviceSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type DeviceScalarRelationFilter = {
@@ -545,7 +476,7 @@ export type DeviceUpdateOneRequiredWithoutPresenceLogsNestedInput = {
 }
 
 export type DeviceCreateWithoutUserInput = {
-  publicId?: string
+  id?: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -557,8 +488,7 @@ export type DeviceCreateWithoutUserInput = {
 }
 
 export type DeviceUncheckedCreateWithoutUserInput = {
-  id?: number
-  publicId?: string
+  id?: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -599,9 +529,8 @@ export type DeviceScalarWhereInput = {
   AND?: Prisma.DeviceScalarWhereInput | Prisma.DeviceScalarWhereInput[]
   OR?: Prisma.DeviceScalarWhereInput[]
   NOT?: Prisma.DeviceScalarWhereInput | Prisma.DeviceScalarWhereInput[]
-  id?: Prisma.IntFilter<"Device"> | number
-  publicId?: Prisma.StringFilter<"Device"> | string
-  userId?: Prisma.IntFilter<"Device"> | number
+  id?: Prisma.StringFilter<"Device"> | string
+  userId?: Prisma.StringFilter<"Device"> | string
   deviceName?: Prisma.StringNullableFilter<"Device"> | string | null
   hashedMac?: Prisma.StringFilter<"Device"> | string
   isActive?: Prisma.BoolFilter<"Device"> | boolean
@@ -610,7 +539,7 @@ export type DeviceScalarWhereInput = {
 }
 
 export type DeviceCreateWithoutSessionsInput = {
-  publicId?: string
+  id?: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -622,9 +551,8 @@ export type DeviceCreateWithoutSessionsInput = {
 }
 
 export type DeviceUncheckedCreateWithoutSessionsInput = {
-  id?: number
-  publicId?: string
-  userId: number
+  id?: string
+  userId: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -651,7 +579,7 @@ export type DeviceUpdateToOneWithWhereWithoutSessionsInput = {
 }
 
 export type DeviceUpdateWithoutSessionsInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -663,9 +591,8 @@ export type DeviceUpdateWithoutSessionsInput = {
 }
 
 export type DeviceUncheckedUpdateWithoutSessionsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -676,7 +603,7 @@ export type DeviceUncheckedUpdateWithoutSessionsInput = {
 }
 
 export type DeviceCreateWithoutAttendanceLogsInput = {
-  publicId?: string
+  id?: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -688,9 +615,8 @@ export type DeviceCreateWithoutAttendanceLogsInput = {
 }
 
 export type DeviceUncheckedCreateWithoutAttendanceLogsInput = {
-  id?: number
-  publicId?: string
-  userId: number
+  id?: string
+  userId: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -717,7 +643,7 @@ export type DeviceUpdateToOneWithWhereWithoutAttendanceLogsInput = {
 }
 
 export type DeviceUpdateWithoutAttendanceLogsInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -729,9 +655,8 @@ export type DeviceUpdateWithoutAttendanceLogsInput = {
 }
 
 export type DeviceUncheckedUpdateWithoutAttendanceLogsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -742,7 +667,7 @@ export type DeviceUncheckedUpdateWithoutAttendanceLogsInput = {
 }
 
 export type DeviceCreateWithoutPresenceLogsInput = {
-  publicId?: string
+  id?: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -754,9 +679,8 @@ export type DeviceCreateWithoutPresenceLogsInput = {
 }
 
 export type DeviceUncheckedCreateWithoutPresenceLogsInput = {
-  id?: number
-  publicId?: string
-  userId: number
+  id?: string
+  userId: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -783,7 +707,7 @@ export type DeviceUpdateToOneWithWhereWithoutPresenceLogsInput = {
 }
 
 export type DeviceUpdateWithoutPresenceLogsInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -795,9 +719,8 @@ export type DeviceUpdateWithoutPresenceLogsInput = {
 }
 
 export type DeviceUncheckedUpdateWithoutPresenceLogsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -808,8 +731,7 @@ export type DeviceUncheckedUpdateWithoutPresenceLogsInput = {
 }
 
 export type DeviceCreateManyUserInput = {
-  id?: number
-  publicId?: string
+  id?: string
   deviceName?: string | null
   hashedMac: string
   isActive?: boolean
@@ -818,7 +740,7 @@ export type DeviceCreateManyUserInput = {
 }
 
 export type DeviceUpdateWithoutUserInput = {
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -830,8 +752,7 @@ export type DeviceUpdateWithoutUserInput = {
 }
 
 export type DeviceUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -843,8 +764,7 @@ export type DeviceUncheckedUpdateWithoutUserInput = {
 }
 
 export type DeviceUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -903,7 +823,6 @@ export type DeviceCountOutputTypeCountPresenceLogsArgs<ExtArgs extends runtime.T
 
 export type DeviceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
@@ -919,7 +838,6 @@ export type DeviceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type DeviceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
@@ -931,7 +849,6 @@ export type DeviceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type DeviceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
@@ -943,7 +860,6 @@ export type DeviceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type DeviceSelectScalar = {
   id?: boolean
-  publicId?: boolean
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
@@ -952,7 +868,7 @@ export type DeviceSelectScalar = {
   createdAt?: boolean
 }
 
-export type DeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "userId" | "deviceName" | "hashedMac" | "isActive" | "deletedAt" | "createdAt", ExtArgs["result"]["device"]>
+export type DeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "deviceName" | "hashedMac" | "isActive" | "deletedAt" | "createdAt", ExtArgs["result"]["device"]>
 export type DeviceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sessions?: boolean | Prisma.Device$sessionsArgs<ExtArgs>
@@ -976,9 +892,8 @@ export type $DevicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     presenceLogs: Prisma.$PresenceLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
-    publicId: string
-    userId: number
+    id: string
+    userId: string
     deviceName: string | null
     hashedMac: string
     isActive: boolean
@@ -1411,9 +1326,8 @@ export interface Prisma__DeviceClient<T, Null = never, ExtArgs extends runtime.T
  * Fields of the Device model
  */
 export interface DeviceFieldRefs {
-  readonly id: Prisma.FieldRef<"Device", 'Int'>
-  readonly publicId: Prisma.FieldRef<"Device", 'String'>
-  readonly userId: Prisma.FieldRef<"Device", 'Int'>
+  readonly id: Prisma.FieldRef<"Device", 'String'>
+  readonly userId: Prisma.FieldRef<"Device", 'String'>
   readonly deviceName: Prisma.FieldRef<"Device", 'String'>
   readonly hashedMac: Prisma.FieldRef<"Device", 'String'>
   readonly isActive: Prisma.FieldRef<"Device", 'Boolean'>
