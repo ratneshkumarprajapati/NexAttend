@@ -138,7 +138,7 @@ export default function BulkUploadPage() {
           Example: student1@example.com,Password@123,Ratnesh,Kumar,9876543210,CSE,ENR001,2,Lab-PC-01,AA:BB:CC:DD:EE:01
         </p>
         <Button
-          className="mt-2 bg-gradient-to-r from-primary to-accent hover:opacity-90"
+          className="mt-2 bg-linear-to-r from-primary to-accent hover:opacity-90"
           onClick={() => {
             const csv = 'email,password,firstName,lastName,phoneNo,department,enrolmentNo,year,deviceName,macAddress\nstudent1@example.com,Password@123,Ratnesh,Kumar,9876543210,CSE,ENR001,2,Lab-PC-01,AA:BB:CC:DD:EE:01';
             const element = document.createElement('a');
@@ -212,7 +212,7 @@ export default function BulkUploadPage() {
           <Button
             onClick={handleUpload}
             disabled={isLoading}
-            className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
+            className="bg-linear-to-r from-primary to-accent hover:opacity-90"
           >
             {isLoading ? 'Uploading...' : 'Upload Students'}
           </Button>
@@ -264,7 +264,7 @@ export default function BulkUploadPage() {
               setFile(null);
               setResult(null);
             }}
-            className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90"
+            className="w-full bg-linear-to-r from-primary to-accent hover:opacity-90"
           >
             Upload Another File
           </Button>
