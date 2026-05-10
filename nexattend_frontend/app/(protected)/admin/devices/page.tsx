@@ -81,6 +81,7 @@ export default function AdminDevicesPage() {
     (safeCurrentPage - 1) * PAGE_SIZE,
     safeCurrentPage * PAGE_SIZE,
   );
+  const emptyRows = Math.max(0, PAGE_SIZE - paginatedDevices.length);
 
   return (
     <div className="space-y-6">
@@ -110,12 +111,13 @@ export default function AdminDevicesPage() {
 
       <div className="glass rounded-xl border border-border/40 p-6">
         {isLoading || isFetching ? (
-          <TableSkeleton columns={7} rows={8} />
+          <TableSkeleton columns={7} rows={PAGE_SIZE} />
         ) : filteredDevices.length === 0 ? (
-          <div className="py-8 text-center text-muted-foreground">
+          <div className="flex min-h-[480px] items-center justify-center text-center text-muted-foreground">
             No devices found
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="border-border/50 hover:bg-transparent">
@@ -130,7 +132,7 @@ export default function AdminDevicesPage() {
             </TableHeader>
             <TableBody>
               {paginatedDevices.map((device) => (
-                <TableRow key={device.id} className="border-border/30 hover:bg-white/5">
+                <TableRow key={device.id} className="h-12 border-border/30 hover:bg-white/5">
                   <TableCell className="font-medium text-foreground">
                     <div className="flex items-center gap-2">
                       <Smartphone className="h-4 w-4 text-muted-foreground" />
@@ -162,8 +164,14 @@ export default function AdminDevicesPage() {
                   </TableCell>
                 </TableRow>
               ))}
+              {Array.from({ length: emptyRows }).map((_, index) => (
+                <TableRow key={`empty-${index}`} aria-hidden className="h-12 border-border/30 hover:bg-transparent">
+                  <TableCell colSpan={7}>&nbsp;</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
+          </div>
         )}
       {!isLoading && !isFetching && filteredDevices.length > 0 && (
         <ListPagination

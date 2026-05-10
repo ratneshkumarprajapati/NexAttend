@@ -23,3 +23,18 @@ export interface AdminStudentAttendanceQuery {
     page: number;
     limit: number;
 }
+
+export interface StudentAttendanceCalendarQuery {
+    year: number;
+    month: number;
+}
+
+export type StudentAttendanceCalendarStatus = "present" | "absent" | "future";
+
+export interface StudentAttendanceCalendarDay {
+    date: string;
+    status: StudentAttendanceCalendarStatus;
+    firstSeen: string | null;
+    lastSeen: string | null;
+    totalDuration: number;
+}

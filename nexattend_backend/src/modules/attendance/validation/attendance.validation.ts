@@ -28,3 +28,18 @@ export const adminStudentAttendanceQuerySchema = z.object({
     page: optionalPositiveInt(1),
     limit: optionalPositiveInt(25, 100),
 });
+
+export const studentAttendanceCalendarParamsSchema = z.object({
+    studentId: z.string().min(1),
+});
+
+export const studentAttendanceCalendarQuerySchema = z.object({
+    year: z.preprocess(
+        (value) => Number(value),
+        z.number().int().min(2000).max(2100),
+    ),
+    month: z.preprocess(
+        (value) => Number(value),
+        z.number().int().min(1).max(12),
+    ),
+});

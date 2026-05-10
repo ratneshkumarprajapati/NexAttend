@@ -51,7 +51,7 @@ export function ListPagination({
 
   return (
     <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm text-foreground">
         Showing {startItem}-{endItem} of {totalItems}
       </p>
       <Pagination className="mx-0 w-auto justify-start sm:justify-end">

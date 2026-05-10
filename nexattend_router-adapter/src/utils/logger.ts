@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import winston from "winston";
-import { loadConfig } from "../config/router.config.js";
+import { loadConfig } from "../config/app.config.js";
 
 const config = loadConfig();
 type LogMeta = Record<string, unknown> & {

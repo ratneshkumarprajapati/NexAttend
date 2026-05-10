@@ -2,6 +2,7 @@ import { RouterAggregator } from "../aggregator/router.aggregator.js";
 import { RouterCache } from "../cache/router.cache.js";
 import type { RouterHealth, RouterDiagnostics } from "../adapters/router.adapter.js";
 import { logger } from "../utils/logger.js";
+import type { RouterSyncPublisher } from "../queue/routerSync/routerSync.types.js";
 
 export class RouterService {
   private timer?: NodeJS.Timeout;
@@ -10,7 +11,8 @@ export class RouterService {
   constructor(
     private readonly aggregator: RouterAggregator,
     private readonly cache: RouterCache,
-    private readonly pollIntervalMs: number
+    private readonly pollIntervalMs: number,
+    private readonly syncPublisher?: RouterSyncPublisher
   ) {}
 
   start(): void {
@@ -50,6 +52,7 @@ export class RouterService {
     try {
       const snapshot = await this.aggregator.fetchAllDevices();
       this.cache.set(snapshot);
+      await this.syncPublisher?.publishSnapshot(snapshot);
       logger.info(`Devices received: ${snapshot.devices.length}`, { context: "Poller" });
     } catch (error) {
       logger.error("Router polling failed unexpectedly", { context: "Poller", error });

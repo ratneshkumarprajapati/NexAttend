@@ -16,6 +16,8 @@ import { systemLogArchiveJob } from "./jobs/systemLogArchive.job.js";
 import { initPresenceModule } from "./modules/presence/init/presence.init.js";
 import { initAttendanceModule } from "./modules/attendance/init/attendance.init.js";
 import { initAIModule } from "./modules/ai/Init/ai.init.js";
+import { routerSnapshotConsumer } from "./queue/routerSync/routerSnapshot.consumer.js";
+import { env } from "./config/env.js";
 
 const app = express();
 
@@ -50,11 +52,15 @@ v1Router.use("/attendance", attendanceRoutes);
 
 app.use(API_BASE_PATH, v1Router);
 
-export const startAppWorkers = () => {
+export const startAppWorkers = async () => {
   initPresenceModule();
   initAttendanceModule();
   initAIModule();
-  poller.start();
+  if (env.ROUTER.SYNC_MODE === "queue") {
+    await routerSnapshotConsumer.start();
+  } else {
+    poller.start();
+  }
   logDumpJob.start();
   systemLogArchiveJob.start();
 };

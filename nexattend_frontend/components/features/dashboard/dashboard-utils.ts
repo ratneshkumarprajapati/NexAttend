@@ -40,7 +40,7 @@ export function buildWeeklyData(present: number, absent: number): WeeklyDataPoin
 }
 
 export function buildRecentCheckIns(students: StudentAttendanceEntry[]): RecentCheckIn[] {
-  return students.slice(0, 5).map((student, index) => ({
+  return students.slice(0, 10).map((student, index) => ({
     id: student.id || index,
     name:
       [student.profile?.firstName, student.profile?.lastName].filter(Boolean).join(' ') ||

@@ -22,7 +22,7 @@ const initialForm: DeviceForm = {
   macAddress: '',
 };
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 10;
 
 export default function DevicesPage() {
   const {

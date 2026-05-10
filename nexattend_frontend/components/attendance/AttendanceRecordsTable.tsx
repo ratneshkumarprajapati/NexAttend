@@ -30,17 +30,19 @@ export function AttendanceRecordsTable({
     (safeCurrentPage - 1) * PAGE_SIZE,
     safeCurrentPage * PAGE_SIZE,
   );
+  const emptyRows = Math.max(0, PAGE_SIZE - paginatedRecords.length);
 
   return (
     <div className="space-y-4">
       {loading ? (
-        <TableSkeleton columns={6} rows={6} />
+        <TableSkeleton columns={6} rows={PAGE_SIZE} />
       ) : records.length === 0 ? (
-        <div className="py-8 text-center text-muted-foreground">
+        <div className="flex min-h-120 items-center justify-center text-center text-muted-foreground">
           No attendance records found
         </div>
       ) : (
         <>
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="border-border/50 hover:bg-transparent">
@@ -62,7 +64,7 @@ export function AttendanceRecordsTable({
                 return (
                   <TableRow
                     key={record.id}
-                    className={`border-border/30 transition-colors duration-300 ${
+                    className={`h-12 border-border/30 transition-colors duration-300 ${
                       onRowClick
                         ? 'hover:bg-white/5 cursor-pointer'
                         : 'hover:bg-muted/30'
@@ -97,8 +99,14 @@ export function AttendanceRecordsTable({
                   </TableRow>
                 );
               })}
+              {Array.from({ length: emptyRows }).map((_, index) => (
+                <TableRow key={`empty-${index}`} aria-hidden className="h-12 border-border/30 hover:bg-transparent">
+                  <TableCell colSpan={6}>&nbsp;</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
+          </div>
 
           {records.length > 0 && (
             <ListPagination

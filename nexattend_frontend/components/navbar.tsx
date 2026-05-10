@@ -74,7 +74,7 @@ export function Navbar() {
                   <span>Settings</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout} className="gap-2 text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer">
+              <DropdownMenuItem onClick={handleLogout} className="gap-2 text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer focus:text-foreground">
                 <LogOut className="h-4 w-4" />
                 <span>Sign Out</span>
               </DropdownMenuItem>

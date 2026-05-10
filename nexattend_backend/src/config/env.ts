@@ -126,6 +126,7 @@ export const env = {
       process.env.ROUTER_EXECUTION_MODE === "router-adapter"
         ? "router-adapter"
         : "normal",
+    SYNC_MODE: process.env.ROUTER_SYNC_MODE === "queue" ? "queue" : "polling",
     ADAPTER_BASE_URL:
       process.env.ROUTER_ADAPTER_BASE_URL || "http://localhost:5000",
     CONFIGS: routers,
@@ -136,6 +137,17 @@ export const env = {
     USERNAME: primaryRouter.username,
     PASSWORD: primaryRouter.password,
     POLL_INTERVAL: Number(process.env.ROUTER_POLL_INTERVAL) || 15000,
+  },
+
+  QUEUE: {
+    URL: process.env.CLOUDAMQP_URL || process.env.AMQP_URL || "",
+    EXCHANGE: process.env.ROUTER_SYNC_EXCHANGE || "nexattend.router-sync",
+    SNAPSHOT_ROUTING_KEY:
+      process.env.ROUTER_SYNC_SNAPSHOT_ROUTING_KEY || "router.snapshot",
+    SNAPSHOT_QUEUE:
+      process.env.ROUTER_SYNC_SNAPSHOT_QUEUE || "nexattend.router-snapshots",
+    RECONNECT_DELAY_MS: Number(process.env.AMQP_RECONNECT_DELAY_MS) || 5000,
+    PREFETCH: Number(process.env.AMQP_PREFETCH) || 1,
   },
 
   SECURITY: {

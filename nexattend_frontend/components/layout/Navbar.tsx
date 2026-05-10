@@ -39,7 +39,7 @@ export function Navbar() {
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="h-10 w-10 rounded-md text-muted-foreground transition-all duration-200 hover:bg-secondary hover:text-foreground"
+            className="h-10 w-10 rounded-md text-muted-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary dark:hover:text-foreground"
             title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {theme === 'dark' ? (
@@ -52,7 +52,7 @@ export function Navbar() {
           {/* User menu with modern design */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="smooth-transition h-10 gap-2 rounded-md px-3 py-2 hover:bg-secondary">
+              <Button variant="ghost" className="smooth-transition h-10 gap-2 rounded-md px-3 py-2 hover:bg-primary/10 hover:text-primary dark:hover:text-foreground">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground shadow-sm shadow-primary/20">
                   {user?.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
@@ -63,7 +63,7 @@ export function Navbar() {
               <div className="border-b border-border/70 px-3 py-2">
                 <p className="text-sm font-semibold text-foreground">{user?.name || 'User'}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">{user?.email || 'no-email@demo.local'}</p>
-                <p className="mt-2 w-fit rounded-md bg-secondary px-2 py-1 text-xs capitalize text-secondary-foreground">
+                <p className="mt-2 w-fit rounded-md bg-primary/10 px-2 py-1 text-xs capitalize text-primary">
                   {user?.role || 'user'}
                 </p>
               </div>

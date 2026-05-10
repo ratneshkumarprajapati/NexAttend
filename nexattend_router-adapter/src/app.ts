@@ -1,12 +1,13 @@
 import express, { type ErrorRequestHandler } from "express";
 import { ZodError } from "zod";
-import { loadConfig } from "./config/router.config.js";
+import { loadConfig } from "./config/app.config.js";
 import { createRouterAdapters } from "./adapters/router.factory.js";
 import { RouterAggregator } from "./aggregator/router.aggregator.js";
 import { RouterCache } from "./cache/router.cache.js";
 import { RouterService } from "./services/router.service.js";
 import { RouterController } from "./controllers/router.controller.js";
 import { createRouterRoutes } from "./routes/router.routes.js";
+import { RabbitRouterSyncPublisher } from "./queue/routerSync/routerSnapshot.publisher.js";
 import { requestLogger } from "./utils/logger.js";
 
 export function appInit() {
@@ -14,7 +15,15 @@ export function appInit() {
   const adapters = createRouterAdapters(config.routers);
   const aggregator = new RouterAggregator(adapters);
   const cache = new RouterCache();
-  const service = new RouterService(aggregator, cache, config.pollIntervalMs);
+  const syncPublisher = config.queue.enabled
+    ? new RabbitRouterSyncPublisher(config.queue)
+    : undefined;
+  const service = new RouterService(
+    aggregator,
+    cache,
+    config.pollIntervalMs,
+    syncPublisher,
+  );
   const controller = new RouterController(service);
 
   const app = express();
@@ -23,7 +32,7 @@ export function appInit() {
   app.use(createRouterRoutes(controller));
   app.use(errorHandler);
 
-  return { app, service, config, adapters };
+  return { app, service, config, adapters, syncPublisher };
 }
 
 const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {

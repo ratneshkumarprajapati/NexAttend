@@ -11,4 +11,11 @@ router.get(
     attendanceController.getAdminStudentMonitor,
 );
 
+router.get(
+    "/admin/students/:studentId/calendar",
+    authMiddleware,
+    adminMiddleware,
+    attendanceController.getStudentAttendanceCalendar,
+);
+
 export default router;
