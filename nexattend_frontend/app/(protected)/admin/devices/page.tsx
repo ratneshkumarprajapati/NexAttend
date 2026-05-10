@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Search, Smartphone, Wifi, WifiOff } from 'lucide-react';
 import { ListPagination } from '@/components/list-pagination';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { attendanceService } from '@/lib/services/attendanceService';
+import { useGetAdminStudentMonitorQuery } from '@/redux/features/attendance';
+import { TableSkeleton } from '@/components/common/page-skeletons';
 
 type AdminDeviceRecord = {
   id: string;
@@ -35,27 +36,20 @@ function getLocalDateString(date = new Date()) {
 }
 
 export default function AdminDevicesPage() {
-  const [devices, setDevices] = useState<AdminDeviceRecord[]>([]);
+  const {
+    data: monitor,
+    isLoading,
+    isFetching,
+    error: loadError,
+  } = useGetAdminStudentMonitorQuery({
+    date: getLocalDateString(),
+    limit: 100,
+  });
   const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    void fetchDevices();
-  }, []);
-
-  const fetchDevices = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const monitor = await attendanceService.getAdminStudentMonitor({
-        date: getLocalDateString(),
-        limit: 100,
-      });
-
-      const flattenedDevices = (monitor.students || []).flatMap((student) => {
+  const devices = useMemo<AdminDeviceRecord[]>(() => {
+    return (monitor?.students || []).flatMap((student) => {
         const ownerName = [student.profile?.firstName, student.profile?.lastName].filter(Boolean).join(' ') || student.email;
         const activeDeviceId = student.attendance?.activeSession?.device?.id;
         const lastSeen = student.attendance?.activeSession?.lastSeen || null;
@@ -71,14 +65,7 @@ export default function AdminDevicesPage() {
           createdAt: device.createdAt || null,
         }));
       });
-
-      setDevices(flattenedDevices);
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Failed to load devices');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [monitor]);
 
   const filteredDevices = devices.filter((device) => {
     const term = search.toLowerCase();
@@ -89,20 +76,11 @@ export default function AdminDevicesPage() {
     );
   });
   const totalPages = Math.max(1, Math.ceil(filteredDevices.length / PAGE_SIZE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
   const paginatedDevices = filteredDevices.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
+    (safeCurrentPage - 1) * PAGE_SIZE,
+    safeCurrentPage * PAGE_SIZE,
   );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
 
   return (
     <div className="space-y-6">
@@ -111,9 +89,9 @@ export default function AdminDevicesPage() {
         <p className="text-muted-foreground mt-1">Live student device inventory from the attendance monitor</p>
       </div>
 
-      {error && (
+      {loadError && (
         <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-          {error}
+          Failed to load devices
         </div>
       )}
 
@@ -122,16 +100,17 @@ export default function AdminDevicesPage() {
         <Input
           placeholder="Search devices by name, owner, or email..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+          }}
           className="pl-10 bg-white/5"
         />
       </div>
 
       <div className="glass rounded-xl border border-border/40 p-6">
-        {loading ? (
-          <div className="py-8 text-center text-muted-foreground">
-            Loading devices...
-          </div>
+        {isLoading || isFetching ? (
+          <TableSkeleton columns={7} rows={8} />
         ) : filteredDevices.length === 0 ? (
           <div className="py-8 text-center text-muted-foreground">
             No devices found
@@ -186,9 +165,9 @@ export default function AdminDevicesPage() {
             </TableBody>
           </Table>
         )}
-      {!loading && filteredDevices.length > 0 && (
+      {!isLoading && !isFetching && filteredDevices.length > 0 && (
         <ListPagination
-          currentPage={currentPage}
+          currentPage={safeCurrentPage}
           totalItems={filteredDevices.length}
           pageSize={PAGE_SIZE}
           onPageChange={setCurrentPage}

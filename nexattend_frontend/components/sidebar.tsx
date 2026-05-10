@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useAppSelector } from '@/lib/hooks';
+import { useAppSelector } from '@/redux/store/hooks';
 import {
   BarChart3,
   Smartphone,
@@ -14,7 +14,6 @@ import {
   Home,
   Settings,
   Upload,
-  LayoutGrid,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/utils/utils';

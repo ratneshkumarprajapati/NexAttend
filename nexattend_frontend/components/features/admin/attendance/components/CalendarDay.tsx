@@ -1,5 +1,5 @@
-import { STATUS_CLASSES } from '../utils/constants';
-import type { AttendanceCalendarDay } from '../utils/helpers';
+import { STATUS_CLASSES } from '@/utils/constants';
+import type { AttendanceCalendarDay } from '@/types';
 
 type CalendarDayProps = {
   item: AttendanceCalendarDay;

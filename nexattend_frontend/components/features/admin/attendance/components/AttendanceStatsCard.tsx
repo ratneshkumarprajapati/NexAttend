@@ -1,13 +1,6 @@
 'use client';
 
-import { LucideIcon } from 'lucide-react';
-
-interface AttendanceStatsCardProps {
-  label: string;
-  value: number | string;
-  icon?: LucideIcon;
-  variant?: 'present' | 'absent' | 'late' | 'default';
-}
+import type { AttendanceStatsCardProps } from '@/types';
 
 const VARIANT_STYLES = {
   present: 'glass border-none text-foreground',

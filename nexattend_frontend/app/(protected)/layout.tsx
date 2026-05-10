@@ -1,10 +1,11 @@
 'use client';
 
-import { useAppSelector } from '@/lib/hooks';
+import { useAppSelector } from '@/redux/store/hooks';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Sidebar } from '@/components/sidebar';
 import { Navbar } from '@/components/navbar';
+import { AppShellSkeleton } from '@/components/common/page-skeletons';
 
 export default function ProtectedLayout({
   children,
@@ -13,15 +14,16 @@ export default function ProtectedLayout({
 }) {
   const router = useRouter();
   const user = useAppSelector((state) => state.auth.user);
+  const isHydrated = useAppSelector((state) => state.auth.isHydrated);
 
   useEffect(() => {
-    if (!user) {
+    if (isHydrated && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [isHydrated, user, router]);
 
-  if (!user) {
-    return null;
+  if (!isHydrated || !user) {
+    return <AppShellSkeleton />;
   }
 
   return (

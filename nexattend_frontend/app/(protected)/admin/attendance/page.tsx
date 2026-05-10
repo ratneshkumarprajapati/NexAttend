@@ -1,7 +1,11 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { Download, Calendar as CalendarIcon } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Download,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -13,63 +17,45 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { attendanceService, type AdminStudentMonitorResponse } from '@/lib/services/attendanceService';
+import { useGetAdminStudentMonitorQuery } from '@/redux/features/attendance';
 import { AttendanceStatsCard } from '../../../../components/attendance/AttendanceStatsCard';
 import { HourlyAttendanceChart } from '../../../../components/attendance/HourlyAttendanceChart';
 import { StatusDistributionChart } from '../../../../components/attendance/StatusDistributionChart';
 import { AttendanceRecordsTable } from '../../../../components/attendance/AttendanceRecordsTable';
 import { StudentAttendanceCalendar } from '../../../../components/attendance/StudentAttendanceCalendar';
 import {
+  ChartGridSkeleton,
+  PageHeaderSkeleton,
+  StatCardsSkeleton,
+  TableSkeleton,
+} from '@/components/common/page-skeletons';
+import {
   getLocalDateString,
   getStudentName,
   generateHourlyAttendanceData,
   calculatePresenceDuration,
-  type AttendanceStatus,
-} from '../../../../utils/helpers';
+} from '@/utils/helpers';
+import type { AttendanceRecord } from '@/types';
 export default function AdminAttendancePage() {
   const [selectedDate, setSelectedDate] = useState(getLocalDateString());
-  const [monitor, setMonitor] = useState<AdminStudentMonitorResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    data: monitor,
+    isLoading,
+    isFetching,
+    error,
+  } = useGetAdminStudentMonitorQuery({
+    date: selectedDate,
+    limit: 100,
+  });
   const [selectedStudent, setSelectedStudent] = useState<{
     id: string;
     name: string;
     status: string;
   } | null>(null);
   const [studentDialogOpen, setStudentDialogOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Hydration fix: only render interactive content after mount
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    void fetchAttendance();
-  }, [selectedDate]);
-
-  const fetchAttendance = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await attendanceService.getAdminStudentMonitor({
-        date: selectedDate,
-        limit: 100,
-      });
-      setMonitor(data);
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-          err.message ||
-          'Failed to load attendance data',
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const summary = monitor?.summary;
-  const students = monitor?.students || [];
+  const students = useMemo(() => monitor?.students ?? [], [monitor?.students]);
 
   const statusData = useMemo(
     () => [
@@ -85,18 +71,18 @@ export default function AdminAttendancePage() {
     [students],
   );
 
-  const attendanceRecords = useMemo(
+  const attendanceRecords = useMemo<AttendanceRecord[]>(
     () =>
       students.map((student) => ({
         id: student.id,
         name: getStudentName(student),
         status: student.attendance?.currentStatus?.toLowerCase() || 'absent',
-        time:
-          student.attendance?.daily?.lastSeen
-            ? new Date(
-                student.attendance.daily.lastSeen,
-              ).toLocaleTimeString()
-            : '-',
+        firstSeen: student.attendance?.daily?.firstSeen
+          ? new Date(student.attendance.daily.firstSeen).toLocaleTimeString()
+          : '-',
+        lastSeen: student.attendance?.daily?.lastSeen
+          ? new Date(student.attendance.daily.lastSeen).toLocaleTimeString()
+          : '-',
         device:
           student.attendance?.activeSession?.device?.deviceName ||
           student.devices?.[0]?.deviceName ||
@@ -111,7 +97,7 @@ export default function AdminAttendancePage() {
     if (attendanceRecords.length === 0) return;
 
     const csv = [
-      'name,status,time,duration,device',
+      'name,status,firstSeen,lastSeen,duration,device',
       ...attendanceRecords.map((record) => {
         const duration = calculatePresenceDuration(
           record.arrivalTime,
@@ -120,7 +106,8 @@ export default function AdminAttendancePage() {
         return [
           record.name,
           record.status,
-          record.time,
+          record.firstSeen,
+          record.lastSeen,
           duration || '-',
           record.device,
         ].join(',');
@@ -138,19 +125,20 @@ export default function AdminAttendancePage() {
     document.body.removeChild(element);
   };
 
-  if (!mounted) {
+  const moveSelectedDate = (days: number) => {
+    const nextDate = new Date(`${selectedDate}T00:00:00`);
+    nextDate.setDate(nextDate.getDate() + days);
+    setSelectedDate(getLocalDateString(nextDate));
+  };
+
+  if (isLoading && !monitor) {
     return (
       <div className="space-y-8">
-        <div className="h-12 bg-muted/30 rounded-lg animate-pulse" />
-        <div className="grid gap-4 md:grid-cols-3">
-          {Array(3)
-            .fill(0)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="h-32 bg-muted/30 rounded-xl animate-pulse"
-              />
-            ))}
+        <PageHeaderSkeleton />
+        <StatCardsSkeleton count={3} />
+        <ChartGridSkeleton />
+        <div className="glass rounded-xl border border-border/50 p-6">
+          <TableSkeleton columns={6} rows={8} />
         </div>
       </div>
     );
@@ -171,20 +159,39 @@ export default function AdminAttendancePage() {
       {/* Error */}
       {error && (
         <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive-foreground">
-          {error}
+          Failed to load attendance data
         </div>
       )}
 
       {/* Date Filter & Export */}
       <div className="flex gap-3 flex-wrap items-center">
         <div className="flex items-center gap-2">
-          <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-10 w-10"
+            onClick={() => moveSelectedDate(-1)}
+            aria-label="Previous day"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
           <Input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
             className="bg-white/5"
           />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-10 w-10"
+            onClick={() => moveSelectedDate(1)}
+            aria-label="Next day"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
         <Button
           onClick={handleExport}
@@ -217,11 +224,13 @@ export default function AdminAttendancePage() {
 
       {/* Charts */}
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="glass rounded-xl p-6 border border-border/50">
+        <div className="glass relative rounded-xl p-6 border border-border/50">
           <HourlyAttendanceChart data={hourlyData} />
+          {isFetching && !isLoading && <ChartLoadingOverlay />}
         </div>
-        <div className="glass rounded-xl p-6 border border-border/50">
+        <div className="glass relative rounded-xl p-6 border border-border/50">
           <StatusDistributionChart data={statusData} />
+          {isFetching && !isLoading && <ChartLoadingOverlay />}
         </div>
       </div>
 
@@ -237,7 +246,7 @@ export default function AdminAttendancePage() {
         </div>
         <AttendanceRecordsTable
           records={attendanceRecords}
-          loading={loading}
+          loading={isLoading && !monitor}
           onRowClick={(record) => {
             setSelectedStudent({
               id: record.id,
@@ -275,6 +284,14 @@ export default function AdminAttendancePage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function ChartLoadingOverlay() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-background/70 backdrop-blur-[1px]">
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-slate-500 dark:border-slate-800 dark:border-t-slate-400" />
     </div>
   );
 }

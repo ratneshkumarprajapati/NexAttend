@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Plus, Search, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { userService, type UserRecord } from '@/lib/services/userService';
+import { TableSkeleton } from '@/components/common/page-skeletons';
+import { getErrorMessage } from '@/utils/errorHandler';
+import {
+  useBulkCreateStudentsMutation,
+  useDeleteUserMutation,
+  useGetAllUsersQuery,
+  type UserRecord,
+} from '@/redux/features/user';
 
 type StudentFormState = {
   firstName: string;
@@ -48,31 +55,24 @@ function getStudentName(student: UserRecord) {
 }
 
 export default function StudentsPage() {
-  const [students, setStudents] = useState<UserRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const {
+    data: users = [],
+    isLoading,
+    isFetching,
+    error: loadError,
+  } = useGetAllUsersQuery();
+  const [bulkCreateStudents, { isLoading: saving }] = useBulkCreateStudentsMutation();
+  const [deleteUser] = useDeleteUserMutation();
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState<StudentFormState>(initialFormState);
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    void fetchStudents();
-  }, []);
-
-  const fetchStudents = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const users = await userService.getAllUsers();
-      setStudents(users.filter((user) => user.role === 'STUDENT'));
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Failed to load students');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const students = useMemo(
+    () => users.filter((user) => user.role === 'STUDENT'),
+    [users],
+  );
 
   const handleAddStudent = async () => {
     const parsedYear = Number(formData.year);
@@ -95,10 +95,9 @@ export default function StudentsPage() {
     }
 
     try {
-      setSaving(true);
       setError(null);
 
-      await userService.bulkCreateStudents({
+      await bulkCreateStudents({
         students: [{
           email: formData.email.trim(),
           password: formData.password,
@@ -113,15 +112,12 @@ export default function StudentsPage() {
             macAddress: formData.macAddress.trim(),
           }],
         }],
-      });
+      }).unwrap();
 
       setFormData(initialFormState);
       setShowForm(false);
-      await fetchStudents();
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Failed to create student');
-    } finally {
-      setSaving(false);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to create student'));
     }
   };
 
@@ -130,10 +126,9 @@ export default function StudentsPage() {
 
     try {
       setError(null);
-      await userService.deleteUser(id);
-      setStudents((current) => current.filter((student) => student.id !== id));
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Failed to delete student');
+      await deleteUser(id).unwrap();
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to delete student'));
     }
   };
 
@@ -145,20 +140,11 @@ export default function StudentsPage() {
     return name.includes(term) || email.includes(term) || enrolmentNo.includes(term);
   });
   const totalPages = Math.max(1, Math.ceil(filteredStudents.length / PAGE_SIZE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
   const paginatedStudents = filteredStudents.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
+    (safeCurrentPage - 1) * PAGE_SIZE,
+    safeCurrentPage * PAGE_SIZE,
   );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
 
   return (
     <div className="space-y-6">
@@ -167,9 +153,9 @@ export default function StudentsPage() {
         <p className="text-muted-foreground mt-1">Create and manage student accounts from the live API</p>
       </div>
 
-      {error && (
+      {(error || loadError) && (
         <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-          {error}
+          {error || 'Failed to load students'}
         </div>
       )}
 
@@ -179,7 +165,10 @@ export default function StudentsPage() {
           <Input
             placeholder="Search students by name, email, or enrolment..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
             className="pl-10 bg-white/5"
           />
         </div>
@@ -215,8 +204,8 @@ export default function StudentsPage() {
       )}
 
       <div className="glass rounded-xl p-6">
-        {loading ? (
-          <div className="py-12 text-center text-muted-foreground">Loading students...</div>
+        {isLoading || isFetching ? (
+          <TableSkeleton columns={7} rows={8} />
         ) : filteredStudents.length === 0 ? (
           <div className="py-12 text-center text-muted-foreground">No students found</div>
         ) : (
@@ -256,9 +245,9 @@ export default function StudentsPage() {
             </TableBody>
           </Table>
         )}
-        {!loading && filteredStudents.length > 0 && (
+        {!isLoading && !isFetching && filteredStudents.length > 0 && (
           <ListPagination
-            currentPage={currentPage}
+            currentPage={safeCurrentPage}
             totalItems={filteredStudents.length}
             pageSize={PAGE_SIZE}
             onPageChange={setCurrentPage}

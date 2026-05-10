@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Clock } from 'lucide-react';
 import {
   Table,
@@ -11,25 +11,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ListPagination } from '@/components/common/ListPagination';
-import { PAGE_SIZE } from '../utils/constants';
-import { calculatePresenceDuration } from '../utils/helpers';
+import { PAGE_SIZE } from '@/utils/constants';
+import { calculatePresenceDuration } from '@/utils/helpers';
 import { StatusBadge } from '@/components/common/StatusBadge';
-
-interface AttendanceRecord {
-  id: string;
-  name: string;
-  status: string;
-  time: string;
-  device: string;
-  arrivalTime?: string;
-  departureTime?: string;
-}
-
-interface AttendanceRecordsTableProps {
-  records: AttendanceRecord[];
-  loading?: boolean;
-  onRowClick?: (record: AttendanceRecord) => void;
-}
+import { TableSkeleton } from '@/components/common/page-skeletons';
+import type { AttendanceRecordsTableProps } from '@/types';
 
 export function AttendanceRecordsTable({
   records,
@@ -37,47 +23,18 @@ export function AttendanceRecordsTable({
   onRowClick,
 }: AttendanceRecordsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [mounted, setMounted] = useState(false);
-
-  // Hydration fix: only render after mount
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const totalPages = Math.max(1, Math.ceil(records.length / PAGE_SIZE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
   const paginatedRecords = records.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
+    (safeCurrentPage - 1) * PAGE_SIZE,
+    safeCurrentPage * PAGE_SIZE,
   );
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
-
-  if (!mounted) {
-    return (
-      <div className="space-y-4">
-        <div className="h-10 w-full bg-muted/20 rounded animate-pulse" />
-        {Array(3)
-          .fill(0)
-          .map((_, i) => (
-            <div
-              key={i}
-              className="h-12 w-full bg-muted/20 rounded animate-pulse"
-            />
-          ))}
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">
       {loading ? (
-        <div className="py-8 text-center text-muted-foreground">
-          Loading attendance records...
-        </div>
+        <TableSkeleton columns={6} rows={6} />
       ) : records.length === 0 ? (
         <div className="py-8 text-center text-muted-foreground">
           No attendance records found
@@ -89,7 +46,8 @@ export function AttendanceRecordsTable({
               <TableRow className="border-border/50 hover:bg-transparent">
                 <TableHead>Student Name</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Time</TableHead>
+                <TableHead>First Seen</TableHead>
+                <TableHead>Last Seen</TableHead>
                 <TableHead>Duration</TableHead>
                 <TableHead>Device</TableHead>
               </TableRow>
@@ -118,7 +76,10 @@ export function AttendanceRecordsTable({
                       <StatusBadge status={record.status} />
                     </TableCell>
                     <TableCell className="text-foreground text-sm">
-                      {record.time}
+                      {record.firstSeen}
+                    </TableCell>
+                    <TableCell className="text-foreground text-sm">
+                      {record.lastSeen}
                     </TableCell>
                     <TableCell>
                       {duration ? (
@@ -127,7 +88,7 @@ export function AttendanceRecordsTable({
                           {duration}
                         </div>
                       ) : (
-                        <span className="text-xs text-muted-foreground">—</span>
+                        <span className="text-xs text-muted-foreground">-</span>
                       )}
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">
@@ -141,7 +102,7 @@ export function AttendanceRecordsTable({
 
           {records.length > 0 && (
             <ListPagination
-              currentPage={currentPage}
+              currentPage={safeCurrentPage}
               totalItems={records.length}
               pageSize={PAGE_SIZE}
               onPageChange={setCurrentPage}
