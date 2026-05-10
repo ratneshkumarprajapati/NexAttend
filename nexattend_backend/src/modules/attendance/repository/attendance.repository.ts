@@ -95,6 +95,7 @@ const buildStudentMonitorWhere = (
                         gte: date,
                         lt: nextDate,
                     },
+                    status: "PRESENT",
                 },
             };
         } else {
@@ -305,6 +306,7 @@ export class AttendanceRepository {
                             gte: date,
                             lt: nextDate,
                         },
+                        status: "PRESENT",
                     },
                 },
             },
@@ -329,6 +331,7 @@ export class AttendanceRepository {
                     gte: date,
                     lt: nextDate,
                 },
+                status: "PRESENT",
             },
             _min: {
                 timestamp: true,
@@ -360,6 +363,46 @@ export class AttendanceRepository {
         );
     }
 
+    async findAttendanceLogsForUserInRange(userId: string, startDate: Date, endDate: Date) {
+        return prisma.attendanceLog.findMany({
+            where: {
+                userId,
+                timestamp: {
+                    gte: startDate,
+                    lt: endDate,
+                },
+            },
+            select: {
+                timestamp: true,
+                status: true,
+            },
+            orderBy: {
+                timestamp: "asc",
+            },
+        });
+    }
+
+    async findDailyAttendanceForUserInRange(userId: string, startDate: Date, endDate: Date) {
+        return prisma.attendanceDaily.findMany({
+            where: {
+                userId,
+                date: {
+                    gte: startDate,
+                    lt: endDate,
+                },
+            },
+            select: {
+                date: true,
+                totalDuration: true,
+                firstSeen: true,
+                lastSeen: true,
+            },
+            orderBy: {
+                date: "asc",
+            },
+        });
+    }
+ 
     async createLog(data: {
         sessionId?: string | null;
         userId: string;

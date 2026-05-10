@@ -22,6 +22,8 @@ export const API_ROUTES = {
 
   ATTENDANCE: {
     ADMIN_STUDENTS: '/attendance/admin/students',
+    ADMIN_STUDENT_CALENDAR: (studentId: string) =>
+      `/attendance/admin/students/${studentId}/calendar`,
   },
 
   PRESENCE: {

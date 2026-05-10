@@ -3,6 +3,8 @@ import { API_ROUTES } from '../../api/apiRoutes';
 import type {
   AttendanceMonitorFilters,
   AdminStudentMonitorResponse,
+  StudentAttendanceCalendarQuery,
+  StudentAttendanceCalendarResponse,
 } from './attendance.models';
 
 export const attendanceApi = baseApi.injectEndpoints({
@@ -22,9 +24,23 @@ export const attendanceApi = baseApi.injectEndpoints({
       transformResponse: (res: { data: AdminStudentMonitorResponse }) => res.data,
       providesTags: ['Attendance'],
     }),
+    getStudentAttendanceCalendar: builder.query<
+      StudentAttendanceCalendarResponse,
+      StudentAttendanceCalendarQuery
+    >({
+      query: ({ studentId, year, month }) => ({
+        url: API_ROUTES.ATTENDANCE.ADMIN_STUDENT_CALENDAR(studentId),
+        params: { year, month },
+      }),
+      transformResponse: (res: { data: StudentAttendanceCalendarResponse }) => res.data,
+      providesTags: ['Attendance'],
+    }),
   }),
 
   overrideExisting: false,
 });
 
-export const { useGetAdminStudentMonitorQuery } = attendanceApi;
+export const {
+  useGetAdminStudentMonitorQuery,
+  useGetStudentAttendanceCalendarQuery,
+} = attendanceApi;

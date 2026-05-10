@@ -5,6 +5,9 @@ export {
   resetAttendanceFilters,
   setSelectedMonth,
 } from './attendanceSlice';
-export { useGetAdminStudentMonitorQuery } from './attendanceApi';
+export {
+  useGetAdminStudentMonitorQuery,
+  useGetStudentAttendanceCalendarQuery,
+} from './attendanceApi';
 export * from './attendanceSelectors';
 export * from './attendance.models';

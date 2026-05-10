@@ -145,6 +145,7 @@ export default function StudentsPage() {
     (safeCurrentPage - 1) * PAGE_SIZE,
     safeCurrentPage * PAGE_SIZE,
   );
+  const emptyRows = Math.max(0, PAGE_SIZE - paginatedStudents.length);
 
   return (
     <div className="space-y-6">
@@ -205,10 +206,11 @@ export default function StudentsPage() {
 
       <div className="glass rounded-xl p-6">
         {isLoading || isFetching ? (
-          <TableSkeleton columns={7} rows={8} />
+          <TableSkeleton columns={7} rows={PAGE_SIZE} />
         ) : filteredStudents.length === 0 ? (
-          <div className="py-12 text-center text-muted-foreground">No students found</div>
+          <div className="flex min-h-[480px] items-center justify-center text-center text-muted-foreground">No students found</div>
         ) : (
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="border-border/50 hover:bg-transparent">
@@ -223,7 +225,7 @@ export default function StudentsPage() {
             </TableHeader>
             <TableBody>
               {paginatedStudents.map((student) => (
-                <TableRow key={student.id} className="border-border/30 hover:bg-white/5">
+                <TableRow key={student.id} className="h-12 border-border/30 hover:bg-white/5">
                   <TableCell className="text-foreground">{getStudentName(student)}</TableCell>
                   <TableCell className="text-foreground">{student.email}</TableCell>
                   <TableCell className="text-foreground">{student.profile?.phoneNo || 'N/A'}</TableCell>
@@ -242,8 +244,14 @@ export default function StudentsPage() {
                   </TableCell>
                 </TableRow>
               ))}
+              {Array.from({ length: emptyRows }).map((_, index) => (
+                <TableRow key={`empty-${index}`} aria-hidden className="h-12 border-border/30 hover:bg-transparent">
+                  <TableCell colSpan={7}>&nbsp;</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
+          </div>
         )}
         {!isLoading && !isFetching && filteredStudents.length > 0 && (
           <ListPagination

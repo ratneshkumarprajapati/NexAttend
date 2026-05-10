@@ -1,7 +1,11 @@
 import { eventBus } from "../../../events/eventBus.js";
 import { createModuleLogger } from "../../../utils/logger.js";
 import type { AttendanceRepository } from "../repository/attendance.repository.js";
-import type { AdminStudentAttendanceQuery } from "../types/attendance.types.js";
+import type {
+    AdminStudentAttendanceQuery,
+    StudentAttendanceCalendarDay,
+    StudentAttendanceCalendarQuery,
+} from "../types/attendance.types.js";
 
 const logger = createModuleLogger("AttendanceService");
 
@@ -24,6 +28,8 @@ const durationSeconds = (startTime: Date, endTime: Date) =>
 
 const monitoringDate = (date?: string) =>
     date ? startOfUtcDay(new Date(`${date}T00:00:00.000Z`)) : startOfUtcDay(new Date());
+
+const dateKey = (date: Date) => date.toISOString().slice(0, 10);
 
 export class AttendanceService {
     constructor(private repo: AttendanceRepository) { }
@@ -175,6 +181,86 @@ export class AttendanceService {
                 };
             }),
         };
+    }
+
+    async getStudentAttendanceCalendar(
+        studentId: string,
+        query: StudentAttendanceCalendarQuery,
+    ): Promise<StudentAttendanceCalendarDay[]> {
+        const startDate = new Date(Date.UTC(query.year, query.month - 1, 1));
+        const endDate = new Date(Date.UTC(query.year, query.month, 1));
+        const [dailyRows, logs] = await Promise.all([
+            this.repo.findDailyAttendanceForUserInRange(
+                studentId,
+                startDate,
+                endDate,
+            ),
+            this.repo.findAttendanceLogsForUserInRange(
+                studentId,
+                startDate,
+                endDate,
+            ),
+        ]);
+
+        const presentByDate = new Map<
+            string,
+            { firstSeen: Date; lastSeen: Date }
+        >();
+
+        for (const row of dailyRows) {
+            if (!row.firstSeen) continue;
+
+            presentByDate.set(dateKey(startOfUtcDay(row.date)), {
+                firstSeen: row.firstSeen,
+                lastSeen: row.lastSeen ?? row.firstSeen,
+            });
+        }
+
+        for (const log of logs) {
+            if (log.status !== "PRESENT") continue;
+
+            const key = dateKey(startOfUtcDay(log.timestamp));
+            const existing = presentByDate.get(key);
+
+            if (!existing) {
+                presentByDate.set(key, {
+                    firstSeen: log.timestamp,
+                    lastSeen: log.timestamp,
+                });
+                continue;
+            }
+
+            if (log.timestamp < existing.firstSeen) {
+                existing.firstSeen = log.timestamp;
+            }
+
+            if (log.timestamp > existing.lastSeen) {
+                existing.lastSeen = log.timestamp;
+            }
+        }
+
+        const today = startOfUtcDay(new Date());
+        const daysInMonth = new Date(Date.UTC(query.year, query.month, 0)).getUTCDate();
+        const days: StudentAttendanceCalendarDay[] = [];
+
+        for (let day = 1; day <= daysInMonth; day += 1) {
+            const date = new Date(Date.UTC(query.year, query.month - 1, day));
+            const key = dateKey(date);
+            const present = presentByDate.get(key);
+            const isFuture = date > today;
+
+            days.push({
+                date: key,
+                status: present ? "present" : isFuture ? "future" : "absent",
+                firstSeen: present?.firstSeen.toISOString() ?? null,
+                lastSeen: present?.lastSeen.toISOString() ?? null,
+                totalDuration: present
+                    ? Math.max(0, Math.floor((present.lastSeen.getTime() - present.firstSeen.getTime()) / 1000))
+                    : 0,
+            });
+        }
+
+        return days;
     }
 
     private async splitSessionAtDayBoundary(session: {

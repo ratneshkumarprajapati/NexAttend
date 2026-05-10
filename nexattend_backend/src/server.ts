@@ -10,7 +10,7 @@ try {
   await connectDB();
   registerDBShutdownHandlers();
   registerTelemetryShutdownHandlers();
-  startAppWorkers()
+  await startAppWorkers()
   app.listen(env.PORT, () => {
     logger.info(
       `${env.APP_NAME} server is running on port ${env.PORT} in ${env.NODE_ENV} mode`,

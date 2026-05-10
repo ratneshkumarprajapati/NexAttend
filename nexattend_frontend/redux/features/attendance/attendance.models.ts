@@ -89,6 +89,29 @@ export interface AdminStudentMonitorResponse {
   activeDevices?: number;
 }
 
+export interface StudentAttendanceCalendarQuery {
+  studentId: string;
+  year:      number;
+  month:     number;
+}
+
+export type StudentAttendanceCalendarStatus = 'present' | 'absent' | 'future';
+
+export interface StudentAttendanceCalendarDayResponse {
+  date:          string;
+  status:        StudentAttendanceCalendarStatus;
+  firstSeen:     string | null;
+  lastSeen:      string | null;
+  totalDuration: number;
+}
+
+export interface StudentAttendanceCalendarResponse {
+  studentId: string;
+  year:      number;
+  month:     number;
+  days:      StudentAttendanceCalendarDayResponse[];
+}
+
 export interface SelectedMonth {
   year:  number;
   month: number;

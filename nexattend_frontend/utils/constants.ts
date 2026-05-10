@@ -18,6 +18,7 @@ export const STATUS_CLASSES = {
   present: 'bg-secondary/20 border-secondary/30 text-secondary-foreground',
   absent: 'bg-destructive/20 border-destructive/30 text-destructive-foreground',
   late: 'bg-amber-500/20 border-amber-500/30 text-amber-700 dark:text-amber-300',
+  future: 'bg-muted/10 border-border/50 text-muted-foreground opacity-60',
   empty: 'bg-muted/10 border-border/50 text-muted-foreground',
 } as const;
 

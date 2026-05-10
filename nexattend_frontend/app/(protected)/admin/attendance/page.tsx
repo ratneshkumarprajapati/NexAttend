@@ -9,6 +9,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -36,8 +43,10 @@ import {
   calculatePresenceDuration,
 } from '@/utils/helpers';
 import type { AttendanceRecord } from '@/types';
+import type { AttendanceFilterStatus } from '@/redux/features/attendance';
 export default function AdminAttendancePage() {
   const [selectedDate, setSelectedDate] = useState(getLocalDateString());
+  const [statusFilter, setStatusFilter] = useState<AttendanceFilterStatus>('ALL');
   const {
     data: monitor,
     isLoading,
@@ -45,6 +54,7 @@ export default function AdminAttendancePage() {
     error,
   } = useGetAdminStudentMonitorQuery({
     date: selectedDate,
+    status: statusFilter,
     limit: 100,
   });
   const [selectedStudent, setSelectedStudent] = useState<{
@@ -236,13 +246,28 @@ export default function AdminAttendancePage() {
 
       {/* Records Table */}
       <div className="glass rounded-xl p-6 border border-border/50">
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-foreground">
-            Attendance Records
-          </h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Click on any student to view their monthly attendance calendar
-          </p>
+        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-foreground">
+              Attendance Records
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Click on any student to view their monthly attendance calendar
+            </p>
+          </div>
+          <Select
+            value={statusFilter}
+            onValueChange={(value) => setStatusFilter(value as AttendanceFilterStatus)}
+          >
+            <SelectTrigger className="w-full bg-primary text-foreground hover:bg-primary md:w-40 [&_svg]:text-primary-foreground">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All</SelectItem>
+              <SelectItem value="PRESENT">Present</SelectItem>
+              <SelectItem value="ABSENT">Absent</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <AttendanceRecordsTable
           records={attendanceRecords}

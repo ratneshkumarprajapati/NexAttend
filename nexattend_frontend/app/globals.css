@@ -127,7 +127,7 @@
 @layer components {
   /* Glassmorphic card effect */
   .glass {
-    @apply backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10;
+    @apply border border-border/70 bg-card/85 shadow-sm shadow-black/5 backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:shadow-none;
   }
 
   /* Smooth gradient overlay */
