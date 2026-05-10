@@ -1,8 +1,8 @@
-import { CheckCircle, Clock, XCircle } from "lucide-react";
+import { CheckCircle, Clock, XCircle, type LucideIcon } from 'lucide-react';
 
 export function StatusBadge({ status }: { status: string }) {
   const normalizedStatus = status.toLowerCase();
-  const configs: Record<string, { bg: string; text: string; icon: any }> = {
+  const configs: Record<string, { bg: string; text: string; icon: LucideIcon }> = {
     present: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', icon: CheckCircle },
     absent: { bg: 'bg-red-500/20', text: 'text-red-400', icon: XCircle },
     late: { bg: 'bg-amber-500/20', text: 'text-amber-400', icon: Clock },

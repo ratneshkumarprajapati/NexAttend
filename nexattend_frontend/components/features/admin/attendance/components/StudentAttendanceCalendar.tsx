@@ -1,28 +1,39 @@
 'use client';
 
-import { useMemo } from 'react';
-import { LEGEND_CLASSES } from '../utils/constants';
+import { useMemo, useState } from 'react';
+import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LEGEND_CLASSES } from '@/utils/constants';
 import { CalendarDay } from './CalendarDay';
 import {
   generateStudentAttendanceCalendar,
   formatMonthLabel,
-} from '../utils/helpers';
-
-interface StudentAttendanceCalendarProps {
-  studentId: string;
-  currentStatus: string;
-}
+} from '@/utils/helpers';
+import { Button } from '@/components/ui/button';
+import type { StudentAttendanceCalendarProps } from '@/types';
 
 export function StudentAttendanceCalendar({
   studentId,
   currentStatus,
 }: StudentAttendanceCalendarProps) {
-  const monthLabel = useMemo(() => formatMonthLabel(new Date()), []);
+  const [visibleMonth, setVisibleMonth] = useState(() => new Date());
+
+  const monthLabel = useMemo(() => formatMonthLabel(visibleMonth), [visibleMonth]);
+  const isCurrentMonth = useMemo(() => {
+    const today = new Date();
+    return (
+      visibleMonth.getFullYear() === today.getFullYear() &&
+      visibleMonth.getMonth() === today.getMonth()
+    );
+  }, [visibleMonth]);
 
   const studentCalendar = useMemo(
-    () => generateStudentAttendanceCalendar(studentId, currentStatus),
-    [studentId, currentStatus],
+    () => generateStudentAttendanceCalendar(studentId, currentStatus, visibleMonth),
+    [studentId, currentStatus, visibleMonth],
   );
+
+  const moveMonth = (step: number) => {
+    setVisibleMonth((current) => new Date(current.getFullYear(), current.getMonth() + step, 1));
+  };
 
   const summary = useMemo(() => {
     return studentCalendar.reduce(
@@ -73,6 +84,17 @@ export function StudentAttendanceCalendar({
             </p>
             <p className="text-lg font-semibold text-foreground">{monthLabel}</p>
           </div>
+          <div className="flex items-center gap-1">
+            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => moveMonth(-1)} aria-label="Previous month">
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => setVisibleMonth(new Date())} disabled={isCurrentMonth} aria-label="Current month">
+              <CalendarDays className="h-4 w-4" />
+            </Button>
+            <Button type="button" variant="ghost" size="icon" className="h-8 w-8" onClick={() => moveMonth(1)} aria-label="Next month">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 border-secondary/20 bg-secondary/10 text-secondary-foreground">
               <span className="h-2 w-2 rounded-full bg-secondary" /> Present
@@ -97,7 +119,7 @@ export function StudentAttendanceCalendar({
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-1">
+        <div key={monthLabel} className="grid grid-cols-7 gap-1 animate-in fade-in-0 slide-in-from-right-1 duration-200">
           {studentCalendar.map((item, index) => (
             <CalendarDay key={index} item={item} />
           ))}

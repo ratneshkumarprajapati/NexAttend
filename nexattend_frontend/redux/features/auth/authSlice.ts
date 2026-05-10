@@ -1,54 +1,44 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { AuthState, AuthUser } from '@/redux/models/auth';
+import type { AuthState, AuthUser } from './auth.models';
 
 const initialState: AuthState = {
   user: null,
   token: null,
-  isLoading: false,
-  error: null,
+  isHydrated: false,
 };
-
-const clientInitialState = typeof window !== 'undefined'
-  ? {
-      ...initialState,
-      token: localStorage.getItem('accessToken'),
-      user: (() => {
-        const serialized = localStorage.getItem('user');
-        if (!serialized) return null;
-        try {
-          return JSON.parse(serialized) as AuthUser;
-        } catch {
-          return null;
-        }
-      })(),
-    }
-  : initialState;
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: clientInitialState,
+  initialState,
   reducers: {
-    setAuthLoading(state, action: PayloadAction<boolean>) {
-      state.isLoading = action.payload;
-    },
-    setAuthSuccess(state, action: PayloadAction<{ user: AuthUser; token: string }>) {
+    hydrateAuth: (
+      state,
+      action: PayloadAction<{ user: AuthUser | null; token: string | null }>,
+    ) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
-      state.isLoading = false;
-      state.error = null;
+      state.isHydrated = true;
+    },
+
+    setAuthSuccess: (
+      state,
+      action: PayloadAction<{ user: AuthUser; token: string }>,
+    ) => {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.isHydrated = true;
+
       if (typeof window !== 'undefined') {
         localStorage.setItem('accessToken', action.payload.token);
         localStorage.setItem('user', JSON.stringify(action.payload.user));
       }
     },
-    setAuthError(state, action: PayloadAction<string>) {
-      state.error = action.payload;
-      state.isLoading = false;
-    },
-    logout(state) {
+
+    logout: (state) => {
       state.user = null;
       state.token = null;
-      state.error = null;
+      state.isHydrated = true;
+
       if (typeof window !== 'undefined') {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('user');
@@ -57,5 +47,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setAuthLoading, setAuthSuccess, setAuthError, logout } = authSlice.actions;
+export const { hydrateAuth, setAuthSuccess, logout } = authSlice.actions;
 export default authSlice.reducer;

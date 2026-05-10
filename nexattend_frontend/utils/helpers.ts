@@ -1,11 +1,5 @@
-import type { AdminStudentMonitorResponse } from '@/lib/services/attendanceService';
-
-export type AttendanceStatus = 'present' | 'absent' | 'late' | 'future' | 'empty';
-
-export type AttendanceCalendarDay = {
-  date: Date | null;
-  status: AttendanceStatus;
-};
+import type { AdminStudentMonitorResponse } from '@/redux/features/attendance';
+import type { AttendanceCalendarDay, AttendanceStatus } from '@/types';
 
 export function getLocalDateString(date = new Date()) {
   const year = date.getFullYear();

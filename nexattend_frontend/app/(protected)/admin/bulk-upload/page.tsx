@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { Upload, Check, AlertCircle, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { userService } from '@/lib/services/userService';
+import { useBulkCreateStudentsMutation, type BulkStudentEntry } from '@/redux/features/user';
+import { getErrorMessage } from '@/utils/errorHandler';
 
 interface UploadResult {
   success: number;
@@ -12,10 +13,10 @@ interface UploadResult {
 }
 
 export default function BulkUploadPage() {
+  const [bulkCreateStudents, { isLoading }] = useBulkCreateStudentsMutation();
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [result, setResult] = useState<UploadResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -43,7 +44,6 @@ export default function BulkUploadPage() {
 
   const handleUpload = async () => {
     if (!file) return;
-    setIsLoading(true);
 
     try {
       if (!file.name.toLowerCase().endsWith('.csv')) {
@@ -52,18 +52,7 @@ export default function BulkUploadPage() {
 
       const text = await file.text();
       const lines = text.split('\n').filter(line => line.trim());
-      const students: Array<{
-        email: string;
-        password: string;
-        firstName: string;
-        lastName: string;
-        phoneNo?: string;
-        department?: string;
-        enrolmentNo?: string;
-        year?: number;
-        deviceName?: string;
-        macAddress?: string;
-      }> = [];
+      const students: BulkStudentEntry[] = [];
       const errors: string[] = [];
 
       lines.slice(1).forEach((line, index) => {
@@ -109,13 +98,10 @@ export default function BulkUploadPage() {
         return;
       }
 
-      const uploadResult = await userService.bulkCreateStudents({ students });
+      const uploadResult = await bulkCreateStudents({ students }).unwrap();
       setResult({ success: uploadResult.count, failed: 0, errors: [] });
-    } catch (error: any) {
-      const message = error.response?.data?.message || error.message || 'Upload failed';
-      setResult({ success: 0, failed: 1, errors: [message] });
-    } finally {
-      setIsLoading(false);
+    } catch (error: unknown) {
+      setResult({ success: 0, failed: 1, errors: [getErrorMessage(error, 'Upload failed')] });
     }
   };
 
@@ -138,7 +124,7 @@ export default function BulkUploadPage() {
           Example: student1@example.com,Password@123,Ratnesh,Kumar,9876543210,CSE,ENR001,2,Lab-PC-01,AA:BB:CC:DD:EE:01
         </p>
         <Button
-          className="mt-2 bg-linear-to-r from-primary to-accent hover:opacity-90"
+          className="mt-2 bg-primary hover:opacity-90"
           onClick={() => {
             const csv = 'email,password,firstName,lastName,phoneNo,department,enrolmentNo,year,deviceName,macAddress\nstudent1@example.com,Password@123,Ratnesh,Kumar,9876543210,CSE,ENR001,2,Lab-PC-01,AA:BB:CC:DD:EE:01';
             const element = document.createElement('a');
@@ -212,7 +198,7 @@ export default function BulkUploadPage() {
           <Button
             onClick={handleUpload}
             disabled={isLoading}
-            className="bg-linear-to-r from-primary to-accent hover:opacity-90"
+            className="bg-primary hover:opacity-90"
           >
             {isLoading ? 'Uploading...' : 'Upload Students'}
           </Button>

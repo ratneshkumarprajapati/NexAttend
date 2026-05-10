@@ -28,3 +28,13 @@ export const LEGEND_CLASSES = {
 } as const;
 
 export const PAGE_SIZE = 10;
+
+
+//Redux
+export const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
+export const ACCESS_TOKEN_KEY = 'accessToken';
+
+export const USER_KEY = 'user';
+
+export const DASHBOARD_POLLING_INTERVAL = 60_000;

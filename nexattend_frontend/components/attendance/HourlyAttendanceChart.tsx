@@ -9,15 +9,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { CHART_COLORS } from '../../utils/constants';
-
-interface HourlyAttendanceChartProps {
-  data: Array<{
-    time: string;
-    hour?: number;
-    Present: number;
-  }>;
-}
+import { CHART_COLORS } from '@/utils/constants';
+import type { HourlyAttendanceChartProps } from '@/types';
 
 export function HourlyAttendanceChart({ data }: HourlyAttendanceChartProps) {
   return (

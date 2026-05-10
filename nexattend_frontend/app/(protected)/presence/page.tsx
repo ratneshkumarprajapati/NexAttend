@@ -1,9 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '@/lib/hooks';
-import { setPresenceRecords, setPresenceError, setPresenceLoading } from '@/lib/slices/presenceSlice';
-import { api } from '@/lib/api';
+import { useState } from 'react';
+import { useGetPresenceQuery } from '@/redux/features/presence';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
@@ -14,30 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Users, Search, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
+import { TableSkeleton } from '@/components/common/page-skeletons';
 
 export default function PresencePage() {
-  const dispatch = useAppDispatch();
-  const { records, isLoading } = useAppSelector((state) => state.presence);
+  const { data: records = [], isLoading } = useGetPresenceQuery(undefined, {
+    pollingInterval: 5000,
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-
-  useEffect(() => {
-    fetchPresenceData();
-    const interval = setInterval(fetchPresenceData, 5000); // Refresh every 5 seconds
-    return () => clearInterval(interval);
-  }, []);
-
-  const fetchPresenceData = async () => {
-    try {
-      dispatch(setPresenceLoading(true));
-      const response = await api.get('/presence');
-      dispatch(setPresenceRecords(response.data.records || []));
-    } catch (error: any) {
-      dispatch(setPresenceError(error.message));
-    }
-  };
 
   const filteredRecords = records.filter((record) => {
     if (searchTerm && !record.userName.toLowerCase().includes(searchTerm.toLowerCase())) {
@@ -166,7 +150,7 @@ export default function PresencePage() {
         </CardHeader>
         <CardContent>
           {isLoading && records.length === 0 ? (
-            <div className="text-center py-8">Loading presence data...</div>
+            <TableSkeleton columns={6} rows={8} />
           ) : filteredRecords.length === 0 ? (
             <div className="text-center py-8">
               <AlertCircle className="h-12 w-12 mx-auto text-muted-foreground opacity-50 mb-2" />

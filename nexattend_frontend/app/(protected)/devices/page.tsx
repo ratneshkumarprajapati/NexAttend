@@ -1,11 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Plus, Search, Smartphone } from 'lucide-react';
 import { ListPagination } from '@/components/list-pagination';
-import { deviceService, type DeviceRecord } from '@/lib/services/deviceService';
+import {
+  useGetMyDevicesQuery,
+  useRegisterDeviceMutation,
+} from '@/redux/features/device';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
+import { getErrorMessage } from '@/utils/errorHandler';
 
 type DeviceForm = {
   deviceName: string;
@@ -20,49 +25,32 @@ const initialForm: DeviceForm = {
 const PAGE_SIZE = 6;
 
 export default function DevicesPage() {
-  const [devices, setDevices] = useState<DeviceRecord[]>([]);
+  const {
+    data: devices = [],
+    isLoading,
+    isFetching,
+    error: loadError,
+  } = useGetMyDevicesQuery();
+  const [registerDevice, { isLoading: isSaving }] = useRegisterDeviceMutation();
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState<DeviceForm>(initialForm);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    void fetchDevices();
-  }, []);
-
-  const fetchDevices = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const records = await deviceService.getMyDevices();
-      setDevices(records);
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Failed to load devices');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleRegisterDevice = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      setIsSaving(true);
       setError(null);
-      const device = await deviceService.registerDevice({
+      await registerDevice({
         deviceName: formData.deviceName.trim(),
         macAddress: formData.macAddress.trim(),
-      });
-      setDevices((current) => [device, ...current]);
+      }).unwrap();
       setFormData(initialForm);
       setIsDialogOpen(false);
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Failed to register device');
-    } finally {
-      setIsSaving(false);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to register device'));
     }
   };
 
@@ -72,20 +60,11 @@ export default function DevicesPage() {
     return name.includes(term);
   });
   const totalPages = Math.max(1, Math.ceil(filteredDevices.length / PAGE_SIZE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
   const paginatedDevices = filteredDevices.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
+    (safeCurrentPage - 1) * PAGE_SIZE,
+    safeCurrentPage * PAGE_SIZE,
   );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
 
   return (
     <div className="space-y-8">
@@ -100,9 +79,9 @@ export default function DevicesPage() {
         </Button>
       </div>
 
-      {error && (
+      {(error || loadError) && (
         <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-          {error}
+          {error || 'Failed to load devices'}
         </div>
       )}
 
@@ -147,16 +126,24 @@ export default function DevicesPage() {
         <Input
           placeholder="Search devices..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
           className="pl-10"
         />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {isLoading ? (
-          <div className="col-span-full rounded-xl border border-border/40 bg-card/40 p-8 text-center text-muted-foreground">
-            Loading devices...
-          </div>
+        {isLoading || isFetching ? (
+          Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="glass rounded-xl border border-border/40 p-6 space-y-4">
+              <Skeleton className="h-5 w-40" />
+              <Skeleton className="h-3 w-28" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </div>
+          ))
         ) : filteredDevices.length === 0 ? (
           <div className="col-span-full rounded-xl border border-border/40 bg-card/40 p-8 text-center text-muted-foreground">
             <Smartphone className="h-12 w-12 mx-auto opacity-50 mb-3" />
@@ -184,9 +171,9 @@ export default function DevicesPage() {
         )}
       </div>
 
-      {!isLoading && filteredDevices.length > 0 && (
+      {!isLoading && !isFetching && filteredDevices.length > 0 && (
         <ListPagination
-          currentPage={currentPage}
+          currentPage={safeCurrentPage}
           totalItems={filteredDevices.length}
           pageSize={PAGE_SIZE}
           onPageChange={setCurrentPage}

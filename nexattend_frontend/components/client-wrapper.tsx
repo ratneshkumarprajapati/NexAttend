@@ -1,18 +1,13 @@
 'use client';
 
-import { Provider } from 'react-redux';
-import { store } from '@/lib/store';
 import { ThemeProvider } from '@/components/theme-provider';
-import { ReactNode } from 'react';
+import type { PropsWithChildren } from 'react';
 import { Analytics } from '@vercel/analytics/next';
+import ReduxProvider from '@/redux/provider/ReduxProvider';
 
-interface ClientWrapperProps {
-  children: ReactNode;
-}
-
-export function ClientWrapper({ children }: ClientWrapperProps) {
+export function ClientWrapper({ children }: PropsWithChildren) {
   return (
-    <Provider store={store}>
+    <ReduxProvider>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
@@ -22,6 +17,6 @@ export function ClientWrapper({ children }: ClientWrapperProps) {
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </ThemeProvider>
-    </Provider>
+    </ReduxProvider>
   );
 }

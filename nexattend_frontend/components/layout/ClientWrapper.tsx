@@ -1,16 +1,12 @@
 'use client';
 
 import { Provider } from 'react-redux';
-import { store } from '@/lib/store';
+import { store } from '@/redux/store';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
-import { ReactNode } from 'react';
+import type { PropsWithChildren } from 'react';
 import { Analytics } from '@vercel/analytics/next';
 
-interface ClientWrapperProps {
-  children: ReactNode;
-}
-
-export function ClientWrapper({ children }: ClientWrapperProps) {
+export function ClientWrapper({ children }: PropsWithChildren) {
   return (
     <Provider store={store}>
       <ThemeProvider

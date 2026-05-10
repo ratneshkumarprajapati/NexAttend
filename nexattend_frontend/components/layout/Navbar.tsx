@@ -1,8 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useAppSelector, useAppDispatch } from '@/lib/hooks';
-import { logout } from '@/lib/slices/authSlice';
+import { useAppSelector, useAppDispatch } from '@/redux/store/hooks';
+import { logout } from '@/redux/features/auth/authSlice';
 import { useTheme } from 'next-themes';
 import { Moon, Sun, LogOut, Settings } from 'lucide-react';
 import Link from 'next/link';

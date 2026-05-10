@@ -2,34 +2,33 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAppDispatch } from '@/lib/hooks';
-import { setAuthSuccess, setAuthError, setAuthLoading } from '@/lib/slices/authSlice';
-import { authService } from '@/lib/services/authService';
+import { useAppDispatch } from '@/redux/store/hooks';
+import { setAuthSuccess } from '@/redux/features/auth/authSlice';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { BarChart3, ArrowRight, Mail, Lock } from 'lucide-react';
+import { useLoginMutation } from '@/redux/features/auth';
+import { getErrorMessage } from '@/utils/errorHandler';
 
 export default function LoginPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const [login, { isLoading }] = useLoginMutation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setIsLoading(true);
-    dispatch(setAuthLoading(true));
 
     try {
       if (!email || !password) {
         throw new Error('Email and password are required');
       }
 
-      const authData = await authService.login({ email, password });
+      const authData = await login({ email, password }).unwrap();
       const normalizedRole = (authData.user.role?.toLowerCase() === 'admin'
         ? 'admin'
         : authData.user.role?.toLowerCase() === 'manager'
@@ -42,12 +41,8 @@ export default function LoginPage() {
       };
       dispatch(setAuthSuccess({ user, token: authData.token }));
       router.push('/dashboard');
-    } catch (err: any) {
-      const errorMessage = err.message || 'Login failed. Please try again.';
-      setError(errorMessage);
-      dispatch(setAuthError(errorMessage));
-    } finally {
-      setIsLoading(false);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Login failed. Please try again.'));
     }
   };
 
@@ -79,8 +74,6 @@ export default function LoginPage() {
               <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
               Demo Mode: Use any email and password
             </div>
-
-          
 
             {/* Error message */}
             {error && (
