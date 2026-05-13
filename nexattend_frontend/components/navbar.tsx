@@ -1,12 +1,13 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/redux/store/hooks';
 import { logout } from '@/redux/features/auth/authSlice';
 import { useTheme } from 'next-themes';
-import { Moon, Sun, LogOut, Settings } from 'lucide-react';
+import { Moon, Sun, LogOut, RefreshCw, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { baseApi } from '@/redux/api/baseApi';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,9 +18,33 @@ import {
 
 export function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
   const { theme, setTheme } = useTheme();
   const user = useAppSelector((state) => state.auth.user);
+
+  const handleRefresh = () => {
+    const tags =
+      pathname === '/dashboard'
+        ? (['Attendance', 'Device', 'User'] as const)
+        : pathname === '/presence'
+          ? (['Presence'] as const)
+          : pathname === '/devices'
+            ? (['Device'] as const)
+            : pathname === '/settings'
+              ? (['Profile'] as const)
+              : pathname.startsWith('/admin/students')
+                ? (['User'] as const)
+                : pathname.startsWith('/admin/devices') || pathname.startsWith('/admin/attendance')
+                  ? (['Attendance'] as const)
+                  : ([] as const);
+
+    if (tags.length > 0) {
+      dispatch(baseApi.util.invalidateTags([...tags]));
+    }
+
+    router.refresh();
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -34,6 +59,16 @@ export function Navbar() {
         
         {/* Right side controls */}
         <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleRefresh}
+            className="h-10 w-10 rounded-lg hover:bg-white/10 transition-all duration-200 text-muted-foreground hover:text-foreground"
+            title="Refresh current tab"
+          >
+            <RefreshCw className="h-5 w-5" />
+          </Button>
+
           {/* Theme toggle with smooth transition */}
           <Button
             variant="ghost"

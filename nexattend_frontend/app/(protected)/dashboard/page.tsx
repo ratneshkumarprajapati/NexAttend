@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 import {
   AlertCircle,
   CheckCircle2,
-  Clock,
   Smartphone,
   TrendingUp,
   Users,
@@ -39,18 +38,15 @@ export default function DashboardPage() {
   const {
     data: monitor,
     isLoading: isAttendanceLoading,
-    isFetching: isAttendanceFetching,
     error: attendanceError,
   } = useGetAdminStudentMonitorQuery({ date: today, limit: 50 }, dashboardQueryOptions);
   const {
     data: devices = [],
     isLoading: isDevicesLoading,
-    isFetching: isDevicesFetching,
   } = useGetMyDevicesQuery(undefined, dashboardQueryOptions);
   const {
     data: users = [],
     isLoading: isUsersLoading,
-    isFetching: isUsersFetching,
   } = useGetAllUsersQuery(undefined, dashboardQueryOptions);
 
   const students = monitor?.students || [];
@@ -109,7 +105,6 @@ export default function DashboardPage() {
   const weeklyData = buildWeeklyData(presentToday, absentToday);
   const recentRecords = buildRecentCheckIns(students);
   const isInitialLoading = isAttendanceLoading || isDevicesLoading || isUsersLoading;
-  const isRefreshing = isAttendanceFetching || isDevicesFetching || isUsersFetching;
 
   if (isInitialLoading) {
     return <DashboardSkeleton />;
@@ -117,21 +112,13 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-4xl font-bold text-foreground">
-            Welcome, {user?.name || 'User'}!
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            Real-time attendance monitoring and insights
-          </p>
-        </div>
-        {isRefreshing && (
-          <div className="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300">
-            <Clock className="h-4 w-4 animate-spin" />
-            Refreshing
-          </div>
-        )}
+      <div>
+        <h1 className="text-4xl font-bold text-foreground">
+          Welcome, {user?.name || 'User'}!
+        </h1>
+        <p className="mt-2 text-muted-foreground">
+          Real-time attendance monitoring and insights
+        </p>
       </div>
 
       {attendanceError && (

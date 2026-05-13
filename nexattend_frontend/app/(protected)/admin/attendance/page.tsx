@@ -42,8 +42,17 @@ import {
   generateHourlyAttendanceData,
   calculatePresenceDuration,
 } from '@/utils/helpers';
+import { DASHBOARD_POLLING_INTERVAL } from '@/utils/constants';
 import type { AttendanceRecord } from '@/types';
 import type { AttendanceFilterStatus } from '@/redux/features/attendance';
+
+const attendanceQueryOptions = {
+  pollingInterval: DASHBOARD_POLLING_INTERVAL,
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
+  skipPollingIfUnfocused: true,
+} as const;
+
 export default function AdminAttendancePage() {
   const [selectedDate, setSelectedDate] = useState(getLocalDateString());
   const [statusFilter, setStatusFilter] = useState<AttendanceFilterStatus>('ALL');
@@ -56,7 +65,7 @@ export default function AdminAttendancePage() {
     date: selectedDate,
     status: statusFilter,
     limit: 100,
-  });
+  }, attendanceQueryOptions);
   const [selectedStudent, setSelectedStudent] = useState<{
     id: string;
     name: string;

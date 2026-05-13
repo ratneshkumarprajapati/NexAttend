@@ -19,6 +19,9 @@ import { TableSkeleton } from '@/components/common/page-skeletons';
 export default function PresencePage() {
   const { data: records = [], isLoading } = useGetPresenceQuery(undefined, {
     pollingInterval: 5000,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+    skipPollingIfUnfocused: true,
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
