@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/table';
 import { useGetAdminStudentMonitorQuery } from '@/redux/features/attendance';
 import { TableSkeleton } from '@/components/common/page-skeletons';
+import { DASHBOARD_POLLING_INTERVAL } from '@/utils/constants';
 
 type AdminDeviceRecord = {
   id: string;
@@ -27,6 +28,12 @@ type AdminDeviceRecord = {
 };
 
 const PAGE_SIZE = 10;
+const adminDevicesQueryOptions = {
+  pollingInterval: DASHBOARD_POLLING_INTERVAL,
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
+  skipPollingIfUnfocused: true,
+} as const;
 
 function getLocalDateString(date = new Date()) {
   const year = date.getFullYear();
@@ -44,7 +51,7 @@ export default function AdminDevicesPage() {
   } = useGetAdminStudentMonitorQuery({
     date: getLocalDateString(),
     limit: 100,
-  });
+  }, adminDevicesQueryOptions);
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
