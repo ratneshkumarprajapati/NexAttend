@@ -21,7 +21,8 @@ export interface UpdateUserInput {
 
 export interface BulkStudentDeviceInput {
   deviceName?: string | undefined;
-  macAddress: string;
+  macAddress?: string | undefined;
+  phoneNo?: string | undefined;
 }
 
 export interface BulkStudentInput {

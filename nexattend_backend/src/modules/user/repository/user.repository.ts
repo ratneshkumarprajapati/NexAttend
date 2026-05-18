@@ -15,7 +15,8 @@ type BulkStudentCreateData = {
   };
   devices: Array<{
     deviceName?: string | null;
-    hashedMac: string;
+    hashedMac?: string | null;
+    phoneNo?: string | null;
   }>;
 };
 

@@ -150,6 +150,31 @@ export const env = {
     PREFETCH: Number(process.env.AMQP_PREFETCH) || 1,
   },
 
+  CAMERA_QUEUE: {
+    ENABLED: process.env.CAMERA_QUEUE_ENABLED === "true",
+    URL: process.env.CLOUDAMQP_URL || process.env.AMQP_URL || "",
+    EXCHANGE: process.env.CAMERA_SYNC_EXCHANGE || "nexattend.camera-sync",
+    RECOGNITION_ROUTING_KEY:
+      process.env.CAMERA_SYNC_RECOGNITION_ROUTING_KEY || "face.matched",
+    RECOGNITION_QUEUE:
+      process.env.CAMERA_SYNC_RECOGNITION_QUEUE || "nexattend.camera-recognitions",
+    MIN_CONFIDENCE: Number(process.env.CAMERA_MIN_CONFIDENCE) || 0.75,
+    RECONNECT_DELAY_MS: Number(process.env.AMQP_RECONNECT_DELAY_MS) || 5000,
+    PREFETCH: Number(process.env.AMQP_PREFETCH) || 1,
+  },
+
+  MOBILE_QUEUE: {
+    ENABLED: process.env.MOBILE_QUEUE_ENABLED === "true",
+    URL: process.env.CLOUDAMQP_URL || process.env.AMQP_URL || "",
+    EXCHANGE: process.env.MOBILE_SYNC_EXCHANGE || "nexattend.mobile-sync",
+    EVENT_ROUTING_KEY:
+      process.env.MOBILE_SYNC_EVENT_ROUTING_KEY || "mobile.device-event",
+    EVENT_QUEUE:
+      process.env.MOBILE_SYNC_EVENT_QUEUE || "nexattend.mobile-events",
+    RECONNECT_DELAY_MS: Number(process.env.AMQP_RECONNECT_DELAY_MS) || 5000,
+    PREFETCH: Number(process.env.AMQP_PREFETCH) || 1,
+  },
+
   SECURITY: {
     JWT_SECRET: process.env.JWT_SECRET!,
     HASH_SALT: process.env.HASH_SALT!,

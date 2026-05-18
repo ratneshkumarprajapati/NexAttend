@@ -29,6 +29,7 @@ export type DeviceMinAggregateOutputType = {
   userId: string | null
   deviceName: string | null
   hashedMac: string | null
+  phoneNo: string | null
   isActive: boolean | null
   deletedAt: Date | null
   createdAt: Date | null
@@ -39,6 +40,7 @@ export type DeviceMaxAggregateOutputType = {
   userId: string | null
   deviceName: string | null
   hashedMac: string | null
+  phoneNo: string | null
   isActive: boolean | null
   deletedAt: Date | null
   createdAt: Date | null
@@ -49,6 +51,7 @@ export type DeviceCountAggregateOutputType = {
   userId: number
   deviceName: number
   hashedMac: number
+  phoneNo: number
   isActive: number
   deletedAt: number
   createdAt: number
@@ -61,6 +64,7 @@ export type DeviceMinAggregateInputType = {
   userId?: true
   deviceName?: true
   hashedMac?: true
+  phoneNo?: true
   isActive?: true
   deletedAt?: true
   createdAt?: true
@@ -71,6 +75,7 @@ export type DeviceMaxAggregateInputType = {
   userId?: true
   deviceName?: true
   hashedMac?: true
+  phoneNo?: true
   isActive?: true
   deletedAt?: true
   createdAt?: true
@@ -81,6 +86,7 @@ export type DeviceCountAggregateInputType = {
   userId?: true
   deviceName?: true
   hashedMac?: true
+  phoneNo?: true
   isActive?: true
   deletedAt?: true
   createdAt?: true
@@ -163,7 +169,8 @@ export type DeviceGroupByOutputType = {
   id: string
   userId: string
   deviceName: string | null
-  hashedMac: string
+  hashedMac: string | null
+  phoneNo: string | null
   isActive: boolean
   deletedAt: Date | null
   createdAt: Date
@@ -194,7 +201,8 @@ export type DeviceWhereInput = {
   id?: Prisma.StringFilter<"Device"> | string
   userId?: Prisma.StringFilter<"Device"> | string
   deviceName?: Prisma.StringNullableFilter<"Device"> | string | null
-  hashedMac?: Prisma.StringFilter<"Device"> | string
+  hashedMac?: Prisma.StringNullableFilter<"Device"> | string | null
+  phoneNo?: Prisma.StringNullableFilter<"Device"> | string | null
   isActive?: Prisma.BoolFilter<"Device"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"Device"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
@@ -208,7 +216,8 @@ export type DeviceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrderInput | Prisma.SortOrder
-  hashedMac?: Prisma.SortOrder
+  hashedMac?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneNo?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -226,6 +235,7 @@ export type DeviceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DeviceWhereInput | Prisma.DeviceWhereInput[]
   userId?: Prisma.StringFilter<"Device"> | string
   deviceName?: Prisma.StringNullableFilter<"Device"> | string | null
+  phoneNo?: Prisma.StringNullableFilter<"Device"> | string | null
   isActive?: Prisma.BoolFilter<"Device"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"Device"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
@@ -239,7 +249,8 @@ export type DeviceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrderInput | Prisma.SortOrder
-  hashedMac?: Prisma.SortOrder
+  hashedMac?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneNo?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -255,7 +266,8 @@ export type DeviceScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Device"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Device"> | string
   deviceName?: Prisma.StringNullableWithAggregatesFilter<"Device"> | string | null
-  hashedMac?: Prisma.StringWithAggregatesFilter<"Device"> | string
+  hashedMac?: Prisma.StringNullableWithAggregatesFilter<"Device"> | string | null
+  phoneNo?: Prisma.StringNullableWithAggregatesFilter<"Device"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Device"> | boolean
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Device"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Device"> | Date | string
@@ -264,7 +276,8 @@ export type DeviceScalarWhereWithAggregatesInput = {
 export type DeviceCreateInput = {
   id?: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -278,7 +291,8 @@ export type DeviceUncheckedCreateInput = {
   id?: string
   userId: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -290,7 +304,8 @@ export type DeviceUncheckedCreateInput = {
 export type DeviceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -304,7 +319,8 @@ export type DeviceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -317,7 +333,8 @@ export type DeviceCreateManyInput = {
   id?: string
   userId: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -326,7 +343,8 @@ export type DeviceCreateManyInput = {
 export type DeviceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -336,7 +354,8 @@ export type DeviceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -357,6 +376,7 @@ export type DeviceCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
+  phoneNo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -367,6 +387,7 @@ export type DeviceMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
+  phoneNo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -377,6 +398,7 @@ export type DeviceMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   deviceName?: Prisma.SortOrder
   hashedMac?: Prisma.SortOrder
+  phoneNo?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -478,7 +500,8 @@ export type DeviceUpdateOneRequiredWithoutPresenceLogsNestedInput = {
 export type DeviceCreateWithoutUserInput = {
   id?: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -490,7 +513,8 @@ export type DeviceCreateWithoutUserInput = {
 export type DeviceUncheckedCreateWithoutUserInput = {
   id?: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -532,7 +556,8 @@ export type DeviceScalarWhereInput = {
   id?: Prisma.StringFilter<"Device"> | string
   userId?: Prisma.StringFilter<"Device"> | string
   deviceName?: Prisma.StringNullableFilter<"Device"> | string | null
-  hashedMac?: Prisma.StringFilter<"Device"> | string
+  hashedMac?: Prisma.StringNullableFilter<"Device"> | string | null
+  phoneNo?: Prisma.StringNullableFilter<"Device"> | string | null
   isActive?: Prisma.BoolFilter<"Device"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"Device"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Device"> | Date | string
@@ -541,7 +566,8 @@ export type DeviceScalarWhereInput = {
 export type DeviceCreateWithoutSessionsInput = {
   id?: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -554,7 +580,8 @@ export type DeviceUncheckedCreateWithoutSessionsInput = {
   id?: string
   userId: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -581,7 +608,8 @@ export type DeviceUpdateToOneWithWhereWithoutSessionsInput = {
 export type DeviceUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -594,7 +622,8 @@ export type DeviceUncheckedUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -605,7 +634,8 @@ export type DeviceUncheckedUpdateWithoutSessionsInput = {
 export type DeviceCreateWithoutAttendanceLogsInput = {
   id?: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -618,7 +648,8 @@ export type DeviceUncheckedCreateWithoutAttendanceLogsInput = {
   id?: string
   userId: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -645,7 +676,8 @@ export type DeviceUpdateToOneWithWhereWithoutAttendanceLogsInput = {
 export type DeviceUpdateWithoutAttendanceLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -658,7 +690,8 @@ export type DeviceUncheckedUpdateWithoutAttendanceLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -669,7 +702,8 @@ export type DeviceUncheckedUpdateWithoutAttendanceLogsInput = {
 export type DeviceCreateWithoutPresenceLogsInput = {
   id?: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -682,7 +716,8 @@ export type DeviceUncheckedCreateWithoutPresenceLogsInput = {
   id?: string
   userId: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -709,7 +744,8 @@ export type DeviceUpdateToOneWithWhereWithoutPresenceLogsInput = {
 export type DeviceUpdateWithoutPresenceLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -722,7 +758,8 @@ export type DeviceUncheckedUpdateWithoutPresenceLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -733,7 +770,8 @@ export type DeviceUncheckedUpdateWithoutPresenceLogsInput = {
 export type DeviceCreateManyUserInput = {
   id?: string
   deviceName?: string | null
-  hashedMac: string
+  hashedMac?: string | null
+  phoneNo?: string | null
   isActive?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -742,7 +780,8 @@ export type DeviceCreateManyUserInput = {
 export type DeviceUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -754,7 +793,8 @@ export type DeviceUpdateWithoutUserInput = {
 export type DeviceUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -766,7 +806,8 @@ export type DeviceUncheckedUpdateWithoutUserInput = {
 export type DeviceUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   deviceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hashedMac?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedMac?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -826,6 +867,7 @@ export type DeviceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
+  phoneNo?: boolean
   isActive?: boolean
   deletedAt?: boolean
   createdAt?: boolean
@@ -841,6 +883,7 @@ export type DeviceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
+  phoneNo?: boolean
   isActive?: boolean
   deletedAt?: boolean
   createdAt?: boolean
@@ -852,6 +895,7 @@ export type DeviceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
+  phoneNo?: boolean
   isActive?: boolean
   deletedAt?: boolean
   createdAt?: boolean
@@ -863,12 +907,13 @@ export type DeviceSelectScalar = {
   userId?: boolean
   deviceName?: boolean
   hashedMac?: boolean
+  phoneNo?: boolean
   isActive?: boolean
   deletedAt?: boolean
   createdAt?: boolean
 }
 
-export type DeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "deviceName" | "hashedMac" | "isActive" | "deletedAt" | "createdAt", ExtArgs["result"]["device"]>
+export type DeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "deviceName" | "hashedMac" | "phoneNo" | "isActive" | "deletedAt" | "createdAt", ExtArgs["result"]["device"]>
 export type DeviceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sessions?: boolean | Prisma.Device$sessionsArgs<ExtArgs>
@@ -895,7 +940,8 @@ export type $DevicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     id: string
     userId: string
     deviceName: string | null
-    hashedMac: string
+    hashedMac: string | null
+    phoneNo: string | null
     isActive: boolean
     deletedAt: Date | null
     createdAt: Date
@@ -1330,6 +1376,7 @@ export interface DeviceFieldRefs {
   readonly userId: Prisma.FieldRef<"Device", 'String'>
   readonly deviceName: Prisma.FieldRef<"Device", 'String'>
   readonly hashedMac: Prisma.FieldRef<"Device", 'String'>
+  readonly phoneNo: Prisma.FieldRef<"Device", 'String'>
   readonly isActive: Prisma.FieldRef<"Device", 'Boolean'>
   readonly deletedAt: Prisma.FieldRef<"Device", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Device", 'DateTime'>

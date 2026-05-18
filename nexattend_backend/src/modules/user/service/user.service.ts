@@ -40,10 +40,13 @@ const getStudentDevices = (student: BulkStudentInput) => {
         });
     }
 
-    return devices.map((device) => ({
-        deviceName: device.deviceName?.trim() || null,
-        hashedMac: hashMac(device.macAddress.trim()),
-    }));
+    return devices
+        .filter((device) => device.macAddress || device.phoneNo)
+        .map((device) => ({
+            deviceName: device.deviceName?.trim() || null,
+            hashedMac: device.macAddress ? hashMac(device.macAddress.trim()) : null,
+            phoneNo: device.phoneNo?.trim() || student.phoneNo?.trim() || null,
+        }));
 };
 
 export const userService = {
@@ -186,7 +189,9 @@ export const userService = {
                         const devices = getStudentDevices(student);
 
                         assertUniqueValues(
-                            devices.map((device) => device.hashedMac),
+                            devices
+                                .map((device) => device.hashedMac)
+                                .filter((value): value is string => Boolean(value)),
                             "device MAC for student"
                         );
 
@@ -223,6 +228,7 @@ export const userService = {
                 assertUniqueValues(
                     studentsWithHashedPasswords.flatMap((student) =>
                         student.devices.map((device) => device.hashedMac)
+                            .filter((value): value is string => Boolean(value))
                     ),
                     "device MAC"
                 );

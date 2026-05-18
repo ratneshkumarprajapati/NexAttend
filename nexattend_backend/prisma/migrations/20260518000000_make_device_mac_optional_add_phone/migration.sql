@@ -1,0 +1,3 @@
+ALTER TABLE "Device" ADD COLUMN "phoneNo" TEXT;
+
+ALTER TABLE "Device" ALTER COLUMN "hashedMac" DROP NOT NULL;

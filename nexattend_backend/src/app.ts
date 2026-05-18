@@ -17,6 +17,8 @@ import { initPresenceModule } from "./modules/presence/init/presence.init.js";
 import { initAttendanceModule } from "./modules/attendance/init/attendance.init.js";
 import { initAIModule } from "./modules/ai/Init/ai.init.js";
 import { routerSnapshotConsumer } from "./queue/routerSync/routerSnapshot.consumer.js";
+import { cameraRecognitionConsumer } from "./queue/cameraSync/cameraRecognition.consumer.js";
+import { mobileEventConsumer } from "./queue/mobileSync/mobileEvent.consumer.js";
 import { env } from "./config/env.js";
 
 const app = express();
@@ -60,6 +62,12 @@ export const startAppWorkers = async () => {
     await routerSnapshotConsumer.start();
   } else {
     poller.start();
+  }
+  if (env.CAMERA_QUEUE.ENABLED) {
+    await cameraRecognitionConsumer.start();
+  }
+  if (env.MOBILE_QUEUE.ENABLED) {
+    await mobileEventConsumer.start();
   }
   logDumpJob.start();
   systemLogArchiveJob.start();

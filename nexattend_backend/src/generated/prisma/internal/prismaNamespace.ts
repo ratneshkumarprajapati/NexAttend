@@ -1152,6 +1152,7 @@ export const DeviceScalarFieldEnum = {
   userId: 'userId',
   deviceName: 'deviceName',
   hashedMac: 'hashedMac',
+  phoneNo: 'phoneNo',
   isActive: 'isActive',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt'

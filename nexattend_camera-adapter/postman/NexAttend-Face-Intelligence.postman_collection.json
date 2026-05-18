@@ -1,0 +1,186 @@
+{
+  "info": {
+    "_postman_id": "d4a48a45-7f1d-4ff7-a0a0-55ac90f9b301",
+    "name": "NexAttend Face Intelligence Microservice",
+    "description": "Test collection for registering face embeddings, recognizing camera frames, and publishing face.matched attendance events.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5100"
+    },
+    {
+      "key": "studentId",
+      "value": "student-123"
+    },
+    {
+      "key": "imageDataUrl",
+      "value": "data:image/jpeg;base64,REPLACE_WITH_BASE64_IMAGE"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Register Face Embedding",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"studentId\": \"{{studentId}}\",\n  \"userId\": \"{{studentId}}\",\n  \"imageDataUrl\": \"{{imageDataUrl}}\",\n  \"metadata\": {\n    \"source\": \"postman\",\n    \"cameraId\": \"front-gate\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/faces/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["faces", "register"]
+        }
+      }
+    },
+    {
+      "name": "Get Registered Face Metadata",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/faces/{{studentId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["faces", "{{studentId}}"]
+        }
+      }
+    },
+    {
+      "name": "Detect Faces Only",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"imageDataUrl\": \"{{imageDataUrl}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/detect",
+          "host": ["{{baseUrl}}"],
+          "path": ["detect"]
+        }
+      }
+    },
+    {
+      "name": "Recognize Face Without Publishing",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"imageDataUrl\": \"{{imageDataUrl}}\",\n  \"publish\": false\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/faces/recognize",
+          "host": ["{{baseUrl}}"],
+          "path": ["faces", "recognize"]
+        }
+      }
+    },
+    {
+      "name": "Recognize Face And Publish face.matched",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"imageDataUrl\": \"{{imageDataUrl}}\",\n  \"publish\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/faces/recognize",
+          "host": ["{{baseUrl}}"],
+          "path": ["faces", "recognize"]
+        }
+      }
+    },
+    {
+      "name": "Capture Full Pipeline",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"imageDataUrl\": \"{{imageDataUrl}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/capture",
+          "host": ["{{baseUrl}}"],
+          "path": ["capture"]
+        }
+      }
+    },
+    {
+      "name": "Publish Manual Face Match Event",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"studentId\": \"{{studentId}}\",\n  \"confidence\": 0.94,\n  \"frameId\": \"postman-frame-1\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/detections",
+          "host": ["{{baseUrl}}"],
+          "path": ["detections"]
+        }
+      }
+    },
+    {
+      "name": "Refresh Backend Photo Gallery",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/students/refresh",
+          "host": ["{{baseUrl}}"],
+          "path": ["students", "refresh"]
+        }
+      }
+    }
+  ]
+}

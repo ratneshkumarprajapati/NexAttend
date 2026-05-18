@@ -11,7 +11,8 @@ const createUserProfileSchema = z.object({
 
 const bulkStudentDeviceSchema = z.object({
     deviceName: z.string().trim().min(1, "Device name is required").optional(),
-    macAddress: z.string().trim().min(1, "MAC address is required"),
+    macAddress: z.string().trim().min(1, "MAC address is required").optional(),
+    phoneNo: z.string().trim().min(1, "Phone number is required").optional(),
 });
 
 const bulkStudentSchema = z
@@ -33,10 +34,6 @@ const bulkStudentSchema = z
         deviceName: z.string().trim().min(1, "Device name is required").optional(),
         macAddress: z.string().trim().min(1, "MAC address is required").optional(),
         devices: z.array(bulkStudentDeviceSchema).min(1).max(5).optional(),
-    })
-    .refine((data) => data.macAddress || data.devices?.length, {
-        message: "At least one device is required",
-        path: ["devices"],
     });
 
 export const createUserSchema = z.object({

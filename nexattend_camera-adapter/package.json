@@ -1,0 +1,37 @@
+{
+  "name": "nexattend-camera-adapter",
+  "version": "1.0.0",
+  "description": "Camera adapter microservice for publishing recognized student face events to NexAttend.",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "npm run build && node dist/server.js",
+    "watch": "tsc --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tensorflow-models/blazeface": "^0.1.0",
+    "@tensorflow-models/mobilenet": "^2.1.1",
+    "@tensorflow/tfjs": "^4.22.0",
+    "amqplib": "^1.2.0",
+    "axios": "^1.16.0",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "jpeg-js": "^0.4.4",
+    "mongodb": "^7.2.0",
+    "pngjs": "^7.0.0",
+    "winston": "^3.17.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.8",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.5.4",
+    "@types/pngjs": "^6.0.5",
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
